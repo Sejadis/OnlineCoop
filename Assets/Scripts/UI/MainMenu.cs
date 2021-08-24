@@ -1,10 +1,15 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Net;
 using MLAPI;
+using MLAPI.Transports;
+using MLAPI.Transports.UNET;
+using TMPro;
 using UnityEngine;
 
 public class MainMenu : MonoBehaviour
 {
+    [SerializeField] private TMP_InputField adressInput;
     public void StartAsHost()
     {
         NetworkManager.Singleton.StartHost();
@@ -13,6 +18,8 @@ public class MainMenu : MonoBehaviour
     
     public void StartAsClient()
     {
+        var hostAddresses = Dns.GetHostAddresses(adressInput.text);
+        NetworkManager.Singleton.GetComponent<UNetTransport>().ConnectAddress = hostAddresses[0]?.ToString();
         NetworkManager.Singleton.StartClient();
         gameObject.SetActive(false);
     }

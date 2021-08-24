@@ -23,12 +23,10 @@ namespace Abilities
             }
 
             SetVisualsClientRpc();
-            Debug.Log("netstart");
         }
 
         public void Initialize(float duration, float range, AbilityType[] hitEffects, ulong actorId)
         {
-            Debug.Log("init");
             scale.Value = range / 2;
             // transform.localScale *= scale;
             // SetVisualsClientRpc(scale);
