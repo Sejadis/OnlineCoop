@@ -1,0 +1,30 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9105942b25715f24fb6c3ec31ff40496, type: 3}
+  m_Name: ElectroPole
+  m_EditorClassIdentifier: 
+  cooldown: 0
+  charges: 0
+  abilityType: 5
+  effect: 8
+  mainValue: 0
+  speed: 0
+  duration: 5
+  range: 15
+  isTracking: 0
+  name: 
+  description: 
+  icon: {fileID: 21300000, guid: b2adbe8fcbeb7214dba4306b789be6bf, type: 3}
+  followUpAbility: {fileID: 0}
+  Prefabs:
+  - {fileID: 6455037696114408690, guid: 3892c155312889d4f89849d12031046a, type: 3}
+  HitEffects: 
