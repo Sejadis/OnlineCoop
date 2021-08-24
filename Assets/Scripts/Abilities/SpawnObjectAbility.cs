@@ -1,5 +1,4 @@
-﻿using MLAPI;
-using SejDev.Systems.Ability;
+﻿using SejDev.Systems.Ability;
 using UnityEngine;
 
 namespace Abilities
@@ -7,6 +6,7 @@ namespace Abilities
     public class SpawnObjectAbility : Ability
     {
         private ServerPlaceableObject spawnedObject;
+
         public SpawnObjectAbility(ref AbilityRuntimeParams abilityRuntimeParams) : base(ref abilityRuntimeParams)
         {
         }
@@ -14,10 +14,10 @@ namespace Abilities
         public override bool Start()
         {
             var desc = Description;
-            var zone = Object.Instantiate(desc.Prefabs[0],abilityRuntimeParams.TargetPosition,Quaternion.identity);
+            var zone = Object.Instantiate(desc.Prefabs[0], abilityRuntimeParams.TargetPosition, Quaternion.identity);
             spawnedObject = zone.GetComponent<ServerPlaceableObject>();
             spawnedObject.Initialize(Description);
-            spawnedObject.NetworkObject.Spawn(); 
+            spawnedObject.NetworkObject.Spawn();
             return true;
         }
 

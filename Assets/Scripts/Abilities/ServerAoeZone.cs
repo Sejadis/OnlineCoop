@@ -1,13 +1,14 @@
-﻿using System;
-using MLAPI;
+﻿using MLAPI;
 using MLAPI.Messaging;
+using MLAPI.NetworkVariable;
 using SejDev.Systems.Ability;
 using UnityEngine;
 
 namespace Abilities
 {
-    public class ServerAoeZone :NetworkBehaviour
+    public class ServerAoeZone : NetworkBehaviour
     {
+        private NetworkVariableFloat scale = new NetworkVariableFloat();
         private AbilityType[] hitEffects;
         private ulong actorId;
 
@@ -16,25 +17,35 @@ namespace Abilities
             base.NetworkStart();
             if (!IsServer)
             {
+                SetVisuals();
                 enabled = false;
                 return;
             }
+
+            SetVisualsClientRpc();
+            Debug.Log("netstart");
         }
 
         public void Initialize(float duration, float range, AbilityType[] hitEffects, ulong actorId)
         {
-            var scale = range / 2;
-            transform.localScale *= scale;
-            SetVisualsClientRpc(scale);
+            Debug.Log("init");
+            scale.Value = range / 2;
+            // transform.localScale *= scale;
+            // SetVisualsClientRpc(scale);
             this.hitEffects = hitEffects;
             this.actorId = actorId;
         }
+
         [ClientRpc]
-        private void SetVisualsClientRpc(float scale)
+        private void SetVisualsClientRpc()
         {
-            transform.localScale *= scale;
+            SetVisuals();
         }
-        
+
+        private void SetVisuals()
+        {
+            transform.localScale *= scale.Value;
+        }
 
         private void OnTriggerEnter(Collider other)
         {
@@ -42,6 +53,7 @@ namespace Abilities
             {
                 return;
             }
+
             foreach (var hitEffect in hitEffects)
             {
                 var netState = other.GetComponent<NetworkState>();
