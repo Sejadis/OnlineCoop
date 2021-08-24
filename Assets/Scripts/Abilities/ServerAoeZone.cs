@@ -1,5 +1,6 @@
 ﻿using System;
 using MLAPI;
+using MLAPI.Messaging;
 using SejDev.Systems.Ability;
 using UnityEngine;
 
@@ -7,7 +8,6 @@ namespace Abilities
 {
     public class ServerAoeZone :NetworkBehaviour
     {
-        private float expireTime;
         private AbilityType[] hitEffects;
         private ulong actorId;
 
@@ -23,10 +23,16 @@ namespace Abilities
 
         public void Initialize(float duration, float range, AbilityType[] hitEffects, ulong actorId)
         {
-            expireTime = Time.time + duration;
-            transform.localScale *= range / 2;
+            var scale = range / 2;
+            transform.localScale *= scale;
+            SetVisualsClientRpc(scale);
             this.hitEffects = hitEffects;
             this.actorId = actorId;
+        }
+        [ClientRpc]
+        private void SetVisualsClientRpc(float scale)
+        {
+            transform.localScale *= scale;
         }
         
 

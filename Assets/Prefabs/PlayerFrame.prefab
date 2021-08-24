@@ -92,7 +92,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &6332655830464930650
 RectTransform:
   m_ObjectHideFlags: 0
@@ -350,7 +350,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: ae97242baea4aac4b96e729e91944070, type: 3}
+  m_Sprite: {fileID: 7482667652216324306, guid: b0d8ef30a083e024e9687821375cc905, type: 3}
   m_Type: 3
   m_PreserveAspect: 0
   m_FillCenter: 1
