@@ -16,15 +16,22 @@ public class NetworkState : NetworkBehaviour
     public NetworkVariableString PlayerName = new NetworkVariableString();
     public NetworkVariableString IconName = new NetworkVariableString();
 
-    public Action<Vector2> OnInputReceived;
+    public Action<Vector2> OnMoveInputReceived;
+    public Action<Vector2> OnLookInputReceived;
     public Action<bool> OnSprintReceived;
     public Action<AbilityRuntimeParams> OnAbilityCast;
     public Action<AbilityType, float> OnStartCooldown;
 
     [ServerRpc(RequireOwnership = false)]
-    public void SendInputServerRpc(Vector2 input)
+    public void SendMoveInputServerRpc(Vector2 input)
     {
-        OnInputReceived?.Invoke(input);
+        OnMoveInputReceived?.Invoke(input);
+    }
+    
+    [ServerRpc(RequireOwnership = false)]
+    public void SendLookInputServerRpc(Vector2 input)
+    {
+        OnLookInputReceived?.Invoke(input);
     }
 
     [ServerRpc(RequireOwnership = false)]

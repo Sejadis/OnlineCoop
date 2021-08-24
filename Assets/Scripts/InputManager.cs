@@ -15,7 +15,8 @@ public class InputManager : MonoBehaviour
     // public Action<InputAction.CallbackContext> OnWeaponSpecial;
 
     public Action<InputAction.CallbackContext> OnMovement;
-    // public Action<InputAction.CallbackContext> OnLook;
+    public Action<InputAction.CallbackContext> OnLook;
+    public Action<InputAction.CallbackContext> OnZoom;
     // public Action<InputAction.CallbackContext> OnJump;
 
     public Action<InputAction.CallbackContext> OnSprint;
@@ -63,9 +64,13 @@ public class InputManager : MonoBehaviour
         PlayerInput.Controls.Interaction.performed += ctx => OnInteraction?.Invoke(ctx);
 
 
-        // PlayerInput.Controls.Look.started += ctx => OnLook?.Invoke(ctx);
-        // PlayerInput.Controls.Look.performed += ctx => OnLook?.Invoke(ctx);
-        // PlayerInput.Controls.Look.canceled += ctx => OnLook?.Invoke(ctx);
+        PlayerInput.Controls.Look.started += ctx => OnLook?.Invoke(ctx);
+        PlayerInput.Controls.Look.performed += ctx => OnLook?.Invoke(ctx);
+        PlayerInput.Controls.Look.canceled += ctx => OnLook?.Invoke(ctx);
+        
+        // PlayerInput.Controls.Zoom.started += ctx => OnZoom?.Invoke(ctx);
+        PlayerInput.Controls.Zoom.performed += ctx => OnZoom?.Invoke(ctx);
+        // PlayerInput.Controls.Zoom.canceled += ctx => OnZoom?.Invoke(ctx);
         //
         // // PlayerInput.Controls.Jump.started += ctx => OnJump?.Invoke(ctx);
         // PlayerInput.Controls.Jump.performed += ctx => OnJump?.Invoke(ctx);

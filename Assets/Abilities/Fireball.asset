@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9105942b25715f24fb6c3ec31ff40496, type: 3}
   m_Name: Fireball
   m_EditorClassIdentifier: 
-  cooldown: 15
+  cooldown: 1
   charges: 0
   abilityType: 1
   effect: 1

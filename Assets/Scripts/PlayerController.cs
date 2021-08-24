@@ -57,10 +57,18 @@ public class PlayerController : NetworkBehaviour
 
         InputManager.Instance.OnMovement += OnMovement;
         InputManager.Instance.OnSprint += OnSprint;
+        InputManager.Instance.OnLook += OnLook;
 
         InputManager.Instance.OnCore1 += OnCore1;
         InputManager.Instance.OnCore2 += OnCore2;
         InputManager.Instance.OnCore3 += OnCore3;
+    }
+
+    private void OnLook(InputAction.CallbackContext obj)
+    {
+        var value = obj.ReadValue<Vector2>();
+        value.y *= -1;
+        networkState.SendLookInputServerRpc(value);
     }
 
     private void OnCore1(InputAction.CallbackContext obj)
@@ -103,7 +111,7 @@ public class PlayerController : NetworkBehaviour
     {
         var inputValue = context.ReadValue<Vector2>();
         movementData = inputValue.normalized;
-        networkState.SendInputServerRpc(movementData);
+        networkState.SendMoveInputServerRpc(movementData);
     }
 
     private void OnDestroy()

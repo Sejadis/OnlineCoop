@@ -41,6 +41,22 @@ public class @PlayerInput : IInputActionCollection, IDisposable
                     ""expectedControlType"": ""Button"",
                     ""processors"": """",
                     ""interactions"": """"
+                },
+                {
+                    ""name"": ""Look"",
+                    ""type"": ""Value"",
+                    ""id"": ""0116de4e-0ef1-4557-a8a9-b1454aac8d9e"",
+                    ""expectedControlType"": ""Vector2"",
+                    ""processors"": """",
+                    ""interactions"": """"
+                },
+                {
+                    ""name"": ""Zoom"",
+                    ""type"": ""Value"",
+                    ""id"": ""eb79613b-5d72-478d-ad4f-ed519faa9725"",
+                    ""expectedControlType"": ""Axis"",
+                    ""processors"": """",
+                    ""interactions"": """"
                 }
             ],
             ""bindings"": [
@@ -175,6 +191,28 @@ public class @PlayerInput : IInputActionCollection, IDisposable
                     ""action"": ""Interaction"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""c194c32b-3a37-4bf4-8181-daa03666f305"",
+                    ""path"": ""<Pointer>/delta"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Look"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""f71fcead-8dba-4171-96db-f4f048203d85"",
+                    ""path"": ""<Mouse>/scroll/y"",
+                    ""interactions"": """",
+                    ""processors"": ""Normalize(min=-120,max=120),Scale(factor=-1)"",
+                    ""groups"": """",
+                    ""action"": ""Zoom"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         },
@@ -251,6 +289,8 @@ public class @PlayerInput : IInputActionCollection, IDisposable
         m_Controls_Movement = m_Controls.FindAction("Movement", throwIfNotFound: true);
         m_Controls_Sprint = m_Controls.FindAction("Sprint", throwIfNotFound: true);
         m_Controls_Interaction = m_Controls.FindAction("Interaction", throwIfNotFound: true);
+        m_Controls_Look = m_Controls.FindAction("Look", throwIfNotFound: true);
+        m_Controls_Zoom = m_Controls.FindAction("Zoom", throwIfNotFound: true);
         // Abilities
         m_Abilities = asset.FindActionMap("Abilities", throwIfNotFound: true);
         m_Abilities_Core1 = m_Abilities.FindAction("Core1", throwIfNotFound: true);
@@ -308,6 +348,8 @@ public class @PlayerInput : IInputActionCollection, IDisposable
     private readonly InputAction m_Controls_Movement;
     private readonly InputAction m_Controls_Sprint;
     private readonly InputAction m_Controls_Interaction;
+    private readonly InputAction m_Controls_Look;
+    private readonly InputAction m_Controls_Zoom;
     public struct ControlsActions
     {
         private @PlayerInput m_Wrapper;
@@ -315,6 +357,8 @@ public class @PlayerInput : IInputActionCollection, IDisposable
         public InputAction @Movement => m_Wrapper.m_Controls_Movement;
         public InputAction @Sprint => m_Wrapper.m_Controls_Sprint;
         public InputAction @Interaction => m_Wrapper.m_Controls_Interaction;
+        public InputAction @Look => m_Wrapper.m_Controls_Look;
+        public InputAction @Zoom => m_Wrapper.m_Controls_Zoom;
         public InputActionMap Get() { return m_Wrapper.m_Controls; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -333,6 +377,12 @@ public class @PlayerInput : IInputActionCollection, IDisposable
                 @Interaction.started -= m_Wrapper.m_ControlsActionsCallbackInterface.OnInteraction;
                 @Interaction.performed -= m_Wrapper.m_ControlsActionsCallbackInterface.OnInteraction;
                 @Interaction.canceled -= m_Wrapper.m_ControlsActionsCallbackInterface.OnInteraction;
+                @Look.started -= m_Wrapper.m_ControlsActionsCallbackInterface.OnLook;
+                @Look.performed -= m_Wrapper.m_ControlsActionsCallbackInterface.OnLook;
+                @Look.canceled -= m_Wrapper.m_ControlsActionsCallbackInterface.OnLook;
+                @Zoom.started -= m_Wrapper.m_ControlsActionsCallbackInterface.OnZoom;
+                @Zoom.performed -= m_Wrapper.m_ControlsActionsCallbackInterface.OnZoom;
+                @Zoom.canceled -= m_Wrapper.m_ControlsActionsCallbackInterface.OnZoom;
             }
             m_Wrapper.m_ControlsActionsCallbackInterface = instance;
             if (instance != null)
@@ -346,6 +396,12 @@ public class @PlayerInput : IInputActionCollection, IDisposable
                 @Interaction.started += instance.OnInteraction;
                 @Interaction.performed += instance.OnInteraction;
                 @Interaction.canceled += instance.OnInteraction;
+                @Look.started += instance.OnLook;
+                @Look.performed += instance.OnLook;
+                @Look.canceled += instance.OnLook;
+                @Zoom.started += instance.OnZoom;
+                @Zoom.performed += instance.OnZoom;
+                @Zoom.canceled += instance.OnZoom;
             }
         }
     }
@@ -404,6 +460,8 @@ public class @PlayerInput : IInputActionCollection, IDisposable
         void OnMovement(InputAction.CallbackContext context);
         void OnSprint(InputAction.CallbackContext context);
         void OnInteraction(InputAction.CallbackContext context);
+        void OnLook(InputAction.CallbackContext context);
+        void OnZoom(InputAction.CallbackContext context);
     }
     public interface IAbilitiesActions
     {

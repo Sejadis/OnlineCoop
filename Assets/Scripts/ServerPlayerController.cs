@@ -8,7 +8,7 @@ using UnityEngine.InputSystem;
 
 public class ServerPlayerController : NetworkBehaviour, IDamagable, IHealable
 {
-
+    [SerializeField] private Transform followTarget;
     private NetworkState networkState;
     private AbilityHandler abilityHandler;
 
@@ -16,7 +16,12 @@ public class ServerPlayerController : NetworkBehaviour, IDamagable, IHealable
 
     public float sprintSpeedMultiplier = 2;
 
-    public Vector2 input;
+    public Vector2 moveInput;
+    public Vector2 lookInput;
+    public float sensitivity = 1f;
+    public float yRotation;
+    public float xRotation;
+
     // Start is called before the first frame update
     public override void NetworkStart()
     {
@@ -28,15 +33,18 @@ public class ServerPlayerController : NetworkBehaviour, IDamagable, IHealable
 
         if (!IsOwner)
         {
-
         }
-        
+
         networkState = GetComponent<NetworkState>();
-        networkState.OnInputReceived += OnInputReceived;
+        networkState.OnMoveInputReceived += OnMoveInputReceived;
+        networkState.OnLookInputReceived += OnLookInputReceived;
         networkState.OnSprintReceived += OnSprintReceived;
         networkState.OnAbilityCast += OnAbilityCast;
-        
+
         abilityHandler = new AbilityHandler(networkState);
+
+        yRotation = transform.rotation.eulerAngles.y;
+        xRotation = followTarget.rotation.eulerAngles.x;
     }
 
     private void OnAbilityCast(AbilityRuntimeParams runtimeParams)
@@ -49,9 +57,14 @@ public class ServerPlayerController : NetworkBehaviour, IDamagable, IHealable
         networkState.IsSprinting.Value = sprint;
     }
 
-    private void OnInputReceived(Vector2 input)
+    private void OnMoveInputReceived(Vector2 input)
     {
-        this.input = input;
+        moveInput = input;
+    }
+
+    private void OnLookInputReceived(Vector2 input)
+    {
+        lookInput = input;
     }
 
     // Update is called once per frame
@@ -60,17 +73,28 @@ public class ServerPlayerController : NetworkBehaviour, IDamagable, IHealable
         if (!IsOwner)
         {
             //give ownership to server (which i think is always 0?)
-            GetComponent<NetworkObject>().ChangeOwnership(0); 
+            GetComponent<NetworkObject>().ChangeOwnership(0);
         }
         ApplyMovement();
 
+        yRotation += lookInput.x * sensitivity;
+        yRotation %= 360; //keep the number small
+
+        transform.rotation =
+            Quaternion.Euler(transform.rotation.eulerAngles.x, yRotation, transform.rotation.eulerAngles.z);
+        
+        xRotation += lookInput.y * sensitivity;
+        xRotation = Mathf.Clamp(xRotation, -90f, 70f);
+        followTarget.rotation = Quaternion.Euler(xRotation, followTarget.rotation.eulerAngles.y,
+            followTarget.rotation.eulerAngles.z);
+        
         abilityHandler.Update();
     }
 
     private void ApplyMovement()
     {
-        var finalMove = input.x * transform.right;
-        finalMove += input.y * transform.forward;
+        var finalMove = moveInput.x * transform.right;
+        finalMove += moveInput.y * transform.forward;
         finalMove.Normalize();
         finalMove *= networkState.IsSprinting.Value ? moveSpeed * sprintSpeedMultiplier : moveSpeed;
         finalMove *= Time.deltaTime;
