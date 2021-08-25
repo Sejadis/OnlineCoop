@@ -13,6 +13,7 @@ public class BaseBoss : NetworkBehaviour, IDamagable
     [SerializeField] private int[] healthTriggers = {75, 50, 25};
     [SerializeField] private Transform[] shardPositions;
     [SerializeField] private GameObject shardPrefab;
+    [SerializeField] private GameObject shieldObject;
     private bool isImmuneToDamage;
     private NetworkHealthState netHealthState;
     private AbilityHandler abilityHandler;
@@ -23,6 +24,7 @@ public class BaseBoss : NetworkBehaviour, IDamagable
     // Start is called before the first frame update
     public override void NetworkStart()
     {
+        shieldObject.SetActive(false);
         if (!IsServer)
         {
             enabled = false;
@@ -61,6 +63,7 @@ public class BaseBoss : NetworkBehaviour, IDamagable
         if (activeTriggers.Count > 0 && netHealthState.CurrentHealth.Value <= activeTriggers[0])
         {
             activeTriggers.RemoveAt(0);
+            shieldObject.SetActive(true);
             foreach (var shardPos in shardPositions)
             {
                 shardsAlive++;
@@ -75,5 +78,9 @@ public class BaseBoss : NetworkBehaviour, IDamagable
     {
         netObj.Despawn(true);
         shardsAlive--;
+        if (shardsAlive == 0)
+        {
+            shieldObject.SetActive(false);
+        }
     }
 }
