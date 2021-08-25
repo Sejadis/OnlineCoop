@@ -1,54 +1,14 @@
-using System;
-using System.Collections;
-using System.Collections.Generic;
+﻿using System;
 using MLAPI;
 using MLAPI.Messaging;
-using MLAPI.NetworkVariable;
 using SejDev.Systems.Ability;
-using UnityEngine;
 
 public class NetworkState : NetworkBehaviour
 {
-    public NetworkVariableInt MaxHealth = new NetworkVariableInt(100);
-    public NetworkVariableInt CurrentHealth = new NetworkVariableInt(50);
-
-    public NetworkVariableBool IsSprinting = new NetworkVariableBool();
-    public NetworkVariableString PlayerName = new NetworkVariableString();
-    public NetworkVariableString IconName = new NetworkVariableString();
-
-    public Action<Vector2> OnMoveInputReceived;
-    public Action<Vector2> OnLookInputReceived;
-    public Action<bool> OnSprintReceived;
     public Action<AbilityRuntimeParams> OnAbilityCast;
-    public Action<AbilityType, float> OnStartCooldown;
-
-    [ServerRpc(RequireOwnership = false)]
-    public void SendMoveInputServerRpc(Vector2 input)
-    {
-        OnMoveInputReceived?.Invoke(input);
-    }
-    
-    [ServerRpc(RequireOwnership = false)]
-    public void SendLookInputServerRpc(Vector2 input)
-    {
-        OnLookInputReceived?.Invoke(input);
-    }
-
-    [ServerRpc(RequireOwnership = false)]
-    public void ToggleSprintServerRpc(bool shouldSprint)
-    {
-        OnSprintReceived?.Invoke(shouldSprint);
-    }
-
     [ServerRpc(RequireOwnership = false)]
     public void CastAbilityServerRpc(AbilityRuntimeParams runtimeParams)
     {
-       OnAbilityCast?.Invoke(runtimeParams);
-    }
-
-    [ClientRpc]
-    public void StartCooldownClientRpc(AbilityType type, float cooldown)
-    {
-        OnStartCooldown?.Invoke(type,cooldown);
+        OnAbilityCast?.Invoke(runtimeParams);
     }
 }

@@ -27,4 +27,4 @@ MonoBehaviour:
   followUpAbility: {fileID: 0}
   Prefabs:
   - {fileID: 2912867827282859571, guid: 292f1bbbe6de41a4ab3de164c5210cdf, type: 3}
-  HitEffects: 
+  HitEffects: 07000000

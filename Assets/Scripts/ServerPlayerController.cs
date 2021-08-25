@@ -9,7 +9,7 @@ using UnityEngine.InputSystem;
 public class ServerPlayerController : NetworkBehaviour, IDamagable, IHealable
 {
     [SerializeField] private Transform followTarget;
-    private NetworkState networkState;
+    private CharacterNetworkState networkState;
     private AbilityHandler abilityHandler;
 
     public float moveSpeed = 5;
@@ -35,7 +35,7 @@ public class ServerPlayerController : NetworkBehaviour, IDamagable, IHealable
         {
         }
 
-        networkState = GetComponent<NetworkState>();
+        networkState = GetComponent<CharacterNetworkState>();
         networkState.OnMoveInputReceived += OnMoveInputReceived;
         networkState.OnLookInputReceived += OnLookInputReceived;
         networkState.OnSprintReceived += OnSprintReceived;
@@ -103,11 +103,11 @@ public class ServerPlayerController : NetworkBehaviour, IDamagable, IHealable
 
     public void Damage(int amount)
     {
-        networkState.CurrentHealth.Value -= amount;
+        networkState.NetHealthState.CurrentHealth.Value -= amount;
     }
 
     public void Heal(int amount)
     {
-        networkState.CurrentHealth.Value += amount;
+        networkState.NetHealthState.CurrentHealth.Value += amount;
     }
 }

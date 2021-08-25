@@ -7,12 +7,12 @@ using UnityEngine;
 public class ServerCharacter : NetworkBehaviour
 {
     private AbilityHandler abilityHandler;
-    private NetworkState networkState;
+    private CharacterNetworkState networkState;
     
     // Start is called before the first frame update
     void Start()
     {
-        networkState = GetComponent<NetworkState>();
+        networkState = GetComponent<CharacterNetworkState>();
         abilityHandler = new AbilityHandler(networkState);
     }
 

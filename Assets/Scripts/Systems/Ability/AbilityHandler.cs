@@ -101,8 +101,11 @@ namespace SejDev.Systems.Ability
                     {
                         abilityCooldowns[ability.Description.abilityType] =
                             Time.time; //TODO possibly dont set cooldown when ability cancels out of start
-                        networkState.StartCooldownClientRpc(ability.Description.abilityType,
-                            ability.Description.cooldown);
+                        if (networkState is CharacterNetworkState charNetState)
+                        {
+                            charNetState.StartCooldownClientRpc(ability.Description.abilityType,
+                                ability.Description.cooldown);
+                        }
                     }
 
                     if (!ability.Start())

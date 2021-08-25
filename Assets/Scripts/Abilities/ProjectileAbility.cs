@@ -6,7 +6,6 @@ using UnityEngine;
 
 public class ProjectileAbility : Ability
 {
-
     public override bool Start()
     {
         FireProjectile();
@@ -35,10 +34,10 @@ public class ProjectileAbility : Ability
     private void FireProjectile()
     {
         var desc = Description;
-        var projectile = Object.Instantiate(desc.Prefabs[0],abilityRuntimeParams.StartPosition,Quaternion.identity);
+        var projectile = Object.Instantiate(desc.Prefabs[0], abilityRuntimeParams.StartPosition, Quaternion.identity);
         projectile.transform.forward = abilityRuntimeParams.TargetDirection;
         var serverLogic = projectile.GetComponent<ServerProjectile>();
-        serverLogic.Initialize(desc.speed, desc.range);
+        serverLogic.Initialize(desc.speed, desc.range, desc.HitEffects, abilityRuntimeParams.Actor);
         serverLogic.OnHit += OnHit;
         var netObject = projectile.GetComponent<NetworkObject>();
         netObject.Spawn();

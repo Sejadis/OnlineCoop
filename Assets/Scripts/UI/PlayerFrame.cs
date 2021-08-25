@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using MLAPI.NetworkVariable;
 using TMPro;
+using UI;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -11,21 +12,16 @@ public class PlayerFrame : MonoBehaviour
 
     [SerializeField] private TMP_Text nameText;
 
-    [SerializeField] private Image healthBarImage;
-    private int maxHealth;
-    private int currentHealth;
+    [SerializeField] private HealthBar healthBar;
 
-    public void RegisterPlayer(string playerName, NetworkState networkState)
+    public void RegisterPlayer(string playerName, CharacterNetworkState networkState)
     {
         nameText.text = playerName;
-        networkState.CurrentHealth.OnValueChanged += OnCurrentHealthChanged;
-        networkState.MaxHealth.OnValueChanged += OnMaxHealthChanged;
         networkState.PlayerName.OnValueChanged += OnPlayerNameChanged;
         networkState.IconName.OnValueChanged += OnIconNameChanged;
-        maxHealth = networkState.MaxHealth.Value;
-        currentHealth = networkState.CurrentHealth.Value;
-        SetFillAmount();
         OnIconNameChanged("", networkState.IconName.Value);
+
+        healthBar.Link(networkState.NetHealthState);
     }
 
     private void OnIconNameChanged(string prevValue, string newValue)
@@ -36,23 +32,5 @@ public class PlayerFrame : MonoBehaviour
     private void OnPlayerNameChanged(string prevValue, string newValue)
     {
         nameText.text = newValue;
-    }
-
-    private void OnMaxHealthChanged(int prevValue, int newValue)
-    {
-        maxHealth = newValue;
-        SetFillAmount();
-    }
-
-    private void OnCurrentHealthChanged(int prevValue, int newValue)
-    {
-        currentHealth = newValue;
-        SetFillAmount();
-    }
-
-    private void SetFillAmount()
-    {
-        var fillValue = (float) currentHealth / maxHealth;
-        healthBarImage.fillAmount = fillValue;
     }
 }

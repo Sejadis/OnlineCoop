@@ -1,6 +1,7 @@
 ﻿using MLAPI;
 using MLAPI.Messaging;
 using MLAPI.NetworkVariable;
+using MLAPI.Spawning;
 using SejDev.Systems.Ability;
 using UnityEngine;
 
@@ -47,17 +48,23 @@ namespace Abilities
 
         private void OnTriggerEnter(Collider other)
         {
-            if (!IsServer)
+            // var entity =  other.GetComponent<NetworkObject>();
+            // OnHit?.Invoke(entity.NetworkObjectId);
+//TODO catch self
+            var netObject = other.GetComponent<NetworkState>();
+            if (!IsServer || netObject == null)
             {
                 return;
             }
 
+            var actor = NetworkSpawnManager.SpawnedObjects[actorId].GetComponent<NetworkState>();
             foreach (var hitEffect in hitEffects)
             {
-                var netState = other.GetComponent<NetworkState>();
-                var runtimeParams = new AbilityRuntimeParams(hitEffect, actorId, netState.NetworkObjectId, Vector3.zero,
+                var runtimeParams = new AbilityRuntimeParams(hitEffect, actorId, netObject.NetworkObjectId, Vector3.zero,
                     Vector3.zero, transform.position);
-                netState.CastAbilityServerRpc(runtimeParams);
+
+                actor.CastAbilityServerRpc(runtimeParams);
+                // netObject.CastAbilityServerRpc(runtimeParams);
             }
         }
     }

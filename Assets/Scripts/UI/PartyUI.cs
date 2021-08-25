@@ -12,13 +12,13 @@ public class PartyUI : MonoBehaviour
 
     private int registeredPartyMembers = 0;
 
-    public void RegisterPlayer(string playerName, NetworkState networkState)
+    public void RegisterPlayer(string playerName, CharacterNetworkState networkState)
     {
         playerFrame.RegisterPlayer(playerName, networkState);
         playerFrame.gameObject.SetActive(true);
     }
 
-    public void RegisterPartyMember(string playerName, NetworkState networkState)
+    public void RegisterPartyMember(string playerName, CharacterNetworkState networkState)
     {
         if (registeredPartyMembers == 3)
         {

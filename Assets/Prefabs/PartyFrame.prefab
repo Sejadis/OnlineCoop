@@ -11,6 +11,10 @@ PrefabInstance:
       propertyPath: m_IsActive
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 6332655830464930651, guid: 964e9eb335e830642b9972f02759b9b3, type: 3}
+      propertyPath: m_Sprite
+      value: 
+      objectReference: {fileID: 7482667652216324306, guid: b0d8ef30a083e024e9687821375cc905, type: 3}
     - target: {fileID: 6332655830666350420, guid: 964e9eb335e830642b9972f02759b9b3, type: 3}
       propertyPath: m_SizeDelta.x
       value: 265
@@ -125,7 +129,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6332655832357139967, guid: 964e9eb335e830642b9972f02759b9b3, type: 3}
       propertyPath: m_Name
-      value: PlayerFrame (4)
+      value: PartyFrame
       objectReference: {fileID: 0}
     - target: {fileID: 6332655832357139967, guid: 964e9eb335e830642b9972f02759b9b3, type: 3}
       propertyPath: m_IsActive

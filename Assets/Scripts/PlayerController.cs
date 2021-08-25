@@ -22,12 +22,12 @@ public class PlayerController : NetworkBehaviour
     private IInteractable currentInteractable;
 
     private bool isSprinting;
-    private NetworkState networkState;
+    private CharacterNetworkState networkState;
 
     // Start is called before the first frame update
     public override void NetworkStart()
     {
-        networkState = GetComponent<NetworkState>();
+        networkState = GetComponent<CharacterNetworkState>();
 
         if (!IsLocalPlayer)
         {

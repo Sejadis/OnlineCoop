@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using SejDev.Systems.Ability;
 using UnityEngine;
@@ -8,6 +9,11 @@ namespace UI
     public class AbilityUI : MonoBehaviour
     {
         [SerializeField] private AbilityFrame[] abilityFrames;
+
+        private void Awake()
+        {
+            DontDestroyOnLoad(gameObject);
+        }
 
         public void SetAbility(AbilityDescription abilityDescription, int slot)
         {

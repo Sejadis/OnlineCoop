@@ -1,56 +1,79 @@
 ﻿using System;
 using MLAPI;
+using MLAPI.Spawning;
+using SejDev.Systems.Ability;
 using UnityEngine;
 
-    public class ServerProjectile : NetworkBehaviour
+public class ServerProjectile : NetworkBehaviour
+{
+    public float Speed { get; set; }
+    public float Range { get; set; }
+    public Action<ulong> OnHit;
+    private AbilityType[] hitEffects;
+
+    private bool isInitialized = false;
+    private float startTime;
+    private float lifeTime;
+    private ulong actorId;
+
+    public override void NetworkStart()
     {
-        public float Speed { get; set; }
-        public float Range { get; set; }
-        public Action<ulong> OnHit;
-
-        private bool isInitialized = false;
-        private float startTime;
-        private float lifeTime;
-
-        public override void NetworkStart()
+        base.NetworkStart();
+        if (!IsServer)
         {
-            base.NetworkStart();
-            if (!IsServer)
-            {
-                enabled = false;
-                return;
-            }
-        }
-
-        public void Initialize(float speed, float range)
-        {
-            Speed = speed;
-            Range = range;
-            lifeTime = Range / Speed;
-            startTime = Time.time;
-            isInitialized = true;
-            
-        }
-        private void OnTriggerEnter(Collider other)
-        {
-            var entity =  other.GetComponent<NetworkObject>();
-            OnHit?.Invoke(entity.NetworkObjectId);
-        }
-
-        private void Update()
-        {
-            if (!isInitialized)
-            {
-                return;
-            }
-
-            if (Time.time > startTime + lifeTime)
-            {
-                GetComponent<NetworkObject>().Despawn(true);
-            }
-
-            var transf = transform;
-            var move = transf.forward * (Time.deltaTime * Speed);
-            transf.position += move;
+            enabled = false;
+            return;
         }
     }
+
+//TODO rework to ability description
+    public void Initialize(float speed, float range, AbilityType[] hitEffects, ulong actorId)
+    {
+        Speed = speed;
+        Range = range;
+        lifeTime = Range / Speed;
+        startTime = Time.time;
+        isInitialized = true;
+        this.hitEffects = hitEffects;
+        this.actorId = actorId;
+    }
+
+    private void OnTriggerEnter(Collider other)
+    {
+        // var entity =  other.GetComponent<NetworkObject>();
+        // OnHit?.Invoke(entity.NetworkObjectId);
+//TODO catch self
+        var netObject = other.GetComponent<NetworkState>();
+        if (!IsServer || other.gameObject.name == "PlayerPrefab(Clone)" || netObject == null)
+        {
+            return;
+        }
+
+        var actor = NetworkSpawnManager.SpawnedObjects[actorId].GetComponent<NetworkState>();
+        foreach (var hitEffect in hitEffects)
+        {
+            var runtimeParams = new AbilityRuntimeParams(hitEffect, actorId, netObject.NetworkObjectId, Vector3.zero,
+                Vector3.zero, transform.position);
+
+            actor.CastAbilityServerRpc(runtimeParams);
+            // netObject.CastAbilityServerRpc(runtimeParams);
+        }
+    }
+
+    private void Update()
+    {
+        if (!isInitialized)
+        {
+            return;
+        }
+
+        if (Time.time > startTime + lifeTime)
+        {
+            GetComponent<NetworkObject>().Despawn(true);
+        }
+
+        var transf = transform;
+        var move = transf.forward * (Time.deltaTime * Speed);
+        transf.position += move;
+    }
+}
