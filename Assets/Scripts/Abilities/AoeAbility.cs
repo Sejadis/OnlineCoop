@@ -1,5 +1,6 @@
-﻿using System.Collections.Generic;
+﻿using System;
 using MLAPI;
+using MLAPI.Spawning;
 using SejDev.Systems.Ability;
 using UnityEngine;
 
@@ -7,41 +8,62 @@ namespace Abilities
 {
     public class AoeAbility : Ability
     {
-        private NetworkObject spawnedZone;
+        private Collider[] overlapResults = new Collider[10];
+        protected NetworkState actor;
+        
+        public AoeAbility(ref AbilityRuntimeParams abilityRuntimeParams) : base(ref abilityRuntimeParams)
+        {
+        }
 
         public override bool Start()
         {
-            CreateZone();
-            return true;
+            NetworkSpawnManager.SpawnedObjects[abilityRuntimeParams.Actor].GetComponent<NetworkState>()
+                .CastAbilityClientRpc(abilityRuntimeParams);
+            actor = NetworkSpawnManager.SpawnedObjects[abilityRuntimeParams.Actor].GetComponent<NetworkState>();
+            RunHitCheck();
+            return false;
         }
 
         public override bool Update()
         {
-            return true;
+            throw new NotImplementedException();
+        }
+
+        protected void RunHitCheck()
+        {
+            var size = Physics.OverlapSphereNonAlloc(abilityRuntimeParams.TargetPosition, Description.range,
+                overlapResults);
+            for (var i = 0; i < size; i++)
+            {
+                var result = overlapResults[i];
+                var netObj = result.GetComponent<NetworkObject>();
+                if (netObj != null)
+                {
+                    if (actor != null)
+                    {
+                        foreach (var effect in Description.HitEffects)
+                        {
+                            var runtimeParams = new AbilityRuntimeParams(effect, abilityRuntimeParams.Actor, netObj.NetworkObjectId, result.transform.position,
+                                Vector3.zero, abilityRuntimeParams.TargetPosition);
+                            actor.CastAbilityServerRpc(runtimeParams);
+                        }
+                    }
+                    else
+                    {
+                        //TODO try run on target?
+                    }
+                }
+            }
         }
 
         public override void End()
         {
-            spawnedZone.Despawn(true);
+            throw new System.NotImplementedException();
         }
 
         public override bool IsBlocking()
         {
             return false;
-        }
-
-        private void CreateZone()
-        {
-            var desc = Description;
-            var zone = Object.Instantiate(desc.Prefabs[0],abilityRuntimeParams.TargetPosition,Quaternion.identity);
-            var serverLogic = zone.GetComponent<ServerAoeZone>();
-            serverLogic.Initialize(desc.duration, desc.range,Description.HitEffects,abilityRuntimeParams.Actor);
-            spawnedZone = zone.GetComponent<NetworkObject>();
-            spawnedZone.Spawn();
-        }
-
-        public AoeAbility(ref AbilityRuntimeParams abilityRuntimeParams) : base(ref abilityRuntimeParams)
-        {
         }
     }
 }

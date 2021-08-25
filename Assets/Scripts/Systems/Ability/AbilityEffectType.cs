@@ -12,9 +12,10 @@ namespace SejDev.Systems.Ability
         Damage,
         Heal,
         CC,
-        AoE,
+        AoeZone,
         Log,
         SpawnObject,
+        AoeOneShot,
     }
 }
 

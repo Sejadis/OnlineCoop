@@ -48,12 +48,13 @@ public class PlayerController : NetworkBehaviour
         {
             abilityUI.SetAbility(ability2, 1);
         }
-        if(GameDataManager.Instance.TryGetAbilityDescriptionByType(AbilityType.DamageZone, out var ability3))
+        if(GameDataManager.Instance.TryGetAbilityDescriptionByType(AbilityType.PoisonZone, out var ability3))
         {
             abilityUI.SetAbility(ability3, 2);
         }
 
         networkState.OnStartCooldown += abilityUI.TriggerCooldown;
+        networkState.OnClientAbilityCast += OnClientAbilityCast;
 
         InputManager.Instance.OnMovement += OnMovement;
         InputManager.Instance.OnSprint += OnSprint;
@@ -62,6 +63,16 @@ public class PlayerController : NetworkBehaviour
         InputManager.Instance.OnCore1 += OnCore1;
         InputManager.Instance.OnCore2 += OnCore2;
         InputManager.Instance.OnCore3 += OnCore3;
+    }
+
+    private void OnClientAbilityCast(AbilityRuntimeParams runtimeParams)
+    {
+        if(GameDataManager.Instance.TryGetAbilityDescriptionByType(runtimeParams.AbilityType, out var description))
+        {
+            var obj = Instantiate(description.Prefabs[0], runtimeParams.TargetPosition, Quaternion.identity);
+            obj.transform.localScale = Vector3.one * description.range;
+            Destroy(obj, description.duration > 0 ? description.duration : 1f);
+        }
     }
 
     private void OnLook(InputAction.CallbackContext obj)
@@ -80,14 +91,14 @@ public class PlayerController : NetworkBehaviour
 
     private void OnCore2(InputAction.CallbackContext obj)
     {
-        var runtimeParams = new AbilityRuntimeParams(AbilityType.ElectroPole, NetworkObjectId, 0,
+        var runtimeParams = new AbilityRuntimeParams(AbilityType.LightningStrike, NetworkObjectId, 0,
             transform.position + transform.forward * 5, transform.forward, transform.position);
         networkState.CastAbilityServerRpc(runtimeParams);
     }
 
     private void OnCore3(InputAction.CallbackContext obj)
     {
-        var runtimeParams = new AbilityRuntimeParams(AbilityType.DamageZone, NetworkObjectId, 0,
+        var runtimeParams = new AbilityRuntimeParams(AbilityType.PoisonZone, NetworkObjectId, 0,
             transform.position + transform.forward * 5, transform.forward, transform.position);
         networkState.CastAbilityServerRpc(runtimeParams);
     }

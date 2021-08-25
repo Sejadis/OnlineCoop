@@ -8,8 +8,9 @@
         Log,
         LogZone,
         ElectroPole,
-        DamageZone,
+        PoisonZone,
         Damage,
         Heal,
+        LightningStrike,
     }
 }

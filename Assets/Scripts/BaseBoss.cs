@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using MLAPI;
 using SejDev.Systems.Ability;
+using TreeEditor;
 using UnityEngine;
 
 [RequireComponent(typeof(NetworkHealthState))]
@@ -36,7 +37,7 @@ public class BaseBoss : NetworkBehaviour, IDamagable
         netHealthState.CurrentHealth.Value = maxHealth;
 
         abilityHandler = new AbilityHandler(netHealthState);
-        netHealthState.OnAbilityCast += OnAbilityCast;
+        netHealthState.OnServerAbilityCast += OnAbilityCast;
         activeTriggers = new List<int>(healthTriggers);
         activeTriggers = activeTriggers.OrderByDescending(i => i).ToList();
     }

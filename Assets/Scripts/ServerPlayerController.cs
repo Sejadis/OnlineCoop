@@ -39,7 +39,7 @@ public class ServerPlayerController : NetworkBehaviour, IDamagable, IHealable
         networkState.OnMoveInputReceived += OnMoveInputReceived;
         networkState.OnLookInputReceived += OnLookInputReceived;
         networkState.OnSprintReceived += OnSprintReceived;
-        networkState.OnAbilityCast += OnAbilityCast;
+        networkState.OnServerAbilityCast += OnAbilityCast;
 
         abilityHandler = new AbilityHandler(networkState);
 

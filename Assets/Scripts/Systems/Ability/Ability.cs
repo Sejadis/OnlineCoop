@@ -11,11 +11,12 @@ namespace SejDev.Systems.Ability
         public float StartTime { get; set; } = -1f;
         public bool IsStarted => StartTime > 0;
         protected AbilityRuntimeParams abilityRuntimeParams;
+
         public Ability(ref AbilityRuntimeParams abilityRuntimeParams)
         {
             this.abilityRuntimeParams = abilityRuntimeParams;
         }
-    
+
         public AbilityDescription Description
         {
             get
@@ -38,7 +39,7 @@ namespace SejDev.Systems.Ability
 
         public abstract void End();
         public abstract bool IsBlocking();
-        
+
         public static Ability CreateAbility(ref AbilityRuntimeParams runtimeParams)
         {
             if (!GameDataManager.Instance.TryGetAbilityDescriptionByType(runtimeParams.AbilityType,
@@ -50,13 +51,15 @@ namespace SejDev.Systems.Ability
             return GetAbilityByEffectType(abilityDescription.effect, ref runtimeParams);
         }
 
-        private static Ability GetAbilityByEffectType(AbilityEffectType effectType, ref AbilityRuntimeParams runtimeParams)
+        private static Ability GetAbilityByEffectType(AbilityEffectType effectType,
+            ref AbilityRuntimeParams runtimeParams)
         {
             return effectType switch
             {
                 AbilityEffectType.Projectile => new ProjectileAbility(ref runtimeParams),
                 AbilityEffectType.Craft => new CraftItemAbility(ref runtimeParams),
-                AbilityEffectType.AoE => new AoeAbility(ref runtimeParams),
+                AbilityEffectType.AoeZone => new AoeZoneAbility(ref runtimeParams),
+                AbilityEffectType.AoeOneShot => new AoeAbility(ref runtimeParams),
                 AbilityEffectType.Log => new LogAbility(ref runtimeParams),
                 AbilityEffectType.SpawnObject => new SpawnObjectAbility(ref runtimeParams),
                 AbilityEffectType.Damage => new DamageAbility(ref runtimeParams),
@@ -64,5 +67,4 @@ namespace SejDev.Systems.Ability
             };
         }
     }
-
 }

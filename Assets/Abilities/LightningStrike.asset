@@ -10,21 +10,22 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 9105942b25715f24fb6c3ec31ff40496, type: 3}
-  m_Name: Fireball
+  m_Name: LightningStrike
   m_EditorClassIdentifier: 
-  cooldown: 1
+  cooldown: 0
   charges: 0
-  abilityType: 1
-  effect: 1
+  abilityType: 9
+  effect: 9
   mainValue: 0
-  speed: 100
+  speed: 0
   duration: 0
-  range: 50
+  range: 2
   isTracking: 0
   name: 
   description: 
-  icon: {fileID: 21300000, guid: 6b37369797a6ad34a92448f1340dedfa, type: 3}
+  icon: {fileID: 21300000, guid: dce72afd5cc467345bf175634e982335, type: 3}
   followUpAbility: {fileID: 0}
   Prefabs:
-  - {fileID: 2912867827282859571, guid: 292f1bbbe6de41a4ab3de164c5210cdf, type: 3}
+  - {fileID: 7166335207139937323, guid: 0302f63e6872f1f489e44295a8838885, type: 3}
   HitEffects: 07000000
+  delay: 0

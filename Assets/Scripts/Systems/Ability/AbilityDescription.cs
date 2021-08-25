@@ -22,6 +22,7 @@ namespace SejDev.Systems.Ability
         public AbilityDescription followUpAbility;
         public GameObject[] Prefabs;
         public AbilityType[] HitEffects;
+        public float delay;
     }
 }
 
