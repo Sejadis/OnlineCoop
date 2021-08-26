@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 2002930688267978284}
   - component: {fileID: 109146053549157243}
   m_Layer: 0
-  m_Name: Particle System
+  m_Name: SmokeCenter
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -4877,7 +4877,7 @@ GameObject:
   - component: {fileID: 7281479210424818461}
   - component: {fileID: 7551985964068317999}
   m_Layer: 0
-  m_Name: Particle System
+  m_Name: Sparks
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
