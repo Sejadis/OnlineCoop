@@ -10,7 +10,7 @@ using UI;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
-public class PlayerController : NetworkBehaviour
+public class ClientInputHandler : NetworkBehaviour
 {
     [SerializeField] private float moveSpeed = 3;
     [SerializeField] private float sprintSpeedMultiplier = 2;
@@ -18,28 +18,26 @@ public class PlayerController : NetworkBehaviour
     [SerializeField] private GameObject interactionUI;
     [SerializeField] private Transform aimTarget;
 
-
     private Vector2 movementData;
-    private IInteractable currentInteractable;
 
     private bool isSprinting;
-    private CharacterNetworkState networkState;
+    private NetworkCharacterState state;
 
     // Start is called before the first frame update
     public override void NetworkStart()
     {
-        networkState = GetComponent<CharacterNetworkState>();
+        state = GetComponent<NetworkCharacterState>();
 
         if (!IsLocalPlayer)
         {
             playerCamera.SetActive(false);
             GameObject.FindWithTag("PartyUI").GetComponent<PartyUI>()
-                .RegisterPartyMember("Player " + NetworkObjectId, networkState);
+                .RegisterPartyMember("Player " + NetworkObjectId, state);
             return;
         }
 
         GameObject.FindWithTag("PartyUI").GetComponent<PartyUI>().RegisterPlayer("Player " + NetworkObjectId,
-            networkState);
+            state);
         var abilityUI = GameObject.FindWithTag("AbilityUI").GetComponent<AbilityUI>();
         if (GameDataManager.Instance.TryGetAbilityDescriptionByType(AbilityType.Fireball, out var ability1))
         {
@@ -56,8 +54,8 @@ public class PlayerController : NetworkBehaviour
             abilityUI.SetAbility(ability3, 2);
         }
 
-        networkState.OnStartCooldown += abilityUI.TriggerCooldown;
-        networkState.OnClientAbilityCast += OnClientAbilityCast;
+        state.OnStartCooldown += abilityUI.TriggerCooldown;
+        state.OnClientAbilityCast += OnClientAbilityCast;
 
         InputManager.Instance.OnMovement += OnMovement;
         InputManager.Instance.OnSprint += OnSprint;
@@ -76,11 +74,11 @@ public class PlayerController : NetworkBehaviour
             var scaler = obj.GetComponent<VisualFXScaler>();
             if (scaler != null)
             {
-                scaler.Scale(description.range);
+                scaler.Scale(description.size);
             }
             else
             {
-                obj.transform.localScale = Vector3.one * description.range;
+                obj.transform.localScale = Vector3.one * description.size;
             }
 
             Destroy(obj, description.duration > 0 ? description.duration : 1f);
@@ -91,28 +89,28 @@ public class PlayerController : NetworkBehaviour
     {
         var value = obj.ReadValue<Vector2>();
         value.y *= -1;
-        networkState.SendLookInputServerRpc(value);
+        state.SendLookInputServerRpc(value);
     }
 
     private void OnCore1(InputAction.CallbackContext obj)
     {
         var runtimeParams = new AbilityRuntimeParams(AbilityType.Fireball, NetworkObjectId, 0, Vector3.zero,
             aimTarget.forward, aimTarget.position);
-        networkState.CastAbilityServerRpc(runtimeParams);
+        state.CastAbilityServerRpc(runtimeParams);
     }
 
     private void OnCore2(InputAction.CallbackContext obj)
     {
         var runtimeParams = new AbilityRuntimeParams(AbilityType.LightningStrike, NetworkObjectId, 0,
             transform.position + transform.forward * 5, aimTarget.forward, transform.position);
-        networkState.CastAbilityServerRpc(runtimeParams);
+        state.CastAbilityServerRpc(runtimeParams);
     }
 
     private void OnCore3(InputAction.CallbackContext obj)
     {
         var runtimeParams = new AbilityRuntimeParams(AbilityType.PoisonZone, NetworkObjectId, 0,
             transform.position + transform.forward * 5, aimTarget.forward, transform.position);
-        networkState.CastAbilityServerRpc(runtimeParams);
+        state.CastAbilityServerRpc(runtimeParams);
     }
 
 
@@ -121,12 +119,12 @@ public class PlayerController : NetworkBehaviour
         if (context.performed)
         {
             isSprinting = true;
-            networkState.ToggleSprintServerRpc(true);
+            state.ToggleSprintServerRpc(true);
         }
         else if (context.canceled)
         {
             isSprinting = false;
-            networkState.ToggleSprintServerRpc(false);
+            state.ToggleSprintServerRpc(false);
         }
     }
 
@@ -134,7 +132,7 @@ public class PlayerController : NetworkBehaviour
     {
         var inputValue = context.ReadValue<Vector2>();
         movementData = inputValue.normalized;
-        networkState.SendMoveInputServerRpc(movementData);
+        state.SendMoveInputServerRpc(movementData);
     }
 
     private void OnDestroy()
@@ -144,58 +142,5 @@ public class PlayerController : NetworkBehaviour
         InputManager.Instance.OnSprint -= OnSprint;
         InputManager.Instance.OnCore2 -= OnCore2;
         InputManager.Instance.OnCore1 -= OnCore1;
-
-        // networkState.Position.OnValueChanged -= OnPositionChanged;
-        // networkState.RotationY.OnValueChanged -= OnRotationChanged;
     }
-
-    private void Update()
-    {
-        if (IsServer)
-        {
-            return;
-            Debug.DrawLine(transform.position, transform.position + transform.forward * 5f, Color.red);
-            if (Physics.Raycast(transform.position, transform.forward, out var hitInfo, 5f))
-            {
-                currentInteractable = hitInfo.transform.GetComponent<IInteractable>();
-                var id = hitInfo.transform.GetComponent<NetworkObject>().NetworkObjectId;
-
-                SetInteractionClientRpc(true, id);
-            }
-            else
-            {
-                currentInteractable = null;
-                SetInteractionClientRpc(false, 0);
-            }
-        }
-    }
-
-    [ClientRpc]
-    private void SetInteractionClientRpc(bool state, ulong id, ClientRpcParams rpcParams = default)
-    {
-        if (IsOwner)
-        {
-            interactionUI.SetActive(state);
-            if (state)
-            {
-                currentInteractable = NetworkSpawnManager.SpawnedObjects[id].GetComponent<IInteractable>();
-                InputManager.Instance.OnInteraction += OnInteraction;
-            }
-            else
-            {
-                currentInteractable = null;
-                InputManager.Instance.OnInteraction -= OnInteraction;
-            }
-        }
-    }
-
-    private void OnInteraction(InputAction.CallbackContext context)
-    {
-        currentInteractable?.Interact();
-    }
-}
-
-public interface IInteractable
-{
-    public void Interact();
 }

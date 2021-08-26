@@ -14,6 +14,7 @@ namespace SejDev.Systems.Ability
         public float mainValue;
         public float speed;
         public float duration;
+        public float size;
         public float range;
         public bool isTracking;
         public string name;
@@ -23,6 +24,7 @@ namespace SejDev.Systems.Ability
         public GameObject[] Prefabs;
         public AbilityType[] HitEffects;
         public float delay;
+        public GameObject targetingPrefab;
     }
 }
 

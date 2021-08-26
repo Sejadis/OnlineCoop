@@ -19,7 +19,8 @@ MonoBehaviour:
   mainValue: 10
   speed: 0
   duration: 10
-  range: 3
+  size: 3
+  range: 10
   isTracking: 0
   name: 
   description: 
@@ -29,3 +30,4 @@ MonoBehaviour:
   - {fileID: 3861986476908520211, guid: e9e56c1fb94a2f947b007a0a1194b52e, type: 3}
   HitEffects: 07000000
   delay: 1
+  targetingPrefab: {fileID: 387838333247220065, guid: d1381262e1eea7648a51c68ac418776a, type: 3}

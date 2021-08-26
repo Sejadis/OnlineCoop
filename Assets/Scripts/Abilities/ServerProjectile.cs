@@ -42,14 +42,15 @@ public class ServerProjectile : NetworkBehaviour
     {
         // var entity =  other.GetComponent<NetworkObject>();
         // OnHit?.Invoke(entity.NetworkObjectId);
+        //TODO refactor to decrease duplicated code (like server aoe zone)
 //TODO catch self
-        var netObject = other.GetComponent<NetworkState>();
+        var netObject = other.GetComponent<NetworkCharacterState>();
         if (!IsServer || other.gameObject.name == "PlayerPrefab(Clone)" || netObject == null)
         {
             return;
         }
 
-        var actor = NetworkSpawnManager.SpawnedObjects[actorId].GetComponent<NetworkState>();
+        var actor = NetworkSpawnManager.SpawnedObjects[actorId].GetComponent<NetworkCharacterState>();
         foreach (var hitEffect in hitEffects)
         {
             var runtimeParams = new AbilityRuntimeParams(hitEffect, actorId, netObject.NetworkObjectId, Vector3.zero,

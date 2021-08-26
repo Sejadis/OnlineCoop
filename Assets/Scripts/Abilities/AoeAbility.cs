@@ -9,7 +9,7 @@ namespace Abilities
     public class AoeAbility : Ability
     {
         private Collider[] overlapResults = new Collider[10];
-        protected NetworkState actor;
+        protected NetworkCharacterState actor;
         
         public AoeAbility(ref AbilityRuntimeParams abilityRuntimeParams) : base(ref abilityRuntimeParams)
         {
@@ -17,9 +17,9 @@ namespace Abilities
 
         public override bool Start()
         {
-            NetworkSpawnManager.SpawnedObjects[abilityRuntimeParams.Actor].GetComponent<NetworkState>()
+            NetworkSpawnManager.SpawnedObjects[abilityRuntimeParams.Actor].GetComponent<NetworkCharacterState>()
                 .CastAbilityClientRpc(abilityRuntimeParams);
-            actor = NetworkSpawnManager.SpawnedObjects[abilityRuntimeParams.Actor].GetComponent<NetworkState>();
+            actor = NetworkSpawnManager.SpawnedObjects[abilityRuntimeParams.Actor].GetComponent<NetworkCharacterState>();
             RunHitCheck();
             return false;
         }
@@ -31,7 +31,7 @@ namespace Abilities
 
         protected void RunHitCheck()
         {
-            var size = Physics.OverlapSphereNonAlloc(abilityRuntimeParams.TargetPosition, Description.range,
+            var size = Physics.OverlapSphereNonAlloc(abilityRuntimeParams.TargetPosition, Description.size,
                 overlapResults);
             for (var i = 0; i < size; i++)
             {

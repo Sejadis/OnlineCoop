@@ -27,7 +27,7 @@ namespace Abilities
                 return;
             }
 
-            var hits = Physics.OverlapSphere(transform.position, abilityDescription.range / 2);
+            var hits = Physics.OverlapSphere(transform.position, abilityDescription.size / 2);
             foreach (var hit in hits)
             {
                 var pole = hit.GetComponent<ServerElectroPole>();

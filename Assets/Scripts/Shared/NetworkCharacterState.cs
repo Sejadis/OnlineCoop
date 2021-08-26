@@ -1,13 +1,14 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using MLAPI;
 using MLAPI.Messaging;
 using MLAPI.NetworkVariable;
 using SejDev.Systems.Ability;
 using UnityEngine;
 
 [RequireComponent(typeof(NetworkHealthState))]
-public class CharacterNetworkState : NetworkState
+public class NetworkCharacterState : NetworkBehaviour
 {
     private  void Awake()
     {
@@ -22,6 +23,20 @@ public class CharacterNetworkState : NetworkState
     public Action<Vector2> OnLookInputReceived;
     public Action<bool> OnSprintReceived;
     public Action<AbilityType, float> OnStartCooldown;
+    public Action<AbilityRuntimeParams> OnServerAbilityCast;
+    public Action<AbilityRuntimeParams> OnClientAbilityCast;
+    
+    [ServerRpc(RequireOwnership = false)]
+    public void CastAbilityServerRpc(AbilityRuntimeParams runtimeParams)
+    {
+        OnServerAbilityCast?.Invoke(runtimeParams);
+    }
+
+    [ClientRpc]
+    public void CastAbilityClientRpc(AbilityRuntimeParams runtimeParams)
+    {
+        OnClientAbilityCast?.Invoke(runtimeParams);
+    }
 
     public NetworkHealthState NetHealthState { get; private set; }
 
@@ -41,6 +56,7 @@ public class CharacterNetworkState : NetworkState
     public void ToggleSprintServerRpc(bool shouldSprint)
     {
         OnSprintReceived?.Invoke(shouldSprint);
+        Vector2 v = new Vector2(1, 2);
     }
 
 

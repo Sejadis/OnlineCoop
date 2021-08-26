@@ -7,7 +7,7 @@ using SejDev.Systems.Ability;
 using TreeEditor;
 using UnityEngine;
 
-[RequireComponent(typeof(NetworkHealthState))]
+[RequireComponent(typeof(NetworkCharacterState))]
 //TODO serverchar that has abilityhandler
 public class BaseBoss : NetworkBehaviour, IDamagable
 {
@@ -17,7 +17,7 @@ public class BaseBoss : NetworkBehaviour, IDamagable
     [SerializeField] private GameObject shardPrefab;
     [SerializeField] private GameObject shieldObject;
     private bool isImmuneToDamage;
-    private NetworkHealthState netHealthState;
+    private NetworkCharacterState networkCharacterState;
     private AbilityHandler abilityHandler;
 
     private int shardsAlive = 0;
@@ -33,12 +33,12 @@ public class BaseBoss : NetworkBehaviour, IDamagable
             return;
         }
 
-        netHealthState = GetComponent<NetworkHealthState>();
-        netHealthState.MaxHealth.Value = maxHealth;
-        netHealthState.CurrentHealth.Value = maxHealth;
+        networkCharacterState = GetComponent<NetworkCharacterState>();
+        networkCharacterState.NetHealthState.MaxHealth.Value = maxHealth;
+        networkCharacterState.NetHealthState.CurrentHealth.Value = maxHealth;
 
-        abilityHandler = new AbilityHandler(netHealthState);
-        netHealthState.OnServerAbilityCast += OnAbilityCast;
+        abilityHandler = new AbilityHandler(networkCharacterState);
+        networkCharacterState.OnServerAbilityCast += OnAbilityCast;
         activeTriggers = new List<int>(healthTriggers);
         activeTriggers = activeTriggers.OrderByDescending(i => i).ToList();
     }
@@ -61,8 +61,8 @@ public class BaseBoss : NetworkBehaviour, IDamagable
             return;
         }
 
-        netHealthState.CurrentHealth.Value -= amount;
-        if (activeTriggers.Count > 0 && netHealthState.CurrentHealth.Value <= activeTriggers[0])
+        networkCharacterState.NetHealthState.CurrentHealth.Value -= amount;
+        if (activeTriggers.Count > 0 && networkCharacterState.NetHealthState.CurrentHealth.Value <= activeTriggers[0])
         {
             activeTriggers.RemoveAt(0);
             shieldObject.SetActive(true);
@@ -75,7 +75,7 @@ public class BaseBoss : NetworkBehaviour, IDamagable
             }
         }
 
-        if (netHealthState.CurrentHealth.Value <= 0)
+        if (networkCharacterState.NetHealthState.CurrentHealth.Value <= 0)
         {
             Die();
         }

@@ -12,11 +12,12 @@ namespace Abilities
 
         public override bool Start()
         {
-            // CreateZone();
-            NetworkSpawnManager.SpawnedObjects[abilityRuntimeParams.Actor].GetComponent<NetworkState>()
-                .CastAbilityClientRpc(abilityRuntimeParams);
+            // NetworkSpawnManager.SpawnedObjects[abilityRuntimeParams.Actor].GetComponent<NetworkCharacterState>()
+            //     .CastAbilityClientRpc(abilityRuntimeParams);
+            // actor = NetworkSpawnManager.SpawnedObjects[abilityRuntimeParams.Actor]
+            //     .GetComponent<NetworkCharacterState>();
+            base.Start();
             nextTickTime = Time.time + Description.delay;
-            actor = NetworkSpawnManager.SpawnedObjects[abilityRuntimeParams.Actor].GetComponent<NetworkState>();
             return true;
         }
 

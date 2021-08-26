@@ -37,7 +37,7 @@ public class ProjectileAbility : Ability
         var projectile = Object.Instantiate(desc.Prefabs[0], abilityRuntimeParams.StartPosition, Quaternion.identity);
         projectile.transform.forward = abilityRuntimeParams.TargetDirection;
         var serverLogic = projectile.GetComponent<ServerProjectile>();
-        serverLogic.Initialize(desc.speed, desc.range, desc.HitEffects, abilityRuntimeParams.Actor);
+        serverLogic.Initialize(desc.speed, desc.size, desc.HitEffects, abilityRuntimeParams.Actor);
         serverLogic.OnHit += OnHit;
         var netObject = projectile.GetComponent<NetworkObject>();
         netObject.Spawn();

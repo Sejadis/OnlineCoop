@@ -13,11 +13,11 @@ namespace SejDev.Systems.Ability
         private List<Ability> nonBlockingAbilities = new List<Ability>();
 
         private Dictionary<AbilityType, float> abilityCooldowns = new Dictionary<AbilityType, float>();
-        private NetworkState networkState;
+        private NetworkCharacterState state;
 
-        public AbilityHandler(NetworkState networkState)
+        public AbilityHandler(NetworkCharacterState state)
         {
-            this.networkState = networkState;
+            this.state = state;
         }
         // Start is called before the first frame update
 
@@ -75,6 +75,11 @@ namespace SejDev.Systems.Ability
             if (GameDataManager.Instance.TryGetAbilityDescriptionByType(runtimeParams.AbilityType, out var descr))
             {
                 var ability = Ability.CreateAbility(ref runtimeParams);
+                if (descr.targetingPrefab != null)
+                {
+                    var obj = Object.Instantiate(descr.targetingPrefab);
+                    obj.GetComponent<AbilityInput>().Setup(null,descr,GameObject.Find("FollowTarget").transform);
+                }
                 blockingAbilities.Add(ability);
                 if (blockingAbilities.Count == 1)
                 {
@@ -101,13 +106,12 @@ namespace SejDev.Systems.Ability
                     {
                         abilityCooldowns[ability.Description.abilityType] =
                             Time.time; //TODO possibly dont set cooldown when ability cancels out of start
-                        if (networkState is CharacterNetworkState charNetState)
+                        if (state is NetworkCharacterState charNetState)
                         {
                             charNetState.StartCooldownClientRpc(ability.Description.abilityType,
                                 ability.Description.cooldown);
                         }
                     }
-
                     if (!ability.Start())
                     {
                         AdvanceAbilityQueue();

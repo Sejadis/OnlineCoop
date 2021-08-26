@@ -14,14 +14,14 @@ public class PlayerFrame : MonoBehaviour
 
     [SerializeField] private HealthBar healthBar;
 
-    public void RegisterPlayer(string playerName, CharacterNetworkState networkState)
+    public void RegisterPlayer(string playerName, NetworkCharacterState state)
     {
         nameText.text = playerName;
-        networkState.PlayerName.OnValueChanged += OnPlayerNameChanged;
-        networkState.IconName.OnValueChanged += OnIconNameChanged;
-        OnIconNameChanged("", networkState.IconName.Value);
+        state.PlayerName.OnValueChanged += OnPlayerNameChanged;
+        state.IconName.OnValueChanged += OnIconNameChanged;
+        OnIconNameChanged("", state.IconName.Value);
 
-        healthBar.Link(networkState.NetHealthState);
+        healthBar.Link(state.NetHealthState);
     }
 
     private void OnIconNameChanged(string prevValue, string newValue)

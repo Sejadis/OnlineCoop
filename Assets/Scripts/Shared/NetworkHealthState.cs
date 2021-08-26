@@ -4,7 +4,7 @@ using MLAPI;
 using MLAPI.NetworkVariable;
 using UnityEngine;
 
-public class NetworkHealthState : NetworkState
+public class NetworkHealthState : NetworkBehaviour
 {
     public NetworkVariableInt MaxHealth = new NetworkVariableInt(100);
     public NetworkVariableInt CurrentHealth = new NetworkVariableInt(50);

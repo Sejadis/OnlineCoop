@@ -746,8 +746,9 @@ GameObject:
   - component: {fileID: 902076549}
   - component: {fileID: 902076555}
   - component: {fileID: 902076552}
-  - component: {fileID: 902076554}
   - component: {fileID: 902076553}
+  - component: {fileID: 902076556}
+  - component: {fileID: 902076554}
   m_Layer: 0
   m_Name: Body
   m_TagString: Untagged
@@ -880,13 +881,15 @@ MonoBehaviour:
   m_GameObject: {fileID: 902076547}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: bfbb4807c24adab449a88567bcea1891, type: 3}
+  m_Script: {fileID: 11500000, guid: 9cb1d16ae3927ba4db4a6e632cc4aadb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  MaxHealth:
-    m_InternalValue: 100
-  CurrentHealth:
-    m_InternalValue: 50
+  IsSprinting:
+    m_InternalValue: 0
+  PlayerName:
+    m_InternalValue: 
+  IconName:
+    m_InternalValue: 
 --- !u!54 &902076555
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -903,6 +906,22 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
+--- !u!114 &902076556
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 902076547}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bfbb4807c24adab449a88567bcea1891, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  MaxHealth:
+    m_InternalValue: 100
+  CurrentHealth:
+    m_InternalValue: 50
 --- !u!1 &1471837784
 GameObject:
   m_ObjectHideFlags: 0
@@ -1329,7 +1348,7 @@ PrefabInstance:
     - target: {fileID: 8357854090050519821, guid: 2920003247ebad14386b22660e83b36a, type: 3}
       propertyPath: networkHealthState
       value: 
-      objectReference: {fileID: 902076554}
+      objectReference: {fileID: 902076556}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 2920003247ebad14386b22660e83b36a, type: 3}
 --- !u!224 &2094094164 stripped

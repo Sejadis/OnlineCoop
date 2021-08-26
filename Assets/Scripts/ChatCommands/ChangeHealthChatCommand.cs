@@ -9,7 +9,7 @@ namespace DefaultNamespace.Chat
             var id = ulong.Parse(parameters[0]);
             var isMax = parameters[1] == "max";
             var isCurrent = parameters[1] == "current";
-            var netState = NetworkSpawnManager.SpawnedObjects[id].GetComponent<CharacterNetworkState>();
+            var netState = NetworkSpawnManager.SpawnedObjects[id].GetComponent<NetworkCharacterState>();
             if (isMax)
             {
                 netState.NetHealthState.MaxHealth.Value = int.Parse(parameters[2]);
