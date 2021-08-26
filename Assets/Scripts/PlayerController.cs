@@ -16,6 +16,7 @@ public class PlayerController : NetworkBehaviour
     [SerializeField] private float sprintSpeedMultiplier = 2;
     [SerializeField] private GameObject playerCamera;
     [SerializeField] private GameObject interactionUI;
+    [SerializeField] private Transform aimTarget;
 
 
     private Vector2 movementData;
@@ -96,21 +97,21 @@ public class PlayerController : NetworkBehaviour
     private void OnCore1(InputAction.CallbackContext obj)
     {
         var runtimeParams = new AbilityRuntimeParams(AbilityType.Fireball, NetworkObjectId, 0, Vector3.zero,
-            transform.forward, transform.position);
+            aimTarget.forward, aimTarget.position);
         networkState.CastAbilityServerRpc(runtimeParams);
     }
 
     private void OnCore2(InputAction.CallbackContext obj)
     {
         var runtimeParams = new AbilityRuntimeParams(AbilityType.LightningStrike, NetworkObjectId, 0,
-            transform.position + transform.forward * 5, transform.forward, transform.position);
+            transform.position + transform.forward * 5, aimTarget.forward, transform.position);
         networkState.CastAbilityServerRpc(runtimeParams);
     }
 
     private void OnCore3(InputAction.CallbackContext obj)
     {
         var runtimeParams = new AbilityRuntimeParams(AbilityType.PoisonZone, NetworkObjectId, 0,
-            transform.position + transform.forward * 5, transform.forward, transform.position);
+            transform.position + transform.forward * 5, aimTarget.forward, transform.position);
         networkState.CastAbilityServerRpc(runtimeParams);
     }
 

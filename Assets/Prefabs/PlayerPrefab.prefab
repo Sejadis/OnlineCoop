@@ -1010,6 +1010,7 @@ MonoBehaviour:
   sprintSpeedMultiplier: 2
   playerCamera: {fileID: 3223002782766173919}
   interactionUI: {fileID: 5117485562082760443}
+  aimTarget: {fileID: 920960692069537107}
 --- !u!114 &4612193621415580500
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1091,7 +1092,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 7239202883376211541}
   m_LocalRotation: {x: 0.13732688, y: -0.1553267, z: 0.021809435, w: 0.9780283}
-  m_LocalPosition: {x: 0, y: -0.011000156, z: 0}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 5638007240998581290}
@@ -1203,7 +1204,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: 0.008239746}
+  m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 100, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &6728190819769657640

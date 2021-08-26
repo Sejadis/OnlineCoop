@@ -21,7 +21,10 @@ namespace Abilities
 
         public override void End()
         {
-            NetworkSpawnManager.SpawnedObjects[abilityRuntimeParams.TargetEntity]?.GetComponent<IDamagable>().Damage((int) Description.mainValue);
+            if (NetworkSpawnManager.SpawnedObjects.TryGetValue(abilityRuntimeParams.TargetEntity, out var netObj))
+            {
+                netObj.GetComponent<IDamagable>().Damage((int) Description.mainValue);
+            }
         }
 
         public override bool IsBlocking()
