@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using MLAPI;
+using MLAPI.SceneManagement;
 using SejDev.Systems.Ability;
 using TreeEditor;
 using UnityEngine;
@@ -73,6 +74,16 @@ public class BaseBoss : NetworkBehaviour, IDamagable
                 shard.GetComponent<NetworkObject>().Spawn();
             }
         }
+
+        if (netHealthState.CurrentHealth.Value <= 0)
+        {
+            Die();
+        }
+    }
+
+    private void Die()
+    {
+        NetworkSceneManager.SwitchScene("SampleScene");
     }
 
     private void OnShardDeath(NetworkObject netObj)
