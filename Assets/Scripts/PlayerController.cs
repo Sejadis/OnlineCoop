@@ -44,11 +44,13 @@ public class PlayerController : NetworkBehaviour
         {
             abilityUI.SetAbility(ability1, 0);
         }
-        if(GameDataManager.Instance.TryGetAbilityDescriptionByType(AbilityType.ElectroPole, out var ability2))
+
+        if (GameDataManager.Instance.TryGetAbilityDescriptionByType(AbilityType.ElectroPole, out var ability2))
         {
             abilityUI.SetAbility(ability2, 1);
         }
-        if(GameDataManager.Instance.TryGetAbilityDescriptionByType(AbilityType.PoisonZone, out var ability3))
+
+        if (GameDataManager.Instance.TryGetAbilityDescriptionByType(AbilityType.PoisonZone, out var ability3))
         {
             abilityUI.SetAbility(ability3, 2);
         }
@@ -67,10 +69,19 @@ public class PlayerController : NetworkBehaviour
 
     private void OnClientAbilityCast(AbilityRuntimeParams runtimeParams)
     {
-        if(GameDataManager.Instance.TryGetAbilityDescriptionByType(runtimeParams.AbilityType, out var description))
+        if (GameDataManager.Instance.TryGetAbilityDescriptionByType(runtimeParams.AbilityType, out var description))
         {
             var obj = Instantiate(description.Prefabs[0], runtimeParams.TargetPosition, Quaternion.identity);
-            obj.transform.localScale = Vector3.one * description.range;
+            var scaler = obj.GetComponent<VisualFXScaler>();
+            if (scaler != null)
+            {
+                scaler.Scale(description.range);
+            }
+            else
+            {
+                obj.transform.localScale = Vector3.one * description.range;
+            }
+
             Destroy(obj, description.duration > 0 ? description.duration : 1f);
         }
     }
