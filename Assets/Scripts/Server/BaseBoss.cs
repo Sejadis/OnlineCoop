@@ -18,8 +18,6 @@ namespace Server
         [SerializeField] private GameObject shardPrefab;
         [SerializeField] private GameObject shieldObject;
         private bool isImmuneToDamage;
-        private NetworkCharacterState networkCharacterState;
-        private AbilityHandler abilityHandler;
 
         private int shardsAlive = 0;
         private List<int> activeTriggers;
@@ -27,35 +25,17 @@ namespace Server
         // Start is called before the first frame update
         public override void NetworkStart()
         {
+            base.NetworkStart();
             shieldObject.SetActive(false);
-            if (!IsServer)
-            {
-                enabled = false;
-                return;
-            }
-
-            networkCharacterState = GetComponent<NetworkCharacterState>();
+            
             networkCharacterState.NetHealthState.MaxHealth.Value = maxHealth;
             networkCharacterState.NetHealthState.CurrentHealth.Value = maxHealth;
-
-            abilityHandler = new AbilityHandler(this);
-            networkCharacterState.OnServerAbilityCast += OnAbilityCast;
+            
             activeTriggers = new List<int>(healthTriggers);
             activeTriggers = activeTriggers.OrderByDescending(i => i).ToList();
         }
 
-        private void OnAbilityCast(AbilityRuntimeParams runtimeParams)
-        {
-            abilityHandler.StartAbility(ref runtimeParams);
-        }
-
-        // Update is called once per frame
-        void Update()
-        {
-            abilityHandler.Update();
-        }
-
-        public void Damage(int amount)
+        public override void Damage(int amount)
         {
             if (shardsAlive > 0)
             {

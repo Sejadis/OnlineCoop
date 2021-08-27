@@ -23,6 +23,7 @@ namespace Shared
         public Action<Vector2> OnMoveInputReceived;
         public Action<Vector2> OnLookInputReceived;
         public Action<bool> OnSprintReceived;
+        public Action OnJumpReceived;
         public Action<AbilityType, float> OnStartCooldown;
         public Action<AbilityRuntimeParams> OnServerAbilityCast;
         public Action<AbilityRuntimeParams> OnClientAbilityCast;
@@ -66,6 +67,12 @@ namespace Shared
         public void StartCooldownClientRpc(AbilityType type, float cooldown)
         {
             OnStartCooldown?.Invoke(type,cooldown);
+        }
+
+        [ServerRpc]
+        public void SetJumpServerRpc()
+        {
+            OnJumpReceived?.Invoke();
         }
     }
 }

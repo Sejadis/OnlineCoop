@@ -8,11 +8,6 @@ namespace Client.UI
     {
         [SerializeField] private AbilityFrame[] abilityFrames;
 
-        private void Awake()
-        {
-            DontDestroyOnLoad(gameObject);
-        }
-
         public void SetAbility(AbilityDescription abilityDescription, int slot)
         {
             var frame = abilityFrames[slot];

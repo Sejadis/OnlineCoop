@@ -1,3 +1,5 @@
+using System;
+using System.Collections.Generic;
 using MLAPI;
 using Server.Ability;
 using Shared;
@@ -6,12 +8,15 @@ using UnityEngine;
 
 namespace Server
 {
-    [RequireComponent(typeof(NetworkCharacterState))]
+    [RequireComponent(typeof(NetworkCharacterState), typeof(ServerCharacterMovement))]
     public class ServerCharacter : NetworkBehaviour, IDamagable, IHealable
     {
         protected AbilityHandler abilityHandler;
-        protected NetworkCharacterState networkCharacterState;    
-        protected Vector2 moveInput;
+        protected NetworkCharacterState networkCharacterState;
+
+        protected ServerCharacterMovement serverCharacterMovement;
+
+        // protected Vector2 moveInput;
         //TODO refactor into net state
         protected float moveSpeed = 5;
         protected float sprintSpeedMultiplier = 2;
@@ -26,11 +31,7 @@ namespace Server
                 enabled = false;
                 return;
             }
-
-            if (!IsOwner)
-            {
-            }
-
+            serverCharacterMovement = GetComponent<ServerCharacterMovement>();
             networkCharacterState = GetComponent<NetworkCharacterState>();
             networkCharacterState.OnServerAbilityCast += OnAbilityCast;
 
@@ -40,29 +41,19 @@ namespace Server
         protected virtual void Update()
         {
             abilityHandler.Update();
-            ApplyMovement();
         }
 
-        private void ApplyMovement()
-        {
-            var finalMove = moveInput.x * transform.right;
-            finalMove += moveInput.y * transform.forward;
-            finalMove.Normalize();
-            finalMove *= networkCharacterState.IsSprinting.Value ? moveSpeed * sprintSpeedMultiplier : moveSpeed;
-            finalMove *= Time.deltaTime;
-            transform.position += finalMove;
-        }
         protected void OnAbilityCast(AbilityRuntimeParams runtimeParams)
         {
             abilityHandler.StartAbility(ref runtimeParams);
         }
 
-        public void Damage(int amount)
+        public virtual void Damage(int amount)
         {
             networkCharacterState.NetHealthState.CurrentHealth.Value -= amount;
         }
 
-        public void Heal(int amount)
+        public virtual void Heal(int amount)
         {
             networkCharacterState.NetHealthState.CurrentHealth.Value += amount;
         }

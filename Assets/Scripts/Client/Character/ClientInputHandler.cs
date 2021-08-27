@@ -54,12 +54,15 @@ namespace Client.Character
 
             InputManager.Instance.OnMovement += OnMovement;
             InputManager.Instance.OnSprint += OnSprint;
+            InputManager.Instance.OnJump += OnJump;
             InputManager.Instance.OnLook += OnLook;
 
             InputManager.Instance.OnCore1 += OnCore1;
             InputManager.Instance.OnCore2 += OnCore2;
             InputManager.Instance.OnCore3 += OnCore3;
         }
+
+        
 
         private void OnClientAbilityCast(AbilityRuntimeParams runtimeParams)
         {
@@ -80,34 +83,18 @@ namespace Client.Character
             }
         }
 
-        private void OnLook(InputAction.CallbackContext obj)
-        {
-            var value = obj.ReadValue<Vector2>();
-            value.y *= -1;
-            networkCharacterState.SendLookInputServerRpc(value);
-        }
-
         private void OnCore1(InputAction.CallbackContext obj)
         {
-            // var runtimeParams = new AbilityRuntimeParams(AbilityType.Fireball, NetworkObjectId, 0, Vector3.zero,
-            //     aimTarget.forward, aimTarget.position);
-            // networkCharacterState.CastAbilityServerRpc(runtimeParams);
             CastAbility(0);
         }
 
         private void OnCore2(InputAction.CallbackContext obj)
         {
-            // var runtimeParams = new AbilityRuntimeParams(AbilityType.LightningStrike, NetworkObjectId, 0,
-            //     transform.position + transform.forward * 5, aimTarget.forward, transform.position);
-            // networkCharacterState.CastAbilityServerRpc(runtimeParams);
             CastAbility(1);
         }
 
         private void OnCore3(InputAction.CallbackContext obj)
         {
-            // var runtimeParams = new AbilityRuntimeParams(AbilityType.PoisonZone, NetworkObjectId, 0,
-            //     transform.position + transform.forward * 5, aimTarget.forward, transform.position);
-            // networkCharacterState.CastAbilityServerRpc(runtimeParams);
             CastAbility(2);
         }
 
@@ -145,6 +132,18 @@ namespace Client.Character
             var inputValue = context.ReadValue<Vector2>();
             movementData = inputValue.normalized;
             networkCharacterState.SendMoveInputServerRpc(movementData);
+        }
+        
+        private void OnJump(InputAction.CallbackContext obj)
+        {
+            networkCharacterState.SetJumpServerRpc();
+        }
+        
+        private void OnLook(InputAction.CallbackContext obj)
+        {
+            var value = obj.ReadValue<Vector2>();
+            value.y *= -1;
+            networkCharacterState.SendLookInputServerRpc(value);
         }
 
         private void OnDestroy()

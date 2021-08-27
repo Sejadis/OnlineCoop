@@ -6,14 +6,12 @@ using System.Collections.Generic;
 using UnityEngine.InputSystem;
 using UnityEngine.InputSystem.Utilities;
 
-namespace Client.Input
+public class @PlayerInput : IInputActionCollection, IDisposable
 {
-    public class @PlayerInput : IInputActionCollection, IDisposable
+    public InputActionAsset asset { get; }
+    public @PlayerInput()
     {
-        public InputActionAsset asset { get; }
-        public @PlayerInput()
-        {
-            asset = InputActionAsset.FromJson(@"{
+        asset = InputActionAsset.FromJson(@"{
     ""name"": ""PlayerInput"",
     ""maps"": [
         {
@@ -57,6 +55,14 @@ namespace Client.Input
                     ""type"": ""Value"",
                     ""id"": ""eb79613b-5d72-478d-ad4f-ed519faa9725"",
                     ""expectedControlType"": ""Axis"",
+                    ""processors"": """",
+                    ""interactions"": """"
+                },
+                {
+                    ""name"": ""Jump"",
+                    ""type"": ""Button"",
+                    ""id"": ""b287a8a3-970e-43e2-82f8-3bf7ee705efc"",
+                    ""expectedControlType"": ""Button"",
                     ""processors"": """",
                     ""interactions"": """"
                 }
@@ -215,6 +221,17 @@ namespace Client.Input
                     ""action"": ""Zoom"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""3a47a665-95fd-45e4-aca3-266cc9db35a5"",
+                    ""path"": ""<Keyboard>/space"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Jump"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         },
@@ -286,190 +303,199 @@ namespace Client.Input
     ],
     ""controlSchemes"": []
 }");
-            // Controls
-            m_Controls = asset.FindActionMap("Controls", throwIfNotFound: true);
-            m_Controls_Movement = m_Controls.FindAction("Movement", throwIfNotFound: true);
-            m_Controls_Sprint = m_Controls.FindAction("Sprint", throwIfNotFound: true);
-            m_Controls_Interaction = m_Controls.FindAction("Interaction", throwIfNotFound: true);
-            m_Controls_Look = m_Controls.FindAction("Look", throwIfNotFound: true);
-            m_Controls_Zoom = m_Controls.FindAction("Zoom", throwIfNotFound: true);
-            // Abilities
-            m_Abilities = asset.FindActionMap("Abilities", throwIfNotFound: true);
-            m_Abilities_Core1 = m_Abilities.FindAction("Core1", throwIfNotFound: true);
-            m_Abilities_Core2 = m_Abilities.FindAction("Core2", throwIfNotFound: true);
-            m_Abilities_Core3 = m_Abilities.FindAction("Core3", throwIfNotFound: true);
-        }
-
-        public void Dispose()
-        {
-            UnityEngine.Object.Destroy(asset);
-        }
-
-        public InputBinding? bindingMask
-        {
-            get => asset.bindingMask;
-            set => asset.bindingMask = value;
-        }
-
-        public ReadOnlyArray<InputDevice>? devices
-        {
-            get => asset.devices;
-            set => asset.devices = value;
-        }
-
-        public ReadOnlyArray<InputControlScheme> controlSchemes => asset.controlSchemes;
-
-        public bool Contains(InputAction action)
-        {
-            return asset.Contains(action);
-        }
-
-        public IEnumerator<InputAction> GetEnumerator()
-        {
-            return asset.GetEnumerator();
-        }
-
-        IEnumerator IEnumerable.GetEnumerator()
-        {
-            return GetEnumerator();
-        }
-
-        public void Enable()
-        {
-            asset.Enable();
-        }
-
-        public void Disable()
-        {
-            asset.Disable();
-        }
-
         // Controls
-        private readonly InputActionMap m_Controls;
-        private IControlsActions m_ControlsActionsCallbackInterface;
-        private readonly InputAction m_Controls_Movement;
-        private readonly InputAction m_Controls_Sprint;
-        private readonly InputAction m_Controls_Interaction;
-        private readonly InputAction m_Controls_Look;
-        private readonly InputAction m_Controls_Zoom;
-        public struct ControlsActions
-        {
-            private @PlayerInput m_Wrapper;
-            public ControlsActions(@PlayerInput wrapper) { m_Wrapper = wrapper; }
-            public InputAction @Movement => m_Wrapper.m_Controls_Movement;
-            public InputAction @Sprint => m_Wrapper.m_Controls_Sprint;
-            public InputAction @Interaction => m_Wrapper.m_Controls_Interaction;
-            public InputAction @Look => m_Wrapper.m_Controls_Look;
-            public InputAction @Zoom => m_Wrapper.m_Controls_Zoom;
-            public InputActionMap Get() { return m_Wrapper.m_Controls; }
-            public void Enable() { Get().Enable(); }
-            public void Disable() { Get().Disable(); }
-            public bool enabled => Get().enabled;
-            public static implicit operator InputActionMap(ControlsActions set) { return set.Get(); }
-            public void SetCallbacks(IControlsActions instance)
-            {
-                if (m_Wrapper.m_ControlsActionsCallbackInterface != null)
-                {
-                    @Movement.started -= m_Wrapper.m_ControlsActionsCallbackInterface.OnMovement;
-                    @Movement.performed -= m_Wrapper.m_ControlsActionsCallbackInterface.OnMovement;
-                    @Movement.canceled -= m_Wrapper.m_ControlsActionsCallbackInterface.OnMovement;
-                    @Sprint.started -= m_Wrapper.m_ControlsActionsCallbackInterface.OnSprint;
-                    @Sprint.performed -= m_Wrapper.m_ControlsActionsCallbackInterface.OnSprint;
-                    @Sprint.canceled -= m_Wrapper.m_ControlsActionsCallbackInterface.OnSprint;
-                    @Interaction.started -= m_Wrapper.m_ControlsActionsCallbackInterface.OnInteraction;
-                    @Interaction.performed -= m_Wrapper.m_ControlsActionsCallbackInterface.OnInteraction;
-                    @Interaction.canceled -= m_Wrapper.m_ControlsActionsCallbackInterface.OnInteraction;
-                    @Look.started -= m_Wrapper.m_ControlsActionsCallbackInterface.OnLook;
-                    @Look.performed -= m_Wrapper.m_ControlsActionsCallbackInterface.OnLook;
-                    @Look.canceled -= m_Wrapper.m_ControlsActionsCallbackInterface.OnLook;
-                    @Zoom.started -= m_Wrapper.m_ControlsActionsCallbackInterface.OnZoom;
-                    @Zoom.performed -= m_Wrapper.m_ControlsActionsCallbackInterface.OnZoom;
-                    @Zoom.canceled -= m_Wrapper.m_ControlsActionsCallbackInterface.OnZoom;
-                }
-                m_Wrapper.m_ControlsActionsCallbackInterface = instance;
-                if (instance != null)
-                {
-                    @Movement.started += instance.OnMovement;
-                    @Movement.performed += instance.OnMovement;
-                    @Movement.canceled += instance.OnMovement;
-                    @Sprint.started += instance.OnSprint;
-                    @Sprint.performed += instance.OnSprint;
-                    @Sprint.canceled += instance.OnSprint;
-                    @Interaction.started += instance.OnInteraction;
-                    @Interaction.performed += instance.OnInteraction;
-                    @Interaction.canceled += instance.OnInteraction;
-                    @Look.started += instance.OnLook;
-                    @Look.performed += instance.OnLook;
-                    @Look.canceled += instance.OnLook;
-                    @Zoom.started += instance.OnZoom;
-                    @Zoom.performed += instance.OnZoom;
-                    @Zoom.canceled += instance.OnZoom;
-                }
-            }
-        }
-        public ControlsActions @Controls => new ControlsActions(this);
-
+        m_Controls = asset.FindActionMap("Controls", throwIfNotFound: true);
+        m_Controls_Movement = m_Controls.FindAction("Movement", throwIfNotFound: true);
+        m_Controls_Sprint = m_Controls.FindAction("Sprint", throwIfNotFound: true);
+        m_Controls_Interaction = m_Controls.FindAction("Interaction", throwIfNotFound: true);
+        m_Controls_Look = m_Controls.FindAction("Look", throwIfNotFound: true);
+        m_Controls_Zoom = m_Controls.FindAction("Zoom", throwIfNotFound: true);
+        m_Controls_Jump = m_Controls.FindAction("Jump", throwIfNotFound: true);
         // Abilities
-        private readonly InputActionMap m_Abilities;
-        private IAbilitiesActions m_AbilitiesActionsCallbackInterface;
-        private readonly InputAction m_Abilities_Core1;
-        private readonly InputAction m_Abilities_Core2;
-        private readonly InputAction m_Abilities_Core3;
-        public struct AbilitiesActions
+        m_Abilities = asset.FindActionMap("Abilities", throwIfNotFound: true);
+        m_Abilities_Core1 = m_Abilities.FindAction("Core1", throwIfNotFound: true);
+        m_Abilities_Core2 = m_Abilities.FindAction("Core2", throwIfNotFound: true);
+        m_Abilities_Core3 = m_Abilities.FindAction("Core3", throwIfNotFound: true);
+    }
+
+    public void Dispose()
+    {
+        UnityEngine.Object.Destroy(asset);
+    }
+
+    public InputBinding? bindingMask
+    {
+        get => asset.bindingMask;
+        set => asset.bindingMask = value;
+    }
+
+    public ReadOnlyArray<InputDevice>? devices
+    {
+        get => asset.devices;
+        set => asset.devices = value;
+    }
+
+    public ReadOnlyArray<InputControlScheme> controlSchemes => asset.controlSchemes;
+
+    public bool Contains(InputAction action)
+    {
+        return asset.Contains(action);
+    }
+
+    public IEnumerator<InputAction> GetEnumerator()
+    {
+        return asset.GetEnumerator();
+    }
+
+    IEnumerator IEnumerable.GetEnumerator()
+    {
+        return GetEnumerator();
+    }
+
+    public void Enable()
+    {
+        asset.Enable();
+    }
+
+    public void Disable()
+    {
+        asset.Disable();
+    }
+
+    // Controls
+    private readonly InputActionMap m_Controls;
+    private IControlsActions m_ControlsActionsCallbackInterface;
+    private readonly InputAction m_Controls_Movement;
+    private readonly InputAction m_Controls_Sprint;
+    private readonly InputAction m_Controls_Interaction;
+    private readonly InputAction m_Controls_Look;
+    private readonly InputAction m_Controls_Zoom;
+    private readonly InputAction m_Controls_Jump;
+    public struct ControlsActions
+    {
+        private @PlayerInput m_Wrapper;
+        public ControlsActions(@PlayerInput wrapper) { m_Wrapper = wrapper; }
+        public InputAction @Movement => m_Wrapper.m_Controls_Movement;
+        public InputAction @Sprint => m_Wrapper.m_Controls_Sprint;
+        public InputAction @Interaction => m_Wrapper.m_Controls_Interaction;
+        public InputAction @Look => m_Wrapper.m_Controls_Look;
+        public InputAction @Zoom => m_Wrapper.m_Controls_Zoom;
+        public InputAction @Jump => m_Wrapper.m_Controls_Jump;
+        public InputActionMap Get() { return m_Wrapper.m_Controls; }
+        public void Enable() { Get().Enable(); }
+        public void Disable() { Get().Disable(); }
+        public bool enabled => Get().enabled;
+        public static implicit operator InputActionMap(ControlsActions set) { return set.Get(); }
+        public void SetCallbacks(IControlsActions instance)
         {
-            private @PlayerInput m_Wrapper;
-            public AbilitiesActions(@PlayerInput wrapper) { m_Wrapper = wrapper; }
-            public InputAction @Core1 => m_Wrapper.m_Abilities_Core1;
-            public InputAction @Core2 => m_Wrapper.m_Abilities_Core2;
-            public InputAction @Core3 => m_Wrapper.m_Abilities_Core3;
-            public InputActionMap Get() { return m_Wrapper.m_Abilities; }
-            public void Enable() { Get().Enable(); }
-            public void Disable() { Get().Disable(); }
-            public bool enabled => Get().enabled;
-            public static implicit operator InputActionMap(AbilitiesActions set) { return set.Get(); }
-            public void SetCallbacks(IAbilitiesActions instance)
+            if (m_Wrapper.m_ControlsActionsCallbackInterface != null)
             {
-                if (m_Wrapper.m_AbilitiesActionsCallbackInterface != null)
-                {
-                    @Core1.started -= m_Wrapper.m_AbilitiesActionsCallbackInterface.OnCore1;
-                    @Core1.performed -= m_Wrapper.m_AbilitiesActionsCallbackInterface.OnCore1;
-                    @Core1.canceled -= m_Wrapper.m_AbilitiesActionsCallbackInterface.OnCore1;
-                    @Core2.started -= m_Wrapper.m_AbilitiesActionsCallbackInterface.OnCore2;
-                    @Core2.performed -= m_Wrapper.m_AbilitiesActionsCallbackInterface.OnCore2;
-                    @Core2.canceled -= m_Wrapper.m_AbilitiesActionsCallbackInterface.OnCore2;
-                    @Core3.started -= m_Wrapper.m_AbilitiesActionsCallbackInterface.OnCore3;
-                    @Core3.performed -= m_Wrapper.m_AbilitiesActionsCallbackInterface.OnCore3;
-                    @Core3.canceled -= m_Wrapper.m_AbilitiesActionsCallbackInterface.OnCore3;
-                }
-                m_Wrapper.m_AbilitiesActionsCallbackInterface = instance;
-                if (instance != null)
-                {
-                    @Core1.started += instance.OnCore1;
-                    @Core1.performed += instance.OnCore1;
-                    @Core1.canceled += instance.OnCore1;
-                    @Core2.started += instance.OnCore2;
-                    @Core2.performed += instance.OnCore2;
-                    @Core2.canceled += instance.OnCore2;
-                    @Core3.started += instance.OnCore3;
-                    @Core3.performed += instance.OnCore3;
-                    @Core3.canceled += instance.OnCore3;
-                }
+                @Movement.started -= m_Wrapper.m_ControlsActionsCallbackInterface.OnMovement;
+                @Movement.performed -= m_Wrapper.m_ControlsActionsCallbackInterface.OnMovement;
+                @Movement.canceled -= m_Wrapper.m_ControlsActionsCallbackInterface.OnMovement;
+                @Sprint.started -= m_Wrapper.m_ControlsActionsCallbackInterface.OnSprint;
+                @Sprint.performed -= m_Wrapper.m_ControlsActionsCallbackInterface.OnSprint;
+                @Sprint.canceled -= m_Wrapper.m_ControlsActionsCallbackInterface.OnSprint;
+                @Interaction.started -= m_Wrapper.m_ControlsActionsCallbackInterface.OnInteraction;
+                @Interaction.performed -= m_Wrapper.m_ControlsActionsCallbackInterface.OnInteraction;
+                @Interaction.canceled -= m_Wrapper.m_ControlsActionsCallbackInterface.OnInteraction;
+                @Look.started -= m_Wrapper.m_ControlsActionsCallbackInterface.OnLook;
+                @Look.performed -= m_Wrapper.m_ControlsActionsCallbackInterface.OnLook;
+                @Look.canceled -= m_Wrapper.m_ControlsActionsCallbackInterface.OnLook;
+                @Zoom.started -= m_Wrapper.m_ControlsActionsCallbackInterface.OnZoom;
+                @Zoom.performed -= m_Wrapper.m_ControlsActionsCallbackInterface.OnZoom;
+                @Zoom.canceled -= m_Wrapper.m_ControlsActionsCallbackInterface.OnZoom;
+                @Jump.started -= m_Wrapper.m_ControlsActionsCallbackInterface.OnJump;
+                @Jump.performed -= m_Wrapper.m_ControlsActionsCallbackInterface.OnJump;
+                @Jump.canceled -= m_Wrapper.m_ControlsActionsCallbackInterface.OnJump;
+            }
+            m_Wrapper.m_ControlsActionsCallbackInterface = instance;
+            if (instance != null)
+            {
+                @Movement.started += instance.OnMovement;
+                @Movement.performed += instance.OnMovement;
+                @Movement.canceled += instance.OnMovement;
+                @Sprint.started += instance.OnSprint;
+                @Sprint.performed += instance.OnSprint;
+                @Sprint.canceled += instance.OnSprint;
+                @Interaction.started += instance.OnInteraction;
+                @Interaction.performed += instance.OnInteraction;
+                @Interaction.canceled += instance.OnInteraction;
+                @Look.started += instance.OnLook;
+                @Look.performed += instance.OnLook;
+                @Look.canceled += instance.OnLook;
+                @Zoom.started += instance.OnZoom;
+                @Zoom.performed += instance.OnZoom;
+                @Zoom.canceled += instance.OnZoom;
+                @Jump.started += instance.OnJump;
+                @Jump.performed += instance.OnJump;
+                @Jump.canceled += instance.OnJump;
             }
         }
-        public AbilitiesActions @Abilities => new AbilitiesActions(this);
-        public interface IControlsActions
+    }
+    public ControlsActions @Controls => new ControlsActions(this);
+
+    // Abilities
+    private readonly InputActionMap m_Abilities;
+    private IAbilitiesActions m_AbilitiesActionsCallbackInterface;
+    private readonly InputAction m_Abilities_Core1;
+    private readonly InputAction m_Abilities_Core2;
+    private readonly InputAction m_Abilities_Core3;
+    public struct AbilitiesActions
+    {
+        private @PlayerInput m_Wrapper;
+        public AbilitiesActions(@PlayerInput wrapper) { m_Wrapper = wrapper; }
+        public InputAction @Core1 => m_Wrapper.m_Abilities_Core1;
+        public InputAction @Core2 => m_Wrapper.m_Abilities_Core2;
+        public InputAction @Core3 => m_Wrapper.m_Abilities_Core3;
+        public InputActionMap Get() { return m_Wrapper.m_Abilities; }
+        public void Enable() { Get().Enable(); }
+        public void Disable() { Get().Disable(); }
+        public bool enabled => Get().enabled;
+        public static implicit operator InputActionMap(AbilitiesActions set) { return set.Get(); }
+        public void SetCallbacks(IAbilitiesActions instance)
         {
-            void OnMovement(InputAction.CallbackContext context);
-            void OnSprint(InputAction.CallbackContext context);
-            void OnInteraction(InputAction.CallbackContext context);
-            void OnLook(InputAction.CallbackContext context);
-            void OnZoom(InputAction.CallbackContext context);
+            if (m_Wrapper.m_AbilitiesActionsCallbackInterface != null)
+            {
+                @Core1.started -= m_Wrapper.m_AbilitiesActionsCallbackInterface.OnCore1;
+                @Core1.performed -= m_Wrapper.m_AbilitiesActionsCallbackInterface.OnCore1;
+                @Core1.canceled -= m_Wrapper.m_AbilitiesActionsCallbackInterface.OnCore1;
+                @Core2.started -= m_Wrapper.m_AbilitiesActionsCallbackInterface.OnCore2;
+                @Core2.performed -= m_Wrapper.m_AbilitiesActionsCallbackInterface.OnCore2;
+                @Core2.canceled -= m_Wrapper.m_AbilitiesActionsCallbackInterface.OnCore2;
+                @Core3.started -= m_Wrapper.m_AbilitiesActionsCallbackInterface.OnCore3;
+                @Core3.performed -= m_Wrapper.m_AbilitiesActionsCallbackInterface.OnCore3;
+                @Core3.canceled -= m_Wrapper.m_AbilitiesActionsCallbackInterface.OnCore3;
+            }
+            m_Wrapper.m_AbilitiesActionsCallbackInterface = instance;
+            if (instance != null)
+            {
+                @Core1.started += instance.OnCore1;
+                @Core1.performed += instance.OnCore1;
+                @Core1.canceled += instance.OnCore1;
+                @Core2.started += instance.OnCore2;
+                @Core2.performed += instance.OnCore2;
+                @Core2.canceled += instance.OnCore2;
+                @Core3.started += instance.OnCore3;
+                @Core3.performed += instance.OnCore3;
+                @Core3.canceled += instance.OnCore3;
+            }
         }
-        public interface IAbilitiesActions
-        {
-            void OnCore1(InputAction.CallbackContext context);
-            void OnCore2(InputAction.CallbackContext context);
-            void OnCore3(InputAction.CallbackContext context);
-        }
+    }
+    public AbilitiesActions @Abilities => new AbilitiesActions(this);
+    public interface IControlsActions
+    {
+        void OnMovement(InputAction.CallbackContext context);
+        void OnSprint(InputAction.CallbackContext context);
+        void OnInteraction(InputAction.CallbackContext context);
+        void OnLook(InputAction.CallbackContext context);
+        void OnZoom(InputAction.CallbackContext context);
+        void OnJump(InputAction.CallbackContext context);
+    }
+    public interface IAbilitiesActions
+    {
+        void OnCore1(InputAction.CallbackContext context);
+        void OnCore2(InputAction.CallbackContext context);
+        void OnCore3(InputAction.CallbackContext context);
     }
 }

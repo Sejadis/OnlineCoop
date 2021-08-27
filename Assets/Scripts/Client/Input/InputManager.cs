@@ -19,7 +19,7 @@ namespace Client.Input
         public Action<InputAction.CallbackContext> OnMovement;
         public Action<InputAction.CallbackContext> OnLook;
         public Action<InputAction.CallbackContext> OnZoom;
-        // public Action<InputAction.CallbackContext> OnJump;
+        public Action<InputAction.CallbackContext> OnJump;
 
         public Action<InputAction.CallbackContext> OnSprint;
 
@@ -74,9 +74,9 @@ namespace Client.Input
             PlayerInput.Controls.Zoom.performed += ctx => OnZoom?.Invoke(ctx);
             // PlayerInput.Controls.Zoom.canceled += ctx => OnZoom?.Invoke(ctx);
             //
-            // // PlayerInput.Controls.Jump.started += ctx => OnJump?.Invoke(ctx);
-            // PlayerInput.Controls.Jump.performed += ctx => OnJump?.Invoke(ctx);
-            // // PlayerInput.Controls.Jump.canceled += ctx => OnJump?.Invoke(ctx);
+            // PlayerInput.Controls.Jump.started += ctx => OnJump?.Invoke(ctx);
+            PlayerInput.Controls.Jump.performed += ctx => OnJump?.Invoke(ctx);
+            // PlayerInput.Controls.Jump.canceled += ctx => OnJump?.Invoke(ctx);
 
             // PlayerInput.Controls.Jump.started += ctx => OnJump?.Invoke(ctx);
             PlayerInput.Controls.Sprint.performed += ctx => OnSprint?.Invoke(ctx);
