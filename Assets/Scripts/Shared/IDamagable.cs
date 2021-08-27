@@ -1,8 +1,7 @@
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-
-public interface IDamagable
+namespace Shared
 {
-    void Damage(int amount);
+    public interface IDamagable
+    {
+        void Damage(int amount);
+    }
 }

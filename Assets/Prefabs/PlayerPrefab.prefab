@@ -1024,9 +1024,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   followTarget: {fileID: 920960692069537107}
-  moveSpeed: 5
-  sprintSpeedMultiplier: 2
-  moveInput: {x: 0, y: 0}
   lookInput: {x: 0, y: 0}
   sensitivity: 1
   yRotation: 0
@@ -1049,6 +1046,8 @@ MonoBehaviour:
     m_InternalValue: 
   IconName:
     m_InternalValue: 
+  equippedAbilities:
+    m_InternalValue: 010000000600000009000000
 --- !u!114 &5267219560877045827
 MonoBehaviour:
   m_ObjectHideFlags: 0

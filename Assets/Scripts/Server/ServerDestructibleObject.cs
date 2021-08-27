@@ -1,36 +1,37 @@
 using System;
-using System.Collections;
-using System.Collections.Generic;
 using MLAPI;
+using Shared;
 using UnityEngine;
 
-public class ServerDestructibleObject : NetworkBehaviour, IDamagable
+namespace Server
 {
-    [SerializeField] private int maxHealth = 10;
-    [SerializeField] private NetworkHealthState networkHealthState;
-
-    public Action<NetworkObject> OnDeath;
-
-    public override void NetworkStart()
+    public class ServerDestructibleObject : NetworkBehaviour, IDamagable
     {
-        base.NetworkStart();
-        if (!IsServer)
+        [SerializeField] private int maxHealth = 10;
+        [SerializeField] private NetworkHealthState networkHealthState;
+
+        public Action<NetworkObject> OnDeath;
+
+        public override void NetworkStart()
         {
-            enabled = false;
-            return;
+            base.NetworkStart();
+            if (!IsServer)
+            {
+                enabled = false;
+                return;
+            }
+
+            networkHealthState.MaxHealth.Value = maxHealth;
+            networkHealthState.CurrentHealth.Value = maxHealth;
         }
 
-        networkHealthState.MaxHealth.Value = maxHealth;
-        networkHealthState.CurrentHealth.Value = maxHealth;
-    }
-
-    public void Damage(int amount)
-    {
-        networkHealthState.CurrentHealth.Value -= amount;
-        if (networkHealthState.CurrentHealth.Value <= 0)
+        public void Damage(int amount)
         {
-            OnDeath?.Invoke(NetworkObject);
+            networkHealthState.CurrentHealth.Value -= amount;
+            if (networkHealthState.CurrentHealth.Value <= 0)
+            {
+                OnDeath?.Invoke(NetworkObject);
+            }
         }
     }
-    
 }

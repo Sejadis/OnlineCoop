@@ -1,25 +1,25 @@
-using System;
-using System.Collections;
-using System.Collections.Generic;
 using MLAPI;
 using MLAPI.SceneManagement;
 using UnityEngine;
 
-public class ServerSwitchScene : NetworkBehaviour
+namespace Server
 {
-    [SerializeField] private string sceneName = "ArenaBoss";
-    public override void NetworkStart()
+    public class ServerSwitchScene : NetworkBehaviour
     {
-        base.NetworkStart();
-        if (!IsServer)
+        [SerializeField] private string sceneName = "ArenaBoss";
+        public override void NetworkStart()
         {
-            enabled = false;
-            return;
+            base.NetworkStart();
+            if (!IsServer)
+            {
+                enabled = false;
+                return;
+            }
         }
-    }
 
-    private void OnTriggerEnter(Collider other)
-    {
-        NetworkSceneManager.SwitchScene(sceneName);
+        private void OnTriggerEnter(Collider other)
+        {
+            NetworkSceneManager.SwitchScene(sceneName);
+        }
     }
 }
