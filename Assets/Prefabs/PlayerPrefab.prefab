@@ -1065,6 +1065,7 @@ MonoBehaviour:
   fixedGroundedGravity: -5
   jumpHeight: 3
   groundCheckRadius: 0.05
+  sensitivity: {fileID: 11400000, guid: 0f1b9ea199d0b45429043685c5f4f68c, type: 2}
 --- !u!1 &7239202883376211541
 GameObject:
   m_ObjectHideFlags: 0

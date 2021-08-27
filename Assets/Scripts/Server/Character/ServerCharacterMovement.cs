@@ -1,5 +1,6 @@
 using System;
 using MLAPI;
+using Shared.Settings;
 using UnityEngine;
 
 [RequireComponent(typeof(CharacterController))]
@@ -18,9 +19,9 @@ public class ServerCharacterMovement : NetworkBehaviour
     //TODO refactor into net state
     [SerializeField] private float jumpHeight = 3;
     [SerializeField] private float groundCheckRadius = 0.05f;
+    [SerializeField] private SettingFloat sensitivity;
     protected float moveSpeed = 5;
     protected float sprintSpeedMultiplier = 2;
-    private float sensitivity = 1f;
     private float gravity = Physics.gravity.y * 2f;
     private bool gorund;
 
@@ -64,13 +65,13 @@ public class ServerCharacterMovement : NetworkBehaviour
         ApplyMovement();
         if (!IsNPC)
         {
-            yRotation += lookInput.x * sensitivity;
+            yRotation += lookInput.x * sensitivity.Value;
             yRotation %= 360; //keep the number small
 
             transform.rotation =
                 Quaternion.Euler(transform.rotation.eulerAngles.x, yRotation, transform.rotation.eulerAngles.z);
 
-            xRotation += lookInput.y * sensitivity;
+            xRotation += lookInput.y * sensitivity.Value;
             xRotation = Mathf.Clamp(xRotation, -90f, 70f);
             followTarget.rotation = Quaternion.Euler(xRotation, followTarget.rotation.eulerAngles.y,
                 followTarget.rotation.eulerAngles.z);
