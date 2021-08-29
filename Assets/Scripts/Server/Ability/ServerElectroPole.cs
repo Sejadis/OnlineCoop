@@ -49,7 +49,7 @@ namespace Shared.Abilities
 
         private void Update()
         {
-            List<ulong> keysToRemove = new List<ulong>();
+            var keysToRemove = new List<ulong>();
             foreach (var key in lineRenderers.Keys)
             {
                 if (NetworkSpawnManager.SpawnedObjects.ContainsKey(key))

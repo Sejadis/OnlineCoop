@@ -23,6 +23,7 @@ namespace Shared.Abilities
         public AbilityType[] HitEffects;
         public float delay;
         public GameObject targetingPrefab;
+        public bool isUnique;
     }
 }
 

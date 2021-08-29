@@ -10,24 +10,24 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 9105942b25715f24fb6c3ec31ff40496, type: 3}
-  m_Name: Fireball
+  m_Name: Explosion
   m_EditorClassIdentifier: 
-  cooldown: 2
+  cooldown: 1
   charges: 0
-  abilityType: 1
-  effect: 1
-  mainValue: 0
-  speed: 50
-  duration: 0
-  size: 0
-  range: 50
+  abilityType: 10
+  effect: 10
+  mainValue: 5
+  speed: 0
+  duration: 5
+  size: 6
+  range: 0
   isTracking: 0
   name: 
   description: 
-  icon: {fileID: 21300000, guid: 6b37369797a6ad34a92448f1340dedfa, type: 3}
+  icon: {fileID: 21300000, guid: ffdb0945b88293a4bada5c70ab411cd0, type: 3}
   followUpAbility: {fileID: 0}
   Prefabs:
-  - {fileID: 2912867827282859571, guid: 292f1bbbe6de41a4ab3de164c5210cdf, type: 3}
+  - {fileID: 1556073165841505093, guid: 9ad522bab083257499cb462044d7b838, type: 3}
   HitEffects: 07000000
   delay: 0
   targetingPrefab: {fileID: 0}

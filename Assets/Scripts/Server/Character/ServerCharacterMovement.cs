@@ -120,7 +120,7 @@ public class ServerCharacterMovement : NetworkBehaviour
     private void Jump()
     {
         // yVelocity.y = jumpHeight;
-        yVelocity.y += Mathf.Sqrt(jumpHeight * -2f * gravity);
+        yVelocity.y = Mathf.Sqrt(jumpHeight * -2f * gravity);
         // JumpRequested = false;
     }
 

@@ -48,10 +48,16 @@ namespace Server
             abilityHandler.StartAbility(ref runtimeParams);
         }
 
-        public virtual void Damage(int amount)
+        public virtual void Damage(ulong actor, int amount)
         {
             networkCharacterState.NetHealthState.CurrentHealth.Value -= amount;
+            if (networkCharacterState.NetHealthState.CurrentHealth.Value <= 0)
+            {
+                OnDeath?.Invoke(NetworkObjectId,actor);
+            }
         }
+
+        public Action<ulong, ulong> OnDeath { get; set; }
 
         public virtual void Heal(int amount)
         {

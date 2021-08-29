@@ -61,8 +61,6 @@ namespace Shared
             Vector2 v = new Vector2(1, 2);
         }
 
-
-
         [ClientRpc]
         public void StartCooldownClientRpc(AbilityType type, float cooldown)
         {

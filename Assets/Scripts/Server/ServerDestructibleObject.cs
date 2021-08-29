@@ -10,7 +10,7 @@ namespace Server
         [SerializeField] private int maxHealth = 10;
         [SerializeField] private NetworkHealthState networkHealthState;
 
-        public Action<NetworkObject> OnDeath;
+        public Action<ulong, ulong> OnDeath { get; set; }
 
         public override void NetworkStart()
         {
@@ -25,12 +25,12 @@ namespace Server
             networkHealthState.CurrentHealth.Value = maxHealth;
         }
 
-        public void Damage(int amount)
+        public void Damage(ulong actor, int amount)
         {
             networkHealthState.CurrentHealth.Value -= amount;
             if (networkHealthState.CurrentHealth.Value <= 0)
             {
-                OnDeath?.Invoke(NetworkObject);
+                OnDeath?.Invoke(NetworkObjectId, actor);
             }
         }
     }

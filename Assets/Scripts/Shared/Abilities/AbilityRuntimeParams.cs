@@ -23,6 +23,16 @@ namespace Shared.Abilities
             StartPosition = startPosition;
         }
 
+        public AbilityRuntimeParams(AbilityRuntimeParams abilityRuntimeParams)
+        {
+            AbilityType = abilityRuntimeParams.AbilityType;
+            Actor = abilityRuntimeParams.Actor;
+            TargetEntity = abilityRuntimeParams.TargetEntity;
+            TargetPosition = abilityRuntimeParams.TargetPosition;
+            TargetDirection = abilityRuntimeParams.TargetDirection;
+            StartPosition = abilityRuntimeParams.StartPosition;
+        }
+
         public void NetworkSerialize(NetworkSerializer serializer)
         {
             serializer.Serialize(ref AbilityType);

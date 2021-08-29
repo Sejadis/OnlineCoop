@@ -11,6 +11,7 @@ namespace Shared.Abilities
 
         public override bool Start()
         {
+            CanStartCooldown = false;
             return true;
         }
 
@@ -18,18 +19,20 @@ namespace Shared.Abilities
         {
             return false;
         }
+        
 
         public override void End()
         {
             if (NetworkSpawnManager.SpawnedObjects.TryGetValue(abilityRuntimeParams.TargetEntity, out var netObj))
             {
-                netObj.GetComponent<IDamagable>().Damage((int) Description.mainValue);
+                netObj.GetComponent<IDamagable>().Damage(abilityRuntimeParams.Actor, (int) Description.mainValue);
             }
         }
 
         public override bool IsBlocking()
         {
             return false;
+            
         }
     }
 }

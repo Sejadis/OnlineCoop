@@ -17,9 +17,8 @@ namespace Shared.Abilities
 
         public override bool Start()
         {
-            NetworkSpawnManager.SpawnedObjects[abilityRuntimeParams.Actor].GetComponent<NetworkCharacterState>()
-                .CastAbilityClientRpc(abilityRuntimeParams);
             actor = NetworkSpawnManager.SpawnedObjects[abilityRuntimeParams.Actor].GetComponent<NetworkCharacterState>();
+            actor.CastAbilityClientRpc(abilityRuntimeParams); //TODO needs to happen outside of abilities, (maybe ability handler?)
             RunHitCheck();
             return false;
         }
@@ -29,11 +28,11 @@ namespace Shared.Abilities
             throw new NotImplementedException();
         }
 
-        protected void RunHitCheck()
+        protected void RunHitCheck(float? size = null)
         {
-            var size = Physics.OverlapSphereNonAlloc(abilityRuntimeParams.TargetPosition, Description.size,
+            var resultCount = Physics.OverlapSphereNonAlloc(abilityRuntimeParams.TargetPosition, size ?? Description.size,
                 overlapResults);
-            for (var i = 0; i < size; i++)
+            for (var i = 0; i < resultCount; i++)
             {
                 var result = overlapResults[i];
                 var netObj = result.GetComponent<NetworkObject>();

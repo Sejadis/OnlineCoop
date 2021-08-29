@@ -9,9 +9,9 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 23135620d71d4896abbbda0b2fd820de, type: 3}
-  m_Name: Sensitivity
+  m_Script: {fileID: 11500000, guid: 46e7f13dd4f047349c146eb5744b4702, type: 3}
+  m_Name: InvertMouseLook
   m_EditorClassIdentifier: 
-  _value: 500
-  _name: Sensitivity
-  _hint: Adjusts the mouse look sensitivity
+  _value: 1
+  _name: Invert Mouse Look
+  _hint: 

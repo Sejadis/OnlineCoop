@@ -9,6 +9,8 @@ namespace Server.Ability
         public float StartTime { get; set; } = -1f;
         public bool IsStarted => StartTime > 0;
         protected AbilityRuntimeParams abilityRuntimeParams;
+        protected bool CanStartCooldown { get; set; } = true;
+        private bool didCooldownStart = false;
 
         public Ability(ref AbilityRuntimeParams abilityRuntimeParams)
         {
@@ -19,7 +21,7 @@ namespace Server.Ability
         {
             get
             {
-                if (GameDataManager.Instance.TryGetAbilityDescriptionByType(abilityRuntimeParams.AbilityType,
+                if (GameDataManager.TryGetAbilityDescriptionByType(abilityRuntimeParams.AbilityType,
                     out var result))
                 {
                     return result;
@@ -31,6 +33,19 @@ namespace Server.Ability
             }
         }
 
+        public virtual bool Reactivate()
+        {
+            throw new NotSupportedException(
+                $"Can not call Ability.Reactivate() on an ability that doesnt support it ({Description.abilityType})");
+        }
+
+        public bool ShouldStartCooldown()
+        {
+            var currentValue = didCooldownStart;
+            didCooldownStart = didCooldownStart || CanStartCooldown;
+            return !currentValue && CanStartCooldown;
+        }
+
         public abstract bool Start();
 
         public abstract bool Update();
@@ -40,7 +55,7 @@ namespace Server.Ability
 
         public static Ability CreateAbility(ref AbilityRuntimeParams runtimeParams)
         {
-            if (!GameDataManager.Instance.TryGetAbilityDescriptionByType(runtimeParams.AbilityType,
+            if (!GameDataManager.TryGetAbilityDescriptionByType(runtimeParams.AbilityType,
                 out var abilityDescription))
             {
                 throw new ArgumentException("Unhandled AbilityType.");
@@ -61,6 +76,7 @@ namespace Server.Ability
                 AbilityEffectType.Log => new LogAbility(ref runtimeParams),
                 AbilityEffectType.SpawnObject => new SpawnObjectAbility(ref runtimeParams),
                 AbilityEffectType.Damage => new DamageAbility(ref runtimeParams),
+                AbilityEffectType.ChargeAoeOneShot => new ChargedAoeAbility(ref runtimeParams),
                 _ => throw new Exception("Unhandled AbilityEffectType"),
             };
         }

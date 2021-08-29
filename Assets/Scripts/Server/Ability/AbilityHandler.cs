@@ -1,7 +1,9 @@
+using System;
 using System.Collections.Generic;
 using Shared.Abilities;
 using Shared.Data;
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 namespace Server.Ability
 {
@@ -45,6 +47,8 @@ namespace Server.Ability
                 if (!UpdateAbility(nonBlockingAbilities[i]))
                 {
                     nonBlockingAbilities[i].End();
+                    TryStartCooldown(nonBlockingAbilities[0]);
+
                     nonBlockingAbilities.RemoveAt(i);
                 }
             }
@@ -63,6 +67,7 @@ namespace Server.Ability
             if (shouldEnd)
             {
                 blockingAbilities[0].End();
+                TryStartCooldown(blockingAbilities[0]);
             }
 
             blockingAbilities.RemoveAt(0);
@@ -72,8 +77,49 @@ namespace Server.Ability
 
         public void StartAbility(ref AbilityRuntimeParams runtimeParams)
         {
-            if (GameDataManager.Instance.TryGetAbilityDescriptionByType(runtimeParams.AbilityType, out var descr))
+            if (GameDataManager.TryGetAbilityDescriptionByType(runtimeParams.AbilityType, out var description))
             {
+                if (description.isUnique)
+                {
+                    //try to find this ability in queue
+                    Ability match = null;
+                    if (blockingAbilities.Count > 0 &&
+                        blockingAbilities[0].Description.abilityType == description.abilityType)
+                    {
+                        match = blockingAbilities[0];
+                    }
+
+                    if (match == null)
+                    {
+                        foreach (var nonBlockingAbility in nonBlockingAbilities)
+                        {
+                            if (nonBlockingAbility.Description.abilityType == description.abilityType)
+                            {
+                                match = nonBlockingAbility;
+                                break;
+                            }
+                        }
+                    }
+
+                    if (match != null)
+                    {
+                        //we found a match, reactivate it
+                        var shouldEnd = !match.Reactivate();
+                        TryStartCooldown(match);
+
+                        if (shouldEnd)
+                        {
+                            //reactivate returned false, end the ability
+                            match.End();
+                            TryStartCooldown(match);
+                            nonBlockingAbilities.Remove(match);
+                        }
+
+                        return;
+                    }
+                    //ability not found, create a new one normally
+                }
+
                 var ability = Ability.CreateAbility(ref runtimeParams);
                 blockingAbilities.Add(ability);
                 if (blockingAbilities.Count == 1)
@@ -97,17 +143,14 @@ namespace Server.Ability
                 if (canUse)
                 {
                     ability.StartTime = Time.time;
+
+                    var shouldEnd = !ability.Start();
                     if (ability.Description.cooldown > 0)
                     {
-                        abilityCooldowns[ability.Description.abilityType] =
-                            Time.time; //TODO possibly dont set cooldown when ability cancels out of start
-                        if (serverCharacter is ServerPlayerCharacter playerCharacter)
-                        {
-                            playerCharacter.NetworkCharacterState.StartCooldownClientRpc(ability.Description.abilityType,
-                                ability.Description.cooldown);
-                        }
+                        TryStartCooldown(ability);
                     }
-                    if (!ability.Start())
+
+                    if (shouldEnd)
                     {
                         AdvanceAbilityQueue();
                         return;
@@ -125,6 +168,21 @@ namespace Server.Ability
                     AdvanceAbilityQueue();
                 }
             }
+        }
+
+        private bool TryStartCooldown(Ability ability)
+        {
+            if (!ability.ShouldStartCooldown()) return false; //cooldown not started
+
+            abilityCooldowns[ability.Description.abilityType] =
+                Time.time; //TODO possibly dont set cooldown when ability cancels out of start
+            if (serverCharacter is ServerPlayerCharacter playerCharacter)
+            {
+                playerCharacter.NetworkCharacterState.StartCooldownClientRpc(ability.Description.abilityType,
+                    ability.Description.cooldown);
+            }
+
+            return true; //cooldown started
         }
     }
 }

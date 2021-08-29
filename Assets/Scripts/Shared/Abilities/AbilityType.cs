@@ -12,5 +12,6 @@
         Damage,
         Heal,
         LightningStrike,
+        Explosion,
     }
 }

@@ -1,3 +1,4 @@
+using System;
 using Client.Input;
 using Client.UI;
 using Client.VFX;
@@ -5,6 +6,7 @@ using MLAPI;
 using Shared;
 using Shared.Abilities;
 using Shared.Data;
+using Shared.Settings;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -17,13 +19,14 @@ namespace Client.Character
         [SerializeField] private GameObject playerCamera;
         [SerializeField] private GameObject interactionUI;
         [SerializeField] private Transform aimTarget;
+        [SerializeField] private Vector3 localAbilitySpawnOffset;
+        [SerializeField] private SettingBool invertMouseSetting;
 
         private Vector2 movementData;
 
         private bool isSprinting;
         private NetworkCharacterState networkCharacterState;
 
-        // Start is called before the first frame update
         public override void NetworkStart()
         {
             networkCharacterState = GetComponent<NetworkCharacterState>();
@@ -43,7 +46,7 @@ namespace Client.Character
             for (int i = 0; i < 3; i++)
             {
                 var type = (AbilityType) networkCharacterState.equippedAbilities.Value[i];
-                if (GameDataManager.Instance.TryGetAbilityDescriptionByType(type, out var ability))
+                if (GameDataManager.TryGetAbilityDescriptionByType(type, out var ability))
                 {
                     abilityUI.SetAbility(ability, i);
                 }
@@ -62,11 +65,10 @@ namespace Client.Character
             InputManager.Instance.OnCore3 += OnCore3;
         }
 
-        
 
         private void OnClientAbilityCast(AbilityRuntimeParams runtimeParams)
         {
-            if (GameDataManager.Instance.TryGetAbilityDescriptionByType(runtimeParams.AbilityType, out var description))
+            if (GameDataManager.TryGetAbilityDescriptionByType(runtimeParams.AbilityType, out var description))
             {
                 var obj = Instantiate(description.Prefabs[0], runtimeParams.TargetPosition, Quaternion.identity);
                 var scaler = obj.GetComponent<VisualFXScaler>();
@@ -78,6 +80,8 @@ namespace Client.Character
                 {
                     obj.transform.localScale = Vector3.one * description.size;
                 }
+
+                obj.GetComponent<VisualFX>().Init(ref runtimeParams);
 
                 Destroy(obj, description.duration > 0 ? description.duration : 1f);
             }
@@ -107,8 +111,9 @@ namespace Client.Character
 
         private AbilityRuntimeParams CreateRuntimeParams(AbilityType abilityType)
         {
-            var runtimeParams = new AbilityRuntimeParams(abilityType, NetworkObjectId, 0, transform.position + aimTarget.forward,
-                aimTarget.forward, transform.position);
+            var runtimeParams = new AbilityRuntimeParams(abilityType, NetworkObjectId, 0,
+                transform.position + aimTarget.forward,
+                aimTarget.forward, aimTarget.TransformPoint(localAbilitySpawnOffset));
             return runtimeParams;
         }
 
@@ -133,17 +138,21 @@ namespace Client.Character
             movementData = inputValue.normalized;
             networkCharacterState.SendMoveInputServerRpc(movementData);
         }
-        
+
         private void OnJump(InputAction.CallbackContext obj)
         {
             networkCharacterState.SetJumpServerRpc();
         }
-        
+
         private void OnLook(InputAction.CallbackContext obj)
         {
             var value = obj.ReadValue<Vector2>();
-            value.y *= -1;
-            networkCharacterState.SendLookInputServerRpc(value);
+            if (invertMouseSetting.Value)
+            {
+                value.y *= -1;
+            }
+
+            networkCharacterState.SendLookInputServerRpc(Utility.GetRelativeMouseDelta(value));
         }
 
         private void OnDestroy()

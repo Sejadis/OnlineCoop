@@ -514,7 +514,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 3223002782766173919}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 1, y: 2.119, z: -3}
+  m_LocalPosition: {x: 1, y: 2.1, z: -3}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 5228209810745356942}
@@ -632,7 +632,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 4479625470712284609}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 1.619, z: 0}
+  m_LocalPosition: {x: 0, y: 1.6, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 5930723360331561979}
@@ -981,6 +981,8 @@ MonoBehaviour:
   playerCamera: {fileID: 3223002782766173919}
   interactionUI: {fileID: 5117485562082760443}
   aimTarget: {fileID: 920960692069537107}
+  localAbilitySpawnOffset: {x: 0, y: 0, z: 1}
+  invertMouseSetting: {fileID: 11400000, guid: ab0c435b9c54485468f32ac5c21af224, type: 2}
 --- !u!114 &4612193621415580500
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1013,7 +1015,7 @@ MonoBehaviour:
   IconName:
     m_InternalValue: 
   equippedAbilities:
-    m_InternalValue: 010000000600000009000000
+    m_InternalValue: 01000000060000000a000000
 --- !u!114 &5267219560877045827
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1129,7 +1131,7 @@ MonoBehaviour:
     ModeOverride: 0
     LensShift: {x: 0, y: 0}
     GateFit: 2
-    m_SensorSize: {x: 1.7777778, y: 1}
+    m_SensorSize: {x: 1.7767723, y: 1}
   m_Transitions:
     m_BlendHint: 0
     m_InheritPosition: 0
@@ -1152,7 +1154,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   AimCollisionFilter:
     serializedVersion: 2
-    m_Bits: 55
+    m_Bits: 256
   IgnoreTag: 
   AimDistance: 200
   AimTargetReticle: {fileID: 7803716688942729792}
@@ -1197,7 +1199,7 @@ RectTransform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 7706920392575643354}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 150}
+  m_LocalPosition: {x: 0, y: 0, z: 325.9762}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 1671663012244632060}

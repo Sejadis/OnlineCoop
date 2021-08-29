@@ -12,6 +12,7 @@ namespace Shared.Abilities
         Log,
         SpawnObject,
         AoeOneShot,
+        ChargeAoeOneShot,
     }
 }
 

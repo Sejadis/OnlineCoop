@@ -4,28 +4,12 @@ using UnityEngine;
 
 namespace Shared.Data
 {
-    public class GameDataManager : MonoBehaviour
+    public static class GameDataManager
     {
-        [SerializeField] private AbilityDescription[] abilityDescriptions;
-
-        private Dictionary<AbilityType, AbilityDescription> abilityTypeMap;
+        private static Dictionary<AbilityType, AbilityDescription> abilityTypeMap;
 
 
-
-        public static GameDataManager Instance { get; private set; }
-
-        private void Awake()
-        {
-            if (Instance != null)
-            {
-                Debug.LogWarning("There is already a GameDataManager in the scene, deleting this");
-                Destroy(this);
-            }
-
-            Instance = this;
-        }
-
-        public bool TryGetAbilityDescriptionByType(AbilityType abilityType, out AbilityDescription abilityDescription)
+        public static bool TryGetAbilityDescriptionByType(AbilityType abilityType, out AbilityDescription abilityDescription)
         {
             if (abilityTypeMap == null)
             {
@@ -34,9 +18,10 @@ namespace Shared.Data
             return abilityTypeMap.TryGetValue(abilityType, out abilityDescription);
         }
 
-        private void InitializeTypeMap()
+        private static void InitializeTypeMap()
         {
             abilityTypeMap = new Dictionary<AbilityType, AbilityDescription>();
+            var abilityDescriptions = Resources.Load<AbilityResource>("AbilityResource")?.abilities;
             foreach (var description in abilityDescriptions)
             {
                 abilityTypeMap[description.abilityType] = description;

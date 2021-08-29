@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using System.Linq;
 using MLAPI;
 using MLAPI.SceneManagement;
+using MLAPI.Spawning;
 using Server.Ability;
 using Shared;
 using Shared.Abilities;
@@ -17,6 +18,7 @@ namespace Server
         [SerializeField] private Transform[] shardPositions;
         [SerializeField] private GameObject shardPrefab;
         [SerializeField] private GameObject shieldObject;
+        [SerializeField] private Collider[] energyWalls;
         private bool isImmuneToDamage;
 
         private int shardsAlive = 0;
@@ -27,15 +29,15 @@ namespace Server
         {
             base.NetworkStart();
             shieldObject.SetActive(false);
-            
+
             networkCharacterState.NetHealthState.MaxHealth.Value = maxHealth;
             networkCharacterState.NetHealthState.CurrentHealth.Value = maxHealth;
-            
+
             activeTriggers = new List<int>(healthTriggers);
             activeTriggers = activeTriggers.OrderByDescending(i => i).ToList();
         }
 
-        public override void Damage(int amount)
+        public override void Damage(ulong actor, int amount)
         {
             if (shardsAlive > 0)
             {
@@ -43,7 +45,8 @@ namespace Server
             }
 
             networkCharacterState.NetHealthState.CurrentHealth.Value -= amount;
-            if (activeTriggers.Count > 0 && networkCharacterState.NetHealthState.CurrentHealth.Value <= activeTriggers[0])
+            if (activeTriggers.Count > 0 &&
+                networkCharacterState.NetHealthState.CurrentHealth.Value <= activeTriggers[0])
             {
                 activeTriggers.RemoveAt(0);
                 shieldObject.SetActive(true);
@@ -67,13 +70,20 @@ namespace Server
             NetworkSceneManager.SwitchScene("SampleScene");
         }
 
-        private void OnShardDeath(NetworkObject netObj)
+        private void OnShardDeath(ulong objId, ulong actor)
         {
-            netObj.Despawn(true);
+            NetworkSpawnManager.SpawnedObjects[objId].Despawn(true);
             shardsAlive--;
             if (shardsAlive == 0)
             {
                 shieldObject.SetActive(false);
+                if (NetworkSpawnManager.SpawnedObjects.TryGetValue(actor, out var playerCollider))
+                {
+                    foreach (var energyWall in energyWalls)
+                    {
+                        Physics.IgnoreCollision(energyWall,playerCollider.GetComponent<Collider>());
+                    }
+                }
             }
         }
     }

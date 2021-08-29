@@ -45,7 +45,7 @@ namespace Shared.Abilities
             // OnHit?.Invoke(entity.NetworkObjectId);
             //TODO refactor to decrease duplicated code (like server aoe zone)
 //TODO catch self
-            var netObject = other.GetComponent<NetworkCharacterState>();
+            var netObject = other.GetComponent<NetworkObject>();
             if (!IsServer || other.gameObject.name == "PlayerPrefab(Clone)" || netObject == null)
             {
                 return;
@@ -69,10 +69,10 @@ namespace Shared.Abilities
                 return;
             }
 
-            if (Time.time > startTime + lifeTime)
-            {
-                GetComponent<NetworkObject>().Despawn(true);
-            }
+            // if (Time.time > startTime + lifeTime)
+            // {
+            //     GetComponent<NetworkObject>().Despawn(true);
+            // }
 
             var transf = transform;
             var move = transf.forward * (Time.deltaTime * Speed);
