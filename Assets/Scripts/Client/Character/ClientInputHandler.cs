@@ -13,17 +13,11 @@ namespace Client.Character
 {
     public class ClientInputHandler : NetworkBehaviour
     {
-        [SerializeField] private float moveSpeed = 3;
-        [SerializeField] private float sprintSpeedMultiplier = 2;
         [SerializeField] private GameObject playerCamera;
-        [SerializeField] private GameObject interactionUI;
         [SerializeField] private Transform aimTarget;
         [SerializeField] private Vector3 localAbilitySpawnOffset;
         [SerializeField] private SettingBool invertMouseSetting;
 
-        private Vector2 movementData;
-
-        private bool isSprinting;
         private NetworkCharacterState networkCharacterState;
 
         public override void NetworkStart()
@@ -121,12 +115,10 @@ namespace Client.Character
         {
             if (context.performed)
             {
-                isSprinting = true;
                 networkCharacterState.ToggleSprintServerRpc(true);
             }
             else if (context.canceled)
             {
-                isSprinting = false;
                 networkCharacterState.ToggleSprintServerRpc(false);
             }
         }
@@ -134,8 +126,7 @@ namespace Client.Character
         private void OnMovement(InputAction.CallbackContext context)
         {
             var inputValue = context.ReadValue<Vector2>();
-            movementData = inputValue.normalized;
-            networkCharacterState.SendMoveInputServerRpc(movementData);
+            networkCharacterState.SendMoveInputServerRpc(inputValue.normalized);
         }
 
         private void OnJump(InputAction.CallbackContext obj)
