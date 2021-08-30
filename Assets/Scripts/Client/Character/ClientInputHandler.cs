@@ -54,14 +54,14 @@ namespace Client.Character
             networkCharacterState.OnStartCooldown += abilityUI.TriggerCooldown;
             networkCharacterState.OnClientAbilityCast += OnClientAbilityCast;
 
-            InputManager.Instance.OnMovement += OnMovement;
-            InputManager.Instance.OnSprint += OnSprint;
-            InputManager.Instance.OnJump += OnJump;
-            InputManager.Instance.OnLook += OnLook;
+            InputManager.OnMovement += OnMovement;
+            InputManager.OnSprint += OnSprint;
+            InputManager.OnJump += OnJump;
+            InputManager.OnLook += OnLook;
 
-            InputManager.Instance.OnCore1 += OnCore1;
-            InputManager.Instance.OnCore2 += OnCore2;
-            InputManager.Instance.OnCore3 += OnCore3;
+            InputManager.OnCore1 += OnCore1;
+            InputManager.OnCore2 += OnCore2;
+            InputManager.OnCore3 += OnCore3;
         }
 
 
@@ -157,10 +157,17 @@ namespace Client.Character
         private void OnDestroy()
         {
             if (!IsOwner) return;
-            InputManager.Instance.OnMovement -= OnMovement;
-            InputManager.Instance.OnSprint -= OnSprint;
-            InputManager.Instance.OnCore2 -= OnCore2;
-            InputManager.Instance.OnCore1 -= OnCore1;
+            InputManager.OnMovement -= OnMovement;
+            InputManager.OnSprint -= OnSprint;
+            InputManager.OnJump -= OnJump;
+            InputManager.OnLook -= OnLook;
+            
+            InputManager.OnCore1 -= OnCore1;
+            InputManager.OnCore2 -= OnCore2;
+            InputManager.OnCore3 -= OnCore3;
+            
+
+
         }
     }
 }
