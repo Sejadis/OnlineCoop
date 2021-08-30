@@ -26,7 +26,7 @@ namespace Client.Character
             }
 
             cameraDistance = virtualCamera.CameraDistance;
-            InputManager.Instance.OnZoom += OnZoom;
+            InputManager.OnZoom += OnZoom;
         }
 
         private void OnZoom(InputAction.CallbackContext obj)

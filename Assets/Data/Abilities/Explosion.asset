@@ -12,23 +12,25 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9105942b25715f24fb6c3ec31ff40496, type: 3}
   m_Name: Explosion
   m_EditorClassIdentifier: 
-  cooldown: 1
-  charges: 0
+  name: 
+  description: 
+  icon: {fileID: 21300000, guid: ffdb0945b88293a4bada5c70ab411cd0, type: 3}
   abilityType: 10
   effect: 10
+  isUnique: 1
+  cooldown: 1
+  charges: 0
   mainValue: 5
   speed: 0
   duration: 2
   size: 6
   range: 0
+  delay: 0
+  castTime: 0
+  rootsDuringCast: 0
   isTracking: 0
-  name: 
-  description: 
-  icon: {fileID: 21300000, guid: ffdb0945b88293a4bada5c70ab411cd0, type: 3}
   followUpAbility: {fileID: 0}
   Prefabs:
   - {fileID: 1556073165841505093, guid: 9ad522bab083257499cb462044d7b838, type: 3}
   HitEffects: 07000000
-  delay: 0
   targetingPrefab: {fileID: 0}
-  isUnique: 1

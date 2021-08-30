@@ -4,26 +4,25 @@ using UnityEngine.InputSystem;
 
 namespace Client.Input
 {
-    public class InputManager : MonoBehaviour
+    public static class InputManager
     {
         //TODO expose keybinds directly
-        public static InputManager Instance { get; private set; }
-        public PlayerInput PlayerInput { get; private set; } //TODO private?
+        public static PlayerInput PlayerInput { get; private set; } //TODO private?
 
-        public Action<InputAction.CallbackContext> OnCore1;
-        public Action<InputAction.CallbackContext> OnCore2;
-        public Action<InputAction.CallbackContext> OnCore3;
+        public static event Action<InputAction.CallbackContext> OnCore1;
+        public static event Action<InputAction.CallbackContext> OnCore2;
+        public static event Action<InputAction.CallbackContext> OnCore3;
         // public Action<InputAction.CallbackContext> OnWeaponBase;
         // public Action<InputAction.CallbackContext> OnWeaponSpecial;
 
-        public Action<InputAction.CallbackContext> OnMovement;
-        public Action<InputAction.CallbackContext> OnLook;
-        public Action<InputAction.CallbackContext> OnZoom;
-        public Action<InputAction.CallbackContext> OnJump;
+        public static event Action<InputAction.CallbackContext> OnMovement;
+        public static event Action<InputAction.CallbackContext> OnLook;
+        public static event Action<InputAction.CallbackContext> OnZoom;
+        public static event Action<InputAction.CallbackContext> OnJump;
 
-        public Action<InputAction.CallbackContext> OnSprint;
+        public static event Action<InputAction.CallbackContext> OnSprint;
 
-        public Action<InputAction.CallbackContext> OnInteraction;
+        public static event Action<InputAction.CallbackContext> OnInteraction;
 
         // public Action<InputAction.CallbackContext> OnAbilityUI;
         // public Action<InputAction.CallbackContext> OnBackUI;
@@ -31,19 +30,8 @@ namespace Client.Input
         // public Action<InputAction.CallbackContext> OnCraftingUI;
 
         // Start is called before the first frame update
-        void Awake()
+        static InputManager()
         {
-            if (Instance == null)
-            {
-                Instance = this;
-            }
-            else
-            {
-                Debug.LogError("There is already an InputManager in the scene. There can only be one. Destroying this",
-                    this);
-                Destroy(this);
-            }
-
             Application.targetFrameRate = 120;
             PlayerInput = new PlayerInput();
 
@@ -57,7 +45,7 @@ namespace Client.Input
             // PlayerInput.UI.Enable();
         }
 
-        private void HookUpControls()
+        private static void HookUpControls()
         {
             PlayerInput.Controls.Movement.started += ctx => OnMovement?.Invoke(ctx);
             PlayerInput.Controls.Movement.performed += ctx => OnMovement?.Invoke(ctx);
@@ -83,7 +71,7 @@ namespace Client.Input
             PlayerInput.Controls.Sprint.canceled += ctx => OnSprint?.Invoke(ctx);
         }
 
-        private void HookUpAbilities()
+        private static void HookUpAbilities()
         {
             // PlayerInput.Abilities.Core1.started += ctx => OnCore1?.Invoke(ctx);
             PlayerInput.Abilities.Core1.performed += ctx => OnCore1?.Invoke(ctx);
@@ -106,7 +94,7 @@ namespace Client.Input
             // // PlayerInput.Abilities.WeaponSpecial.canceled += ctx => OnWeaponSpecial?.Invoke(ctx);
         }
 
-        private void HookUpUI()
+        private static void HookUpUI()
         {
             // // PlayerInput.UI.Upgrade.started += ctx => OnUpgradeUI?.Invoke(ctx);
             // PlayerInput.UI.Ability.performed += ctx => OnAbilityUI?.Invoke(ctx);
