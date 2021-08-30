@@ -8,15 +8,15 @@ namespace Client.Ability
         [SerializeField] private GameObject targetVisualInRange;
         [SerializeField] private GameObject targetVisualOutOfRange;
 
-        private Camera camera;
+        private Camera targetingCamera;
         private Vector3 screenCenter;
         private LayerMask groundLayerMask;
         private Vector3 newPos;
 
         private void Start()
         {
-            camera = Camera.main;
-            screenCenter = new Vector3(camera.pixelWidth / 2, camera.pixelHeight / 2, 0);
+            targetingCamera = Camera.main;
+            screenCenter = new Vector3(targetingCamera.pixelWidth / 2, targetingCamera.pixelHeight / 2, 0);
             groundLayerMask = 1 << 8;
             transform.parent = baseTransform.parent;
             transform.localPosition = Vector3.zero;
@@ -43,7 +43,7 @@ namespace Client.Ability
             if (Physics.Raycast(ray, out var hit, abilityDescription.range, groundLayerMask))
             {
                 Vector2 hitInXZPlane = new Vector2(hit.point.x, hit.point.z);
-                var position = camera.transform.position;
+                var position = targetingCamera.transform.position;
                 Vector2 cameraInXZPlane = new Vector2(position.x, position.z);
                 float distance = Vector2.Distance(hitInXZPlane, cameraInXZPlane);
                 newPos.z = distance;
