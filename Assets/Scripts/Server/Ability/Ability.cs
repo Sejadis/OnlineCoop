@@ -9,7 +9,8 @@ namespace Server.Ability
     {
         public float StartTime { get; set; } = -1f;
         public bool IsStarted => StartTime > 0;
-        protected AbilityRuntimeParams abilityRuntimeParams;
+        private readonly AbilityRuntimeParams abilityRuntimeParams;
+        public AbilityRuntimeParams AbilityRuntimeParams => abilityRuntimeParams;
         protected bool CanStartCooldown { get; set; } = true;
         protected bool DidCastTimePass => Description.castTime == 0 || Time.time - StartTime > Description.castTime;
         private bool didCooldownStart = false;
@@ -46,7 +47,7 @@ namespace Server.Ability
         {
             var currentValue = didCooldownStart;
             didCooldownStart = didCooldownStart || CanStartCooldown;
-            return !currentValue && CanStartCooldown;
+            return abilityRuntimeParams.EffectType == AbilityEffectType.None && !currentValue && CanStartCooldown;
         }
 
         public abstract bool Start();

@@ -15,7 +15,7 @@ namespace Shared.Abilities
         private void SpawnObject()
         {
             var desc = Description;
-            var zone = Object.Instantiate(desc.Prefabs[0], abilityRuntimeParams.TargetPosition, Quaternion.identity);
+            var zone = Object.Instantiate(desc.Prefabs[0], AbilityRuntimeParams.TargetPosition, Quaternion.identity);
             spawnedObject = zone.GetComponent<ServerPlaceableObject>();
             spawnedObject.Initialize(Description);
             spawnedObject.NetworkObject.Spawn();

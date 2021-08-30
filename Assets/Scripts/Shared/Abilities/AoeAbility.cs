@@ -17,14 +17,14 @@ namespace Shared.Abilities
 
         public override bool Start()
         {
-            actor = NetworkSpawnManager.SpawnedObjects[abilityRuntimeParams.Actor]
+            actor = NetworkSpawnManager.SpawnedObjects[AbilityRuntimeParams.Actor]
                 .GetComponent<NetworkCharacterState>();
             if (DidCastTimePass)
             {
                 didStart = true;
                 RunHitCheck();
                 actor.CastAbilityClientRpc(
-                    abilityRuntimeParams); //TODO needs to happen outside of abilities, (maybe ability handler?)
+                    AbilityRuntimeParams); //TODO needs to happen outside of abilities, (maybe ability handler?)
             }
 
             return false;
@@ -38,7 +38,7 @@ namespace Shared.Abilities
                 if (!didStart)
                 {
                     actor.CastAbilityClientRpc(
-                        abilityRuntimeParams); //TODO needs to happen outside of abilities, (maybe ability handler?)
+                        AbilityRuntimeParams); //TODO needs to happen outside of abilities, (maybe ability handler?)
                 }
                 return false;
             }
@@ -48,7 +48,7 @@ namespace Shared.Abilities
 
         protected void RunHitCheck(float? size = null)
         {
-            var resultCount = Physics.OverlapSphereNonAlloc(abilityRuntimeParams.TargetPosition,
+            var resultCount = Physics.OverlapSphereNonAlloc(AbilityRuntimeParams.TargetPosition,
                 size ?? Description.size,
                 overlapResults);
             for (var i = 0; i < resultCount; i++)
@@ -61,9 +61,9 @@ namespace Shared.Abilities
                     {
                         foreach (var effect in Description.HitEffects)
                         {
-                            var runtimeParams = new AbilityRuntimeParams(Description.abilityType, abilityRuntimeParams.Actor,
+                            var runtimeParams = new AbilityRuntimeParams(Description.abilityType, AbilityRuntimeParams.Actor,
                                 netObj.NetworkObjectId, result.transform.position,
-                                Vector3.zero, abilityRuntimeParams.TargetPosition,effect);
+                                Vector3.zero, AbilityRuntimeParams.TargetPosition,effect);
                             actor.CastAbilityServerRpc(runtimeParams);
                         }
                     }

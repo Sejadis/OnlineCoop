@@ -26,7 +26,7 @@ namespace Shared.Abilities
             {
                 FireProjectile();
             }
-            return !didStart || Vector3.Distance(abilityRuntimeParams.StartPosition, projectileNetObject.transform.position) <
+            return !didStart || Vector3.Distance(AbilityRuntimeParams.StartPosition, projectileNetObject.transform.position) <
                    Description.range;
         }
 
@@ -47,10 +47,10 @@ namespace Shared.Abilities
             didStart = true;
             var desc = Description;
             var projectile =
-                Object.Instantiate(desc.Prefabs[0], abilityRuntimeParams.StartPosition, Quaternion.identity);
-            projectile.transform.forward = abilityRuntimeParams.TargetDirection;
+                Object.Instantiate(desc.Prefabs[0], AbilityRuntimeParams.StartPosition, Quaternion.identity);
+            projectile.transform.forward = AbilityRuntimeParams.TargetDirection;
             var serverLogic = projectile.GetComponent<ServerProjectile>();
-            serverLogic.Initialize(desc, abilityRuntimeParams.Actor);
+            serverLogic.Initialize(desc, AbilityRuntimeParams.Actor);
             projectileNetObject = projectile.GetComponent<NetworkObject>();
             projectileNetObject.Spawn();
         }

@@ -23,9 +23,9 @@ namespace Shared.Abilities
 
         public override void End()
         {
-            if (NetworkSpawnManager.SpawnedObjects.TryGetValue(abilityRuntimeParams.TargetEntity, out var netObj))
+            if (NetworkSpawnManager.SpawnedObjects.TryGetValue(AbilityRuntimeParams.TargetEntity, out var netObj))
             {
-                netObj.GetComponent<IDamagable>().Damage(abilityRuntimeParams.Actor, (int) Description.mainValue);
+                netObj.GetComponent<IDamagable>().Damage(AbilityRuntimeParams.Actor, (int) Description.mainValue);
             }
         }
     }

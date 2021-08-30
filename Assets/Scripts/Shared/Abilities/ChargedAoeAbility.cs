@@ -13,10 +13,10 @@ namespace Shared.Abilities
 //TODO think about how cast time should work for charged abilities
         public override bool Start()
         {
-            actor = NetworkSpawnManager.SpawnedObjects[abilityRuntimeParams.Actor].GetComponent<NetworkCharacterState>(); //TODO refactor into base?
-            var runtimeParams = new AbilityRuntimeParams(abilityRuntimeParams);
-            runtimeParams.TargetPosition = abilityRuntimeParams.StartPosition;
-            actor.CastAbilityClientRpc(abilityRuntimeParams); //TODO needs to happen outside of abilities, (maybe ability handler?)
+            actor = NetworkSpawnManager.SpawnedObjects[AbilityRuntimeParams.Actor].GetComponent<NetworkCharacterState>(); //TODO refactor into base?
+            var runtimeParams = new AbilityRuntimeParams(AbilityRuntimeParams);
+            runtimeParams.TargetPosition = AbilityRuntimeParams.StartPosition;
+            actor.CastAbilityClientRpc(AbilityRuntimeParams); //TODO needs to happen outside of abilities, (maybe ability handler?)
             CanStartCooldown = false;
             return true;
         }
@@ -31,7 +31,7 @@ namespace Shared.Abilities
             var chargeProgress = (Time.time - StartTime) / Description.duration;
             chargeProgress = Mathf.Clamp01(chargeProgress);
             var size = chargeProgress * Description.size;
-            Debug.DrawRay(abilityRuntimeParams.TargetPosition,Vector3.up * size, Color.red,10f);
+            Debug.DrawRay(AbilityRuntimeParams.TargetPosition,Vector3.up * size, Color.red,10f);
             RunHitCheck(size);
             didActivate = true;
             CanStartCooldown = true;

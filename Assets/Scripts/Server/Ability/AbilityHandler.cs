@@ -77,6 +77,7 @@ namespace Server.Ability
         {
             if (GameDataManager.TryGetAbilityDescriptionByType(runtimeParams.AbilityType, out var description))
             {
+                //dont go for reactivation if we are currently in a hitEffect instead of normal ability
                 if (runtimeParams.EffectType == AbilityEffectType.None && description.isUnique)
                 {
                     //try to find this ability in queue
@@ -133,7 +134,8 @@ namespace Server.Ability
             {
                 var ability = blockingAbilities[0];
                 var description = ability.Description;
-                var canUse = description.cooldown == 0f //ability has no cooldown
+                var canUse = ability.AbilityRuntimeParams.EffectType != AbilityEffectType.None //we have an effect type, which cant have a cooldown
+                    || description.cooldown == 0f //ability has no cooldown
                              || !abilityCooldowns.TryGetValue(description.abilityType,
                                  out var lastUseTime) //ability has cooldown but we havent used it yet
                              || Time.time - description.cooldown >

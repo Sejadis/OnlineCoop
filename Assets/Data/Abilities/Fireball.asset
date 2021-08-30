@@ -21,17 +21,18 @@ MonoBehaviour:
   isInterruptable: 1
   cooldown: 0.5
   charges: 0
-  mainValue: 0
+  mainValue: 50
   speed: 50
   duration: 0
   size: 0
   range: 50
   delay: 0
-  castTime: 2
+  castTime: 0
+  force: 15
   rootsDuringCast: 0
   isTracking: 0
   followUpAbility: {fileID: 0}
   Prefabs:
   - {fileID: 2912867827282859571, guid: 292f1bbbe6de41a4ab3de164c5210cdf, type: 3}
-  HitEffects: 07000000
+  HitEffects: 03000000
   targetingPrefab: {fileID: 0}

@@ -1420,6 +1420,10 @@ PrefabInstance:
       propertyPath: energyWalls.Array.data[1]
       value: 
       objectReference: {fileID: 975779538}
+    - target: {fileID: 5077415545571129679, guid: cd9ffed8fd73d9144998dae732eccc9b, type: 3}
+      propertyPath: m_Height
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 5077415546561636372, guid: cd9ffed8fd73d9144998dae732eccc9b, type: 3}
       propertyPath: m_RootOrder
       value: 2

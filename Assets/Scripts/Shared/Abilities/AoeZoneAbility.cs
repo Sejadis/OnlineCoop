@@ -25,7 +25,7 @@ namespace Shared.Abilities
                 RunHitCheck();
                 if (!didStart)
                 {
-                    actor.CastAbilityClientRpc(abilityRuntimeParams);
+                    actor.CastAbilityClientRpc(AbilityRuntimeParams);
                 }
             }
 
