@@ -23,6 +23,7 @@ namespace Server.Ability
         {
             get
             {
+                //TODO cache the result
                 if (GameDataManager.TryGetAbilityDescriptionByType(abilityRuntimeParams.AbilityType,
                     out var result))
                 {
@@ -61,13 +62,20 @@ namespace Server.Ability
 
         public static Ability CreateAbility(ref AbilityRuntimeParams runtimeParams)
         {
-            if (!GameDataManager.TryGetAbilityDescriptionByType(runtimeParams.AbilityType,
-                out var abilityDescription))
-            {
-                throw new ArgumentException("Unhandled AbilityType.");
+            var effectType = runtimeParams.EffectType;
+            if (effectType == AbilityEffectType.None){
+                if (GameDataManager.TryGetAbilityDescriptionByType(
+                    runtimeParams.AbilityType, out var abilityDescription))
+                {
+                    effectType = abilityDescription.effect;
+                }
+                else
+                {
+                    throw new ArgumentException("Unhandled AbilityType");
+                }
             }
 
-            return GetAbilityByEffectType(abilityDescription.effect, ref runtimeParams);
+            return GetAbilityByEffectType(effectType, ref runtimeParams);
         }
 
         private static Ability GetAbilityByEffectType(AbilityEffectType effectType,

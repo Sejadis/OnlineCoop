@@ -19,12 +19,7 @@ namespace Shared.Abilities
 
             return true;
         }
-
-        private void OnHit(ulong id)
-        {
-            throw new System.NotImplementedException();
-        }
-
+        
         public override bool Update()
         {
             if (!didStart && DidCastTimePass)
@@ -55,8 +50,7 @@ namespace Shared.Abilities
                 Object.Instantiate(desc.Prefabs[0], abilityRuntimeParams.StartPosition, Quaternion.identity);
             projectile.transform.forward = abilityRuntimeParams.TargetDirection;
             var serverLogic = projectile.GetComponent<ServerProjectile>();
-            serverLogic.Initialize(desc.speed, desc.range, desc.HitEffects, abilityRuntimeParams.Actor);
-            serverLogic.OnHit += OnHit;
+            serverLogic.Initialize(desc, abilityRuntimeParams.Actor);
             projectileNetObject = projectile.GetComponent<NetworkObject>();
             projectileNetObject.Spawn();
         }

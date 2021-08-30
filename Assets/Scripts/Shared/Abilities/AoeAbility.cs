@@ -61,9 +61,9 @@ namespace Shared.Abilities
                     {
                         foreach (var effect in Description.HitEffects)
                         {
-                            var runtimeParams = new AbilityRuntimeParams(effect, abilityRuntimeParams.Actor,
+                            var runtimeParams = new AbilityRuntimeParams(Description.abilityType, abilityRuntimeParams.Actor,
                                 netObj.NetworkObjectId, result.transform.position,
-                                Vector3.zero, abilityRuntimeParams.TargetPosition);
+                                Vector3.zero, abilityRuntimeParams.TargetPosition,effect);
                             actor.CastAbilityServerRpc(runtimeParams);
                         }
                     }

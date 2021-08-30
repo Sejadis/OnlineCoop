@@ -23,22 +23,26 @@ public class ServerCharacterMovement : NetworkBehaviour
     protected float moveSpeed = 5;
     protected float sprintSpeedMultiplier = 2;
     private float gravity = Physics.gravity.y * 2f;
-    private bool gorund;
-
 
     private float yRotation;
     private float xRotation;
     private bool isGrounded;
     private Vector3 yVelocity;
 
+    private bool isForceMoving;
+    private Vector3 forceMoveTargetPosition;
+    private float forceMoveSpeed;
+
     public void Teleport(Vector3 targetPosition)
     {
         throw new NotImplementedException();
     }
 
-    public void ForceMovement(Vector3 targetPosition)
+    public void ForceMovement(Vector3 targetPosition, float speed)
     {
-        throw new NotImplementedException();
+        isForceMoving = true;
+        forceMoveSpeed = speed;
+        forceMoveTargetPosition = targetPosition;
     }
 
     public void ForceMovement(Vector3 direction, float speed, float time)
@@ -59,7 +63,10 @@ public class ServerCharacterMovement : NetworkBehaviour
     // Update is called once per frame
     void Update()
     {
-        gorund = characterController.isGrounded;
+        if (isForceMoving && Vector3.Distance(transform.position, forceMoveTargetPosition) < 0.5f)
+        {
+            isForceMoving = false;
+        }
         GroundCheck();
         characterController.stepOffset = isGrounded ? 0.3f : 0f;
         ApplyMovement();
@@ -107,12 +114,20 @@ public class ServerCharacterMovement : NetworkBehaviour
 
     protected virtual void ApplyMovement()
     {
-        var finalMove = moveInput.x * transform.right;
-        finalMove += moveInput.y * transform.forward;
-        finalMove.Normalize();
-        finalMove *= IsSprinting ? moveSpeed * sprintSpeedMultiplier : moveSpeed;
-        finalMove *= Time.deltaTime;
-        // transform.position += finalMove;
+        Vector3 finalMove = Vector3.zero;
+        if (isForceMoving)
+        {
+            var targetDirection = (forceMoveTargetPosition - transform.position).normalized;
+            finalMove = targetDirection * (Time.deltaTime * forceMoveSpeed);
+        }
+        else
+        {
+            finalMove = moveInput.x * transform.right;
+            finalMove += moveInput.y * transform.forward;
+            finalMove.Normalize();
+            finalMove *= IsSprinting ? moveSpeed * sprintSpeedMultiplier : moveSpeed;
+            finalMove *= Time.deltaTime;
+        }
 
         characterController.Move(finalMove);
     }

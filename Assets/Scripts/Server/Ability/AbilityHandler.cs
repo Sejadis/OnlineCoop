@@ -77,7 +77,7 @@ namespace Server.Ability
         {
             if (GameDataManager.TryGetAbilityDescriptionByType(runtimeParams.AbilityType, out var description))
             {
-                if (description.isUnique)
+                if (runtimeParams.EffectType == AbilityEffectType.None && description.isUnique)
                 {
                     //try to find this ability in queue
                     Ability match = null;
@@ -132,14 +132,20 @@ namespace Server.Ability
             if (blockingAbilities.Count > 0)
             {
                 var ability = blockingAbilities[0];
-                var descr = ability.Description;
-                var canUse = descr.cooldown == 0f //ability has no cooldown
-                             || !abilityCooldowns.TryGetValue(descr.abilityType,
+                var description = ability.Description;
+                var canUse = description.cooldown == 0f //ability has no cooldown
+                             || !abilityCooldowns.TryGetValue(description.abilityType,
                                  out var lastUseTime) //ability has cooldown but we havent used it yet
-                             || Time.time - descr.cooldown >
+                             || Time.time - description.cooldown >
                              lastUseTime; //ability has cooldown and was used before but cooldown is expired
                 if (canUse)
                 {
+                    if (description.isInterruptable && serverCharacter is ServerPlayerCharacter playerCharacter)
+                    {
+                        //ability is canceled by movement so before starting the ability we will instead cancel movement
+                        //this prevents the ability to immediately be canceled if we cast it during movement
+                        playerCharacter.CancelMovement();
+                    }
                     ability.StartTime = Time.time;
 
                     var shouldEnd = !ability.Start();

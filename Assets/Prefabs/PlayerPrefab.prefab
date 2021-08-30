@@ -976,10 +976,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7d1ddc3e943a649499561df5ccf85fb2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  moveSpeed: 10
-  sprintSpeedMultiplier: 2
   playerCamera: {fileID: 3223002782766173919}
-  interactionUI: {fileID: 5117485562082760443}
   aimTarget: {fileID: 920960692069537107}
   localAbilitySpawnOffset: {x: 0, y: 0, z: 1}
   invertMouseSetting: {fileID: 11400000, guid: ab0c435b9c54485468f32ac5c21af224, type: 2}
@@ -1015,7 +1012,7 @@ MonoBehaviour:
   IconName:
     m_InternalValue: 
   equippedAbilities:
-    m_InternalValue: 01000000060000000a000000
+    m_InternalValue: 010000000300000005000000
 --- !u!114 &5267219560877045827
 MonoBehaviour:
   m_ObjectHideFlags: 0

@@ -18,7 +18,8 @@ MonoBehaviour:
   abilityType: 1
   effect: 1
   isUnique: 1
-  cooldown: 2
+  isInterruptable: 1
+  cooldown: 0.5
   charges: 0
   mainValue: 0
   speed: 50
@@ -26,7 +27,7 @@ MonoBehaviour:
   size: 0
   range: 50
   delay: 0
-  castTime: 0
+  castTime: 2
   rootsDuringCast: 0
   isTracking: 0
   followUpAbility: {fileID: 0}

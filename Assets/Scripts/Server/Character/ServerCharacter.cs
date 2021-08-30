@@ -8,7 +8,7 @@ using UnityEngine;
 
 namespace Server
 {
-    [RequireComponent(typeof(NetworkCharacterState), typeof(ServerCharacterMovement))]
+    [RequireComponent(typeof(NetworkCharacterState), typeof(ServerCharacterMovement), typeof(NetworkObject))]
     public class ServerCharacter : NetworkBehaviour, IDamagable, IHealable
     {
         protected AbilityHandler abilityHandler;
@@ -22,6 +22,11 @@ namespace Server
 
         public NetworkCharacterState NetworkCharacterState => networkCharacterState;
 
+        private void Awake()
+        {
+            abilityHandler = new AbilityHandler(this);
+        }
+
         // Update is called once per frame
         public override void NetworkStart()
         {
@@ -30,16 +35,20 @@ namespace Server
                 enabled = false;
                 return;
             }
+
             serverCharacterMovement = GetComponent<ServerCharacterMovement>();
             networkCharacterState = GetComponent<NetworkCharacterState>();
             networkCharacterState.OnServerAbilityCast += OnAbilityCast;
-
-            abilityHandler = new AbilityHandler(this);
         }
 
         protected virtual void Update()
         {
             abilityHandler.Update();
+        }
+
+        public void ForceMove(Vector3 targetPosition, float speed)
+        {
+            serverCharacterMovement.ForceMovement(targetPosition,speed);
         }
 
         protected void OnAbilityCast(AbilityRuntimeParams runtimeParams)
@@ -52,7 +61,7 @@ namespace Server
             networkCharacterState.NetHealthState.CurrentHealth.Value -= amount;
             if (networkCharacterState.NetHealthState.CurrentHealth.Value <= 0)
             {
-                OnDeath?.Invoke(NetworkObjectId,actor);
+                OnDeath?.Invoke(NetworkObjectId, actor);
             }
         }
 

@@ -4,13 +4,8 @@
     {
         None,
         Fireball,
-        CraftItem,
-        Log,
-        LogZone,
         ElectroPole,
         PoisonZone,
-        Damage,
-        Heal,
         LightningStrike,
         Explosion,
     }
