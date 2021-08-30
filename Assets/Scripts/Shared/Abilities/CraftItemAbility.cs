@@ -19,15 +19,6 @@ namespace Shared.Abilities
             return false;
         }
 
-        public override void End()
-        {
-        }
-
-        public override bool IsBlocking()
-        {
-            return false;
-        }
-
         public CraftItemAbility(ref AbilityRuntimeParams abilityRuntimeParams) : base(ref abilityRuntimeParams)
         {
         }

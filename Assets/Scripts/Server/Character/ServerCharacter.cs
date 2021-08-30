@@ -16,7 +16,6 @@ namespace Server
 
         protected ServerCharacterMovement serverCharacterMovement;
 
-        // protected Vector2 moveInput;
         //TODO refactor into net state
         protected float moveSpeed = 5;
         protected float sprintSpeedMultiplier = 2;
@@ -57,7 +56,7 @@ namespace Server
             }
         }
 
-        public Action<ulong, ulong> OnDeath { get; set; }
+        public event Action<ulong, ulong> OnDeath;
 
         public virtual void Heal(int amount)
         {

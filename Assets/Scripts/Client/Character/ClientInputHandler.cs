@@ -1,12 +1,11 @@
-using System;
 using Client.Input;
 using Client.UI;
 using Client.VFX;
-using MLAPI;
 using Shared;
-using Shared.Abilities;
 using Shared.Data;
 using Shared.Settings;
+using Shared.Abilities;
+using MLAPI;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -81,7 +80,7 @@ namespace Client.Character
                     obj.transform.localScale = Vector3.one * description.size;
                 }
 
-                obj.GetComponent<VisualFX>().Init(ref runtimeParams);
+                obj.GetComponent<VisualFX>()?.Init(ref runtimeParams);
 
                 Destroy(obj, description.duration > 0 ? description.duration : 1f);
             }

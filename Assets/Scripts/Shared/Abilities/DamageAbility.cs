@@ -28,11 +28,5 @@ namespace Shared.Abilities
                 netObj.GetComponent<IDamagable>().Damage(abilityRuntimeParams.Actor, (int) Description.mainValue);
             }
         }
-
-        public override bool IsBlocking()
-        {
-            return false;
-            
-        }
     }
 }

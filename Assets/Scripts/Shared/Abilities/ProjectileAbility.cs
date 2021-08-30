@@ -7,11 +7,16 @@ namespace Shared.Abilities
     public class ProjectileAbility : Ability
     {
         private NetworkObject projectileNetObject;
+        private bool didStart;
 
         public override bool Start()
         {
             CanStartCooldown = false;
-            FireProjectile();
+            if (DidCastTimePass)
+            {
+                FireProjectile();
+            }
+
             return true;
         }
 
@@ -22,7 +27,11 @@ namespace Shared.Abilities
 
         public override bool Update()
         {
-            return Vector3.Distance(abilityRuntimeParams.StartPosition, projectileNetObject.transform.position) <
+            if (!didStart && DidCastTimePass)
+            {
+                FireProjectile();
+            }
+            return !didStart || Vector3.Distance(abilityRuntimeParams.StartPosition, projectileNetObject.transform.position) <
                    Description.range;
         }
 
@@ -38,13 +47,9 @@ namespace Shared.Abilities
             return false;
         }
 
-        public override bool IsBlocking()
-        {
-            return false;
-        }
-
         private void FireProjectile()
         {
+            didStart = true;
             var desc = Description;
             var projectile =
                 Object.Instantiate(desc.Prefabs[0], abilityRuntimeParams.StartPosition, Quaternion.identity);

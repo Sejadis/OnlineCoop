@@ -1,6 +1,7 @@
 using System;
 using Shared.Abilities;
 using Shared.Data;
+using UnityEngine;
 
 namespace Server.Ability
 {
@@ -10,6 +11,7 @@ namespace Server.Ability
         public bool IsStarted => StartTime > 0;
         protected AbilityRuntimeParams abilityRuntimeParams;
         protected bool CanStartCooldown { get; set; } = true;
+        protected bool DidCastTimePass => Description.castTime == 0 || Time.time - StartTime > Description.castTime;
         private bool didCooldownStart = false;
 
         public Ability(ref AbilityRuntimeParams abilityRuntimeParams)
@@ -50,8 +52,12 @@ namespace Server.Ability
 
         public abstract bool Update();
 
-        public abstract void End();
-        public abstract bool IsBlocking();
+        public virtual void End(){}
+
+        public bool IsBlocking()
+        {
+            return Description.castTime > 0 && Time.time - StartTime < Description.castTime;
+        }
 
         public static Ability CreateAbility(ref AbilityRuntimeParams runtimeParams)
         {

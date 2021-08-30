@@ -1,20 +1,18 @@
-using System;
 using System.Collections.Generic;
 using Shared.Abilities;
 using Shared.Data;
 using UnityEngine;
-using UnityEngine.InputSystem;
 
 namespace Server.Ability
 {
     public class AbilityHandler
     {
-        private List<Ability> blockingAbilities = new List<Ability>();
+        private readonly List<Ability> blockingAbilities = new List<Ability>();
 
-        private List<Ability> nonBlockingAbilities = new List<Ability>();
+        private readonly List<Ability> nonBlockingAbilities = new List<Ability>();
 
-        private Dictionary<AbilityType, float> abilityCooldowns = new Dictionary<AbilityType, float>();
-        private ServerCharacter serverCharacter;
+        private readonly Dictionary<AbilityType, float> abilityCooldowns = new Dictionary<AbilityType, float>();
+        private readonly ServerCharacter serverCharacter;
 
         public AbilityHandler(ServerCharacter serverCharacter)
         {

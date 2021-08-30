@@ -44,7 +44,7 @@ namespace Client.Input
                 Destroy(this);
             }
 
-            Application.targetFrameRate = 60;
+            Application.targetFrameRate = 120;
             PlayerInput = new PlayerInput();
 
             HookUpControls();

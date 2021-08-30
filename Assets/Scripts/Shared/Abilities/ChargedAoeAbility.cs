@@ -1,5 +1,4 @@
 ﻿using MLAPI.Spawning;
-using TreeEditor;
 using UnityEngine;
 
 namespace Shared.Abilities
@@ -11,7 +10,7 @@ namespace Shared.Abilities
         public ChargedAoeAbility(ref AbilityRuntimeParams abilityRuntimeParams) : base(ref abilityRuntimeParams)
         {
         }
-
+//TODO think about how cast time should work for charged abilities
         public override bool Start()
         {
             actor = NetworkSpawnManager.SpawnedObjects[abilityRuntimeParams.Actor].GetComponent<NetworkCharacterState>(); //TODO refactor into base?

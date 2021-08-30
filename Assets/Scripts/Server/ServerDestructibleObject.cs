@@ -10,7 +10,7 @@ namespace Server
         [SerializeField] private int maxHealth = 10;
         [SerializeField] private NetworkHealthState networkHealthState;
 
-        public Action<ulong, ulong> OnDeath { get; set; }
+        public event Action<ulong, ulong> OnDeath;
 
         public override void NetworkStart()
         {

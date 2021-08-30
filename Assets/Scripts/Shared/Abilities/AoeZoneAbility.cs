@@ -19,22 +19,17 @@ namespace Shared.Abilities
 
         public override bool Update()
         {
-            if (Time.time > nextTickTime)
+            if (DidCastTimePass && Time.time > nextTickTime)
             {
                 nextTickTime = Time.time + Description.delay;
                 RunHitCheck();
+                if (!didStart)
+                {
+                    actor.CastAbilityClientRpc(abilityRuntimeParams);
+                }
             }
 
             return true;
-        }
-
-        public override void End()
-        {
-        }
-
-        public override bool IsBlocking()
-        {
-            return false;
         }
 
         public AoeZoneAbility(ref AbilityRuntimeParams abilityRuntimeParams) : base(ref abilityRuntimeParams)
