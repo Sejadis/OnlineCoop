@@ -22,13 +22,17 @@ namespace Client.Character
 
         public override void NetworkStart()
         {
+            //do this always in dependent on local player state
             networkCharacterState = GetComponent<NetworkCharacterState>();
+            networkCharacterState.OnClientAbilityCast += OnClientAbilityCast;
 
             if (!IsLocalPlayer)
             {
                 playerCamera.SetActive(false);
                 GameObject.FindWithTag("PartyUI").GetComponent<PartyUI>()
                     .RegisterPartyMember("Player " + NetworkObjectId, networkCharacterState);
+
+
                 return;
             }
 
@@ -46,7 +50,6 @@ namespace Client.Character
             }
 
             networkCharacterState.OnStartCooldown += abilityUI.TriggerCooldown;
-            networkCharacterState.OnClientAbilityCast += OnClientAbilityCast;
 
             InputManager.OnMovement += OnMovement;
             InputManager.OnSprint += OnSprint;
@@ -152,7 +155,7 @@ namespace Client.Character
             InputManager.OnSprint -= OnSprint;
             InputManager.OnJump -= OnJump;
             InputManager.OnLook -= OnLook;
-            
+
             InputManager.OnCore1 -= OnCore1;
             InputManager.OnCore2 -= OnCore2;
             InputManager.OnCore3 -= OnCore3;
