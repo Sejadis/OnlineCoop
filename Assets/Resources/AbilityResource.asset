@@ -12,4 +12,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2fb70b34acf347629661d23342665d37, type: 3}
   m_Name: AbilityResource
   m_EditorClassIdentifier: 
-  abilities: []
+  abilities:
+  - {fileID: 11400000, guid: cff69d9840d27a647b00e4b022c8cf4d, type: 2}
+  - {fileID: 11400000, guid: 0b5050877e11c2c4bb0ccc1d62d218c1, type: 2}
+  - {fileID: 11400000, guid: 368d20c4caee4ea4abafe28b788b6e2a, type: 2}
+  - {fileID: 11400000, guid: eb5b8dd97bd08984f97bc889be02844f, type: 2}
+  - {fileID: 11400000, guid: 7d08d6276a20b5c419517372e97d8f5f, type: 2}

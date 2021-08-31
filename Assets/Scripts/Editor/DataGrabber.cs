@@ -14,7 +14,6 @@ namespace Editor
             {
                 var res = ScriptableObject.CreateInstance<AbilityResource>();
                 AssetDatabase.CreateAsset(res, "Assets/Resources/AbilityResource.asset");
-                AssetDatabase.SaveAssets();
                 abilityResource = res;
             }
 
@@ -25,6 +24,8 @@ namespace Editor
                 abilityResource.abilities
                     .Add(AssetDatabase.LoadAssetAtPath<AbilityDescription>(AssetDatabase.GUIDToAssetPath(guid)));
             }
+
+            AssetDatabase.SaveAssets();
         }
     }
 }
