@@ -1,6 +1,8 @@
+using System.Diagnostics;
 using MLAPI;
 using Server.Ability;
 using UnityEngine;
+using Debug = UnityEngine.Debug;
 
 namespace Shared.Abilities
 {
@@ -8,6 +10,7 @@ namespace Shared.Abilities
     {
         private NetworkObject projectileNetObject;
         private bool didStart;
+        private Stopwatch watch = new Stopwatch();
 
         public override bool Start()
         {
@@ -24,12 +27,14 @@ namespace Shared.Abilities
         {
             if (!didStart && DidCastTimePass)
             {
+                watch.Stop();
                 FireProjectile();
             }
 
-            return projectileNetObject.IsSpawned && (!didStart || Vector3.Distance(AbilityRuntimeParams.StartPosition,
-                    projectileNetObject.transform.position) <
-                Description.range);
+            return !didStart
+                    || projectileNetObject.IsSpawned
+                    && Vector3.Distance(AbilityRuntimeParams.StartPosition, projectileNetObject.transform.position) <
+                    Description.range;
         }
 
         public override void End()

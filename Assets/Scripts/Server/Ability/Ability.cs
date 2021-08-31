@@ -15,7 +15,7 @@ namespace Server.Ability
         private readonly AbilityRuntimeParams abilityRuntimeParams;
         public AbilityRuntimeParams AbilityRuntimeParams => abilityRuntimeParams;
         protected bool CanStartCooldown { get; set; } = true;
-        protected bool DidCastTimePass => Description.castTime == 0 || Time.time - StartTime > Description.castTime;
+        protected bool DidCastTimePass => Description.castTime == 0 || Time.time - StartTime >= Description.castTime;
         private bool didCooldownStart = false;
         private int hitCount = 0;
 
