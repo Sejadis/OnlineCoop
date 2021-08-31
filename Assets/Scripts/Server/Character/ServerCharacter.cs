@@ -69,7 +69,9 @@ namespace Server
 
         public virtual void Heal(ulong actor, int amount)
         {
-            networkCharacterState.NetHealthState.CurrentHealth.Value += amount;
+            var health = amount + networkCharacterState.NetHealthState.CurrentHealth.Value;
+            health = Mathf.Clamp(health, 0, networkCharacterState.NetHealthState.MaxHealth.Value);
+            networkCharacterState.NetHealthState.CurrentHealth.Value = health;
         }
     }
 }
