@@ -67,7 +67,7 @@ namespace Shared
             OnStartCooldown?.Invoke(type,cooldown);
         }
 
-        [ServerRpc]
+        [ServerRpc(RequireOwnership = false)]
         public void SetJumpServerRpc()
         {
             OnJumpReceived?.Invoke();
