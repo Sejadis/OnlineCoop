@@ -29,8 +29,7 @@ namespace Shared.Abilities
             }
             return true;
         }
-
-
+        
         public override bool Update()
         {
             if (DidCastTimePass)

@@ -13,6 +13,8 @@ namespace Shared.Abilities
         SpawnObject,
         AoeOneShot,
         ChargeAoeOneShot,
+        Destroy,
+        ForceMove,
     }
 }
 

@@ -1,4 +1,7 @@
 using System;
+using MLAPI;
+using MLAPI.Spawning;
+using Shared;
 using Shared.Abilities;
 using Shared.Data;
 using UnityEngine;
@@ -61,6 +64,44 @@ namespace Server.Ability
             return Description.castTime > 0 && Time.time - StartTime < Description.castTime;
         }
 
+        //TODO probably take better parameter than collider
+        public virtual void RunHitEffects(Collider other, Vector3 targetPosition, Vector3 targetDirection, Vector3 startPosition, Transform abilityObject = null)
+        {
+            //TODO refactor to decrease duplicated code (like server aoe zone)
+//TODO catch self (target mask)
+            var netObject = other.GetComponent<NetworkObject>();
+            if (other.gameObject.name == "PlayerPrefab(Clone)" || netObject == null)
+            {
+                return;
+            }
+
+            var actor = NetworkSpawnManager.SpawnedObjects[abilityRuntimeParams.Actor].GetComponent<NetworkCharacterState>();
+            foreach (var hitEffect in Description.HitEffect2)
+            {
+                var runtimeParams = new AbilityRuntimeParams(
+                    abilityType: Description.abilityType, 
+                    actor: abilityRuntimeParams.Actor,
+                    targetEntity:netObject.NetworkObjectId,
+                    targetPosition:targetPosition,
+                    targetDirection:targetDirection, 
+                    startPosition:startPosition, 
+                    effectType:hitEffect.EffectType);
+                
+                if (hitEffect.TargetType != AbilityTargetType.None)
+                {
+                    runtimeParams.TargetEntity = hitEffect.TargetType switch
+                    {
+                        AbilityTargetType.Self => abilityObject?.GetComponent<NetworkObject>()?.NetworkObjectId
+                                                  ?? throw new InvalidOperationException("Can not target self on an ability without NetworkObject component"),
+                        AbilityTargetType.Actor => abilityRuntimeParams.Actor,
+                        _ => throw new ArgumentOutOfRangeException()
+                    };
+                }
+
+                actor.CastAbilityServerRpc(runtimeParams);
+            }
+        }
+
         public static Ability CreateAbility(ref AbilityRuntimeParams runtimeParams)
         {
             var effectType = runtimeParams.EffectType;
@@ -92,6 +133,9 @@ namespace Server.Ability
                 AbilityEffectType.SpawnObject => new SpawnObjectAbility(ref runtimeParams),
                 AbilityEffectType.Damage => new DamageAbility(ref runtimeParams),
                 AbilityEffectType.ChargeAoeOneShot => new ChargedAoeAbility(ref runtimeParams),
+                AbilityEffectType.Destroy => new DestroyAbility(ref runtimeParams),
+                AbilityEffectType.Heal => new HealAbility(ref runtimeParams),
+                AbilityEffectType.ForceMove => new ForceMoveAbility(ref runtimeParams),
                 _ => throw new Exception("Unhandled AbilityEffectType"),
             };
         }

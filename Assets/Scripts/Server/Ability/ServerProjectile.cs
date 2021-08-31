@@ -9,12 +9,9 @@ namespace Shared.Abilities
 {
     public class ServerProjectile : NetworkBehaviour
     {
-        private AbilityDescription abilityDescription;
-
+        private Ability ability;
         private bool isInitialized = false;
-        private float startTime;
-        private float lifeTime;
-        private ulong actorId;
+        private float speed;
 
         public override void NetworkStart()
         {
@@ -26,47 +23,23 @@ namespace Shared.Abilities
             }
         }
 
-        public void Initialize(AbilityDescription description, ulong actorId)
+        public void Initialize(Ability ability)
         {
-            abilityDescription = description;
-            lifeTime = description.range / description.speed;
-            startTime = Time.time;
+            this.ability = ability;
+            speed = ability.Description.speed;
             isInitialized = true;
-            this.actorId = actorId;
         }
 
         private void OnTriggerEnter(Collider other)
         {
-            // var entity =  other.GetComponent<NetworkObject>();
-            // OnHit?.Invoke(entity.NetworkObjectId);
-            //TODO refactor to decrease duplicated code (like server aoe zone)
-//TODO catch self (target mask)
-            var netObject = other.GetComponent<NetworkObject>();
-            if (!IsServer || other.gameObject.name == "PlayerPrefab(Clone)" || netObject == null)
+            if (!IsServer)
             {
                 return;
             }
 
-            if (other.TryGetComponent(out ServerCharacter serverChar))
-            {
-                // var hitDirection = other.transform.position - transform.position;
-                var hitDirection = transform.forward;
-                hitDirection.y = 0;
-
-                serverChar.ForceMove(other.transform.position + hitDirection.normalized *2, abilityDescription.force) ;
-            }
-
-            var actor = NetworkSpawnManager.SpawnedObjects[actorId].GetComponent<NetworkCharacterState>();
-            foreach (var hitEffect in abilityDescription.HitEffects)
-            {
-                var runtimeParams = new AbilityRuntimeParams(abilityDescription.abilityType, actorId, netObject.NetworkObjectId,
-                    Vector3.zero,
-                    Vector3.zero, transform.position, hitEffect);
-
-                actor.CastAbilityServerRpc(runtimeParams);
-                // netObject.CastAbilityServerRpc(runtimeParams);
-            }
+            ability.RunHitEffects(other, Vector3.zero, transform.forward,transform.position, transform);
         }
+
 
         private void Update()
         {
@@ -75,14 +48,8 @@ namespace Shared.Abilities
                 return;
             }
 
-            // if (Time.time > startTime + lifeTime)
-            // {
-            //     GetComponent<NetworkObject>().Despawn(true);
-            // }
-
-            var transf = transform;
-            var move = transf.forward * (Time.deltaTime * abilityDescription.speed);
-            transf.position += move;
+            var move = transform.forward * (Time.deltaTime * speed);
+            transform.position += move;
         }
     }
 }

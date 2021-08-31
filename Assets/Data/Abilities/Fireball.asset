@@ -21,7 +21,7 @@ MonoBehaviour:
   isInterruptable: 1
   cooldown: 0.5
   charges: 0
-  mainValue: 50
+  mainValue: 10
   speed: 50
   duration: 0
   size: 0
@@ -35,4 +35,13 @@ MonoBehaviour:
   Prefabs:
   - {fileID: 2912867827282859571, guid: 292f1bbbe6de41a4ab3de164c5210cdf, type: 3}
   HitEffects: 03000000
+  HitEffect2:
+  - EffectType: 3
+    TargetType: 0
+  - EffectType: 11
+    TargetType: 1
+  - EffectType: 4
+    TargetType: 2
+  - EffectType: 12
+    TargetType: 0
   targetingPrefab: {fileID: 0}

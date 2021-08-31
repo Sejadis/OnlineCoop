@@ -27,6 +27,7 @@ namespace Shared.Abilities
         public AbilityDescription followUpAbility;
         public GameObject[] Prefabs;
         public AbilityEffectType[] HitEffects;
+        public AbilityHitEffect[] HitEffect2;
         public GameObject targetingPrefab;
     }
 }

@@ -19,21 +19,26 @@ namespace Shared.Abilities
 
             return true;
         }
-        
+
         public override bool Update()
         {
             if (!didStart && DidCastTimePass)
             {
                 FireProjectile();
             }
-            return !didStart || Vector3.Distance(AbilityRuntimeParams.StartPosition, projectileNetObject.transform.position) <
-                   Description.range;
+
+            return projectileNetObject.IsSpawned && (!didStart || Vector3.Distance(AbilityRuntimeParams.StartPosition,
+                    projectileNetObject.transform.position) <
+                Description.range);
         }
 
         public override void End()
         {
             CanStartCooldown = true;
-            projectileNetObject?.Despawn(true);
+            if (projectileNetObject.IsSpawned)
+            {
+                projectileNetObject.Despawn(true);
+            }
         }
 
         public override bool Reactivate()
@@ -50,7 +55,7 @@ namespace Shared.Abilities
                 Object.Instantiate(desc.Prefabs[0], AbilityRuntimeParams.StartPosition, Quaternion.identity);
             projectile.transform.forward = AbilityRuntimeParams.TargetDirection;
             var serverLogic = projectile.GetComponent<ServerProjectile>();
-            serverLogic.Initialize(desc, AbilityRuntimeParams.Actor);
+            serverLogic.Initialize(this);
             projectileNetObject = projectile.GetComponent<NetworkObject>();
             projectileNetObject.Spawn();
         }

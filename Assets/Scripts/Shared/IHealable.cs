@@ -2,6 +2,6 @@ namespace Shared
 {
     public interface IHealable
     {
-        void Heal(int amount);
+        void Heal(ulong actor, int amount);
     }
 }

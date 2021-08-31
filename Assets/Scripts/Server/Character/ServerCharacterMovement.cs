@@ -38,11 +38,11 @@ public class ServerCharacterMovement : NetworkBehaviour
         throw new NotImplementedException();
     }
 
-    public void ForceMovement(Vector3 targetPosition, float speed)
+    public void ForceMovement(Vector3 targetDirection, float speed)
     {
         isForceMoving = true;
         forceMoveSpeed = speed;
-        forceMoveTargetPosition = targetPosition;
+        forceMoveTargetPosition = transform.position + targetDirection;
     }
 
     public void ForceMovement(Vector3 direction, float speed, float time)

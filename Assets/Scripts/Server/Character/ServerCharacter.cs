@@ -67,7 +67,7 @@ namespace Server
 
         public event Action<ulong, ulong> OnDeath;
 
-        public virtual void Heal(int amount)
+        public virtual void Heal(ulong actor, int amount)
         {
             networkCharacterState.NetHealthState.CurrentHealth.Value += amount;
         }

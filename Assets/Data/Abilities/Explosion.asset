@@ -28,11 +28,16 @@ MonoBehaviour:
   range: 0
   delay: 0
   castTime: 0
-  force: 0
+  force: 10
   rootsDuringCast: 0
   isTracking: 0
   followUpAbility: {fileID: 0}
   Prefabs:
   - {fileID: 1556073165841505093, guid: 9ad522bab083257499cb462044d7b838, type: 3}
-  HitEffects: 03000000
+  HitEffects: 
+  HitEffect2:
+  - EffectType: 3
+    TargetType: 0
+  - EffectType: 12
+    TargetType: 0
   targetingPrefab: {fileID: 0}

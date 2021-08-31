@@ -8,10 +8,6 @@ namespace Shared.Abilities
 
         public override bool Start()
         {
-            // NetworkSpawnManager.SpawnedObjects[abilityRuntimeParams.Actor].GetComponent<NetworkCharacterState>()
-            //     .CastAbilityClientRpc(abilityRuntimeParams);
-            // actor = NetworkSpawnManager.SpawnedObjects[abilityRuntimeParams.Actor]
-            //     .GetComponent<NetworkCharacterState>();
             base.Start();
             nextTickTime = Time.time + Description.delay;
             return true;

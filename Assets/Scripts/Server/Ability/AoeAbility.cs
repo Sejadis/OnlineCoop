@@ -54,24 +54,10 @@ namespace Shared.Abilities
             for (var i = 0; i < resultCount; i++)
             {
                 var result = overlapResults[i];
-                var netObj = result.GetComponent<NetworkObject>();
-                if (netObj != null)
-                {
-                    if (actor != null)
-                    {
-                        foreach (var effect in Description.HitEffects)
-                        {
-                            var runtimeParams = new AbilityRuntimeParams(Description.abilityType, AbilityRuntimeParams.Actor,
-                                netObj.NetworkObjectId, result.transform.position,
-                                Vector3.zero, AbilityRuntimeParams.TargetPosition,effect);
-                            actor.CastAbilityServerRpc(runtimeParams);
-                        }
-                    }
-                    else
-                    {
-                        //TODO try run on target?
-                    }
-                }
+                RunHitEffects(result,
+                    result.transform.position,
+                    result.transform.position - AbilityRuntimeParams.TargetPosition,
+                    AbilityRuntimeParams.TargetPosition);
             }
         }
     }
