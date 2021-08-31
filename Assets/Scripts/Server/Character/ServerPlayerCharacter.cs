@@ -12,14 +12,16 @@ namespace Server
         public override void NetworkStart()
         {
             base.NetworkStart();
+            if (!IsServer)
+            {
+                enabled = false;
+                return;
+            }
             networkCharacterState.OnMoveInputReceived += OnMoveInputReceived;
             networkCharacterState.OnLookInputReceived += OnLookInputReceived;
             networkCharacterState.OnSprintReceived += OnSprintReceived;
             networkCharacterState.OnJumpReceived += OnJumpReceived;
-
-            //should default to 0 anyway, might need to change later
-            // yRotation = transform.rotation.eulerAngles.y;
-            // xRotation = followTarget.rotation.eulerAngles.x;
+            
             serverCharacterMovement.IsNPC = false;
         }
 

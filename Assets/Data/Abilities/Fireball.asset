@@ -38,10 +38,17 @@ MonoBehaviour:
   HitEffect2:
   - EffectType: 3
     TargetType: 0
+    Conditions: []
   - EffectType: 11
     TargetType: 1
+    Conditions:
+    - CompareValue: 2
+      Comparer: 1
+      ConditionValue: 0
   - EffectType: 4
     TargetType: 2
+    Conditions: []
   - EffectType: 12
     TargetType: 0
+    Conditions: []
   targetingPrefab: {fileID: 0}

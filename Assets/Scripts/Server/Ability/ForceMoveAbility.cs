@@ -25,7 +25,7 @@ namespace Shared.Abilities
         {
             if (NetworkSpawnManager.SpawnedObjects.TryGetValue(AbilityRuntimeParams.TargetEntity, out var netObj))
             {
-                netObj.GetComponent<ServerCharacter>().ForceMove(AbilityRuntimeParams.TargetDirection, Description.force);
+                netObj.GetComponent<ServerCharacter>()?.ForceMove(AbilityRuntimeParams.TargetDirection, Description.force);
             }
         }
     }

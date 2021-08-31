@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 
 namespace Shared.Abilities
 {
@@ -8,5 +9,6 @@ namespace Shared.Abilities
         public AbilityEffectType EffectType;
         public float? OverrideValue;
         public AbilityTargetType TargetType;
+        public List<Condition> Conditions = new List<Condition>();
     }
 }

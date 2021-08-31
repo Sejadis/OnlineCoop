@@ -25,7 +25,7 @@ namespace Shared.Abilities
         {
             if (NetworkSpawnManager.SpawnedObjects.TryGetValue(AbilityRuntimeParams.TargetEntity, out var netObj))
             {
-                netObj.GetComponent<IHealable>().Heal(AbilityRuntimeParams.Actor, (int) Description.mainValue);
+                netObj.GetComponent<IHealable>()?.Heal(AbilityRuntimeParams.Actor, (int) Description.mainValue);
             }
         }
     }

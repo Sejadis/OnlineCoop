@@ -28,7 +28,7 @@ MonoBehaviour:
   range: 0
   delay: 0
   castTime: 0
-  force: 10
+  force: 100
   rootsDuringCast: 0
   isTracking: 0
   followUpAbility: {fileID: 0}
@@ -38,6 +38,8 @@ MonoBehaviour:
   HitEffect2:
   - EffectType: 3
     TargetType: 0
+    Conditions: []
   - EffectType: 12
     TargetType: 0
+    Conditions: []
   targetingPrefab: {fileID: 0}

@@ -17,6 +17,7 @@ namespace Server.Ability
         protected bool CanStartCooldown { get; set; } = true;
         protected bool DidCastTimePass => Description.castTime == 0 || Time.time - StartTime > Description.castTime;
         private bool didCooldownStart = false;
+        private int hitCount = 0;
 
         public Ability(ref AbilityRuntimeParams abilityRuntimeParams)
         {
@@ -57,7 +58,9 @@ namespace Server.Ability
 
         public abstract bool Update();
 
-        public virtual void End(){}
+        public virtual void End()
+        {
+        }
 
         public bool IsBlocking()
         {
@@ -65,8 +68,10 @@ namespace Server.Ability
         }
 
         //TODO probably take better parameter than collider
-        public virtual void RunHitEffects(Collider other, Vector3 targetPosition, Vector3 targetDirection, Vector3 startPosition, Transform abilityObject = null)
+        public virtual void RunHitEffects(Collider other, Vector3 targetPosition, Vector3 targetDirection,
+            Vector3 startPosition, Transform abilityObject = null)
         {
+            hitCount++;
             //TODO refactor to decrease duplicated code (like server aoe zone)
 //TODO catch self (target mask)
             var netObject = other.GetComponent<NetworkObject>();
@@ -75,24 +80,37 @@ namespace Server.Ability
                 return;
             }
 
-            var actor = NetworkSpawnManager.SpawnedObjects[abilityRuntimeParams.Actor].GetComponent<NetworkCharacterState>();
+            var actor = NetworkSpawnManager.SpawnedObjects[abilityRuntimeParams.Actor]
+                .GetComponent<NetworkCharacterState>();
             foreach (var hitEffect in Description.HitEffect2)
             {
+                var conditionMet = true;
+                foreach (var condition in hitEffect.Conditions)
+                {
+                    conditionMet = conditionMet && condition.Evaluate(hitCount);
+                }
+
+                if (!conditionMet)
+                {
+                    continue;
+                }
+
                 var runtimeParams = new AbilityRuntimeParams(
-                    abilityType: Description.abilityType, 
+                    abilityType: Description.abilityType,
                     actor: abilityRuntimeParams.Actor,
-                    targetEntity:netObject.NetworkObjectId,
-                    targetPosition:targetPosition,
-                    targetDirection:targetDirection, 
-                    startPosition:startPosition, 
-                    effectType:hitEffect.EffectType);
-                
+                    targetEntity: netObject.NetworkObjectId,
+                    targetPosition: targetPosition,
+                    targetDirection: targetDirection,
+                    startPosition: startPosition,
+                    effectType: hitEffect.EffectType);
+
                 if (hitEffect.TargetType != AbilityTargetType.None)
                 {
                     runtimeParams.TargetEntity = hitEffect.TargetType switch
                     {
                         AbilityTargetType.Self => abilityObject?.GetComponent<NetworkObject>()?.NetworkObjectId
-                                                  ?? throw new InvalidOperationException("Can not target self on an ability without NetworkObject component"),
+                                                  ?? throw new InvalidOperationException(
+                                                      "Can not target self on an ability without NetworkObject component"),
                         AbilityTargetType.Actor => abilityRuntimeParams.Actor,
                         _ => throw new ArgumentOutOfRangeException()
                     };
@@ -105,7 +123,8 @@ namespace Server.Ability
         public static Ability CreateAbility(ref AbilityRuntimeParams runtimeParams)
         {
             var effectType = runtimeParams.EffectType;
-            if (effectType == AbilityEffectType.None){
+            if (effectType == AbilityEffectType.None)
+            {
                 if (GameDataManager.TryGetAbilityDescriptionByType(
                     runtimeParams.AbilityType, out var abilityDescription))
                 {
