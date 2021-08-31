@@ -71,7 +71,6 @@ namespace Server.Ability
         public virtual void RunHitEffects(Collider other, Vector3 targetPosition, Vector3 targetDirection,
             Vector3 startPosition, Transform abilityObject = null)
         {
-            hitCount++;
             //TODO refactor to decrease duplicated code (like server aoe zone)
 //TODO catch self (target mask)
             var netObject = other.GetComponent<NetworkObject>();
@@ -79,6 +78,8 @@ namespace Server.Ability
             {
                 return;
             }
+
+            hitCount++;
 
             var actor = NetworkSpawnManager.SpawnedObjects[abilityRuntimeParams.Actor]
                 .GetComponent<NetworkCharacterState>();
