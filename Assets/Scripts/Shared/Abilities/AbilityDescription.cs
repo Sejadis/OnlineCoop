@@ -3,11 +3,8 @@ using UnityEngine;
 namespace Shared.Abilities
 {
     [CreateAssetMenu(menuName = "Ability")]
-    public class AbilityDescription : ScriptableObject
+    public class AbilityDescription : Description
     {
-        public new string name;
-        public string description;
-        public Sprite icon;
         public AbilityType abilityType;
         public AbilityEffectType effect;
         public bool isUnique;
@@ -26,9 +23,7 @@ namespace Shared.Abilities
         public bool isTracking;
         public AbilityDescription followUpAbility;
         public GameObject[] Prefabs;
-        public AbilityEffectType[] HitEffects;
-        public AbilityHitEffect[] HitEffect2;
+        public AbilityHitEffect[] HitEffects;
         public GameObject targetingPrefab;
     }
 }
-

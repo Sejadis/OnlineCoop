@@ -1,4 +1,6 @@
+using System;
 using System.Collections.Generic;
+using DefaultNamespace;
 using Shared.Abilities;
 using Shared.Data;
 using UnityEngine;
@@ -7,9 +9,9 @@ namespace Server.Ability
 {
     public class AbilityHandler
     {
-        private readonly List<Ability> blockingAbilities = new List<Ability>();
+        private readonly List<AbilityBase> blockingAbilities = new List<AbilityBase>();
 
-        private readonly List<Ability> nonBlockingAbilities = new List<Ability>();
+        private readonly List<AbilityBase> nonBlockingAbilities = new List<AbilityBase>();
 
         private readonly Dictionary<AbilityType, float> abilityCooldowns = new Dictionary<AbilityType, float>();
         private readonly ServerCharacter serverCharacter;
@@ -52,7 +54,7 @@ namespace Server.Ability
             }
         }
 
-        private bool UpdateAbility(Ability ability)
+        private bool UpdateAbility(AbilityBase ability)
         {
             var isActive = ability.Update();
             var canExpire = ability.Description.duration > 0;
@@ -78,10 +80,10 @@ namespace Server.Ability
             if (GameDataManager.TryGetAbilityDescriptionByType(runtimeParams.AbilityType, out var description))
             {
                 //dont go for reactivation if we are currently in a hitEffect instead of normal ability
-                if (runtimeParams.EffectType == AbilityEffectType.None && description.isUnique)
+                if (runtimeParams.EffectType == TargetEffectType.None && description.isUnique)
                 {
                     //try to find this ability in queue
-                    Ability match = null;
+                    AbilityBase match = null;
                     if (blockingAbilities.Count > 0 &&
                         blockingAbilities[0].Description.abilityType == description.abilityType)
                     {
@@ -102,16 +104,25 @@ namespace Server.Ability
 
                     if (match != null)
                     {
-                        //we found a match, reactivate it
-                        var shouldEnd = !match.Reactivate();
-                        TryStartCooldown(match);
-
-                        if (shouldEnd)
+                        if (match is Ability matchedAbility)
                         {
-                            //reactivate returned false, end the ability
-                            match.End();
+                            //we found a match, reactivate it
+                            var shouldEnd = !matchedAbility.Reactivate();
                             TryStartCooldown(match);
-                            nonBlockingAbilities.Remove(match);
+
+                            if (shouldEnd)
+                            {
+                                //reactivate returned false, end the ability
+                                match.End();
+                                TryStartCooldown(match);
+                                nonBlockingAbilities.Remove(match);
+                            }
+                            
+                        }
+                        else
+                        {
+                            //TODO refactor to some other, nicer way potentially separating hiteffects more from normal abilities?
+                            throw new ArgumentException("something wonky here, investigate");
                         }
 
                         return;
@@ -134,7 +145,7 @@ namespace Server.Ability
             {
                 var ability = blockingAbilities[0];
                 var description = ability.Description;
-                var canUse = ability.AbilityRuntimeParams.EffectType != AbilityEffectType.None //we have an effect type, which cant have a cooldown
+                var canUse = ability.AbilityRuntimeParams.EffectType != TargetEffectType.None //we have an effect type, which cant have a cooldown
                     || description.cooldown == 0f //ability has no cooldown
                              || !abilityCooldowns.TryGetValue(description.abilityType,
                                  out var lastUseTime) //ability has cooldown but we havent used it yet
@@ -176,7 +187,7 @@ namespace Server.Ability
             }
         }
 
-        private bool TryStartCooldown(Ability ability)
+        private bool TryStartCooldown(AbilityBase ability)
         {
             if (!ability.ShouldStartCooldown()) return false; //cooldown not started
 

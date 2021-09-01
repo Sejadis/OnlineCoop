@@ -1,9 +1,10 @@
-﻿using MLAPI.Spawning;
+﻿using DefaultNamespace;
+using MLAPI.Spawning;
 using Server.Ability;
 
 namespace Shared.Abilities
 {
-    public class HealAbility : Ability
+    public class HealAbility : AbilityTargetEffect
     {
         public HealAbility(ref AbilityRuntimeParams abilityRuntimeParams) : base(ref abilityRuntimeParams)
         {
@@ -11,22 +12,11 @@ namespace Shared.Abilities
 
         public override bool Start()
         {
-            CanStartCooldown = false;
-            return true;
-        }
-
-        public override bool Update()
-        {
-            return false;
-        }
-        
-
-        public override void End()
-        {
             if (NetworkSpawnManager.SpawnedObjects.TryGetValue(AbilityRuntimeParams.TargetEntity, out var netObj))
             {
-                netObj.GetComponent<IHealable>()?.Heal(AbilityRuntimeParams.Actor, (int) Description.mainValue);
+                netObj.GetComponent<IHealable>()?.Heal(AbilityRuntimeParams.Actor, (int)Description.mainValue);
             }
+            return false;
         }
     }
 }

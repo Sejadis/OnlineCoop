@@ -1,6 +1,6 @@
 ﻿namespace Shared.Abilities
 {
-    public enum AbilityHitEffectCondition
+    public enum TargetEffectConditionType
     {
         HitCount,
     }

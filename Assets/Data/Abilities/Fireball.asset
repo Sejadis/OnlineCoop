@@ -34,21 +34,20 @@ MonoBehaviour:
   followUpAbility: {fileID: 0}
   Prefabs:
   - {fileID: 2912867827282859571, guid: 292f1bbbe6de41a4ab3de164c5210cdf, type: 3}
-  HitEffects: 03000000
-  HitEffect2:
+  HitEffects:
+  - EffectType: 1
+    TargetType: 0
+    Conditions: []
+  - EffectType: 2
+    TargetType: 2
+    Conditions: []
   - EffectType: 3
     TargetType: 0
     Conditions: []
-  - EffectType: 11
+  - EffectType: 4
     TargetType: 1
     Conditions:
     - CompareValue: 2
       Comparer: 1
       ConditionValue: 0
-  - EffectType: 4
-    TargetType: 2
-    Conditions: []
-  - EffectType: 12
-    TargetType: 0
-    Conditions: []
   targetingPrefab: {fileID: 0}

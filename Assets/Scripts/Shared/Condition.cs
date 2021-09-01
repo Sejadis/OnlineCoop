@@ -8,7 +8,7 @@ namespace Shared
     {
         public float CompareValue;
         public ConditionComparer Comparer;
-        public AbilityHitEffectCondition ConditionValue;
+        public TargetEffectConditionType conditionTypeValue;
 
         public static bool Compare(float value1, float value2, ConditionComparer comparer)
         {
@@ -23,9 +23,9 @@ namespace Shared
 
         public bool Evaluate(float values)
         {
-            var value2 = ConditionValue switch
+            var value2 = conditionTypeValue switch
             {
-                AbilityHitEffectCondition.HitCount => values,
+                TargetEffectConditionType.HitCount => values,
                 _ => throw new ArgumentOutOfRangeException()
             };
 
