@@ -34,12 +34,11 @@ MonoBehaviour:
   followUpAbility: {fileID: 0}
   Prefabs:
   - {fileID: 1556073165841505093, guid: 9ad522bab083257499cb462044d7b838, type: 3}
-  HitEffects: 
-  HitEffect2:
-  - EffectType: 3
+  HitEffects:
+  - EffectType: 1
     TargetType: 0
     Conditions: []
-  - EffectType: 12
+  - EffectType: 3
     TargetType: 0
     Conditions: []
   targetingPrefab: {fileID: 0}

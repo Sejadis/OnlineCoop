@@ -6,7 +6,7 @@ namespace Shared.Abilities
     [Serializable]
     public class AbilityHitEffect
     {
-        public AbilityEffectType EffectType;
+        public TargetEffectType EffectType;
         public float? OverrideValue;
         public AbilityTargetType TargetType;
         public List<Condition> Conditions = new List<Condition>();

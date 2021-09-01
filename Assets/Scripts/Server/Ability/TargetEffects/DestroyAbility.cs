@@ -1,12 +1,12 @@
-﻿using MLAPI.Spawning;
+﻿using DefaultNamespace;
+using MLAPI.Spawning;
 using Server.Ability;
 
 namespace Shared.Abilities
 {
-    public class DestroyAbility : Ability
+    public class DestroyAbility : AbilityTargetEffect
     {
-        public DestroyAbility(ref AbilityRuntimeParams abilityRuntimeParams) : base(ref abilityRuntimeParams)
-        {
+        public DestroyAbility(ref AbilityRuntimeParams abilityRuntimeParams) : base(ref abilityRuntimeParams)        {
         }
 
         public override bool Start()
@@ -16,11 +16,6 @@ namespace Shared.Abilities
                obj.Despawn(true); 
             }
             return false;
-        }
-
-        public override bool Update()
-        {
-            throw new System.NotImplementedException();
         }
     }
 }

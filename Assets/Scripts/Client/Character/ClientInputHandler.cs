@@ -1,3 +1,4 @@
+using System;
 using Client.Input;
 using Client.UI;
 using Client.VFX;
@@ -31,11 +32,9 @@ namespace Client.Character
                 playerCamera.SetActive(false);
                 GameObject.FindWithTag("PartyUI").GetComponent<PartyUI>()
                     .RegisterPartyMember("Player " + NetworkObjectId, networkCharacterState);
-
-
                 return;
             }
-
+            
             GameObject.FindWithTag("PartyUI").GetComponent<PartyUI>().RegisterPlayer("Player " + NetworkObjectId,
                 networkCharacterState);
             var abilityUI = GameObject.FindWithTag("AbilityUI").GetComponent<AbilityUI>();

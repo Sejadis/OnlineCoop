@@ -34,5 +34,14 @@ MonoBehaviour:
   followUpAbility: {fileID: 0}
   Prefabs:
   - {fileID: 7166335207139937323, guid: 0302f63e6872f1f489e44295a8838885, type: 3}
-  HitEffects: 03000000
+  HitEffects:
+  - EffectType: 1
+    TargetType: 0
+    Conditions: []
+  - EffectType: 2
+    TargetType: 2
+    Conditions:
+    - CompareValue: 4
+      Comparer: 0
+      conditionTypeValue: 0
   targetingPrefab: {fileID: 0}

@@ -6,7 +6,7 @@ namespace Shared.Abilities
     public struct AbilityRuntimeParams : INetworkSerializable
     {
         public AbilityType AbilityType;
-        public AbilityEffectType EffectType;
+        public TargetEffectType EffectType;
         public ulong Actor;
         public ulong TargetEntity;
         public Vector3 TargetPosition;
@@ -15,7 +15,7 @@ namespace Shared.Abilities
 
 
         public AbilityRuntimeParams(AbilityType abilityType, ulong actor,
-            ulong targetEntity, Vector3 targetPosition, Vector3 targetDirection, Vector3 startPosition, AbilityEffectType effectType = AbilityEffectType.None)
+            ulong targetEntity, Vector3 targetPosition, Vector3 targetDirection, Vector3 startPosition, TargetEffectType effectType = TargetEffectType.None)
         {
             AbilityType = abilityType;
             EffectType = effectType;
