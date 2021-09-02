@@ -3,153 +3,156 @@ using MLAPI;
 using Shared.Settings;
 using UnityEngine;
 
-[RequireComponent(typeof(CharacterController))]
-public class ServerCharacterMovement : NetworkBehaviour
+namespace Server.Character
 {
-    [SerializeField] private CharacterController characterController;
-    [SerializeField] private Transform followTarget;
-
-    public float fixedGroundedGravity = -5f;
-    public Vector2 moveInput { get; set; }
-    public bool IsSprinting { get; set; }
-    public Vector2 lookInput { get; set; }
-    public bool IsNPC { get; set; } = true;
-    public bool JumpRequested { get; set; }
-
-    //TODO refactor into net state
-    [SerializeField] private float jumpHeight = 3;
-    [SerializeField] private float groundCheckRadius = 0.05f;
-    [SerializeField] private SettingFloat sensitivity;
-    protected float moveSpeed = 5;
-    protected float sprintSpeedMultiplier = 2;
-    private float gravity = Physics.gravity.y * 2f;
-
-    private float yRotation;
-    private float xRotation;
-    private bool isGrounded;
-    private Vector3 yVelocity;
-
-    private bool isForceMoving;
-    private Vector3 forceMoveTargetPosition;
-    private float forceMoveSpeed;
-
-    public void Teleport(Vector3 targetPosition)
+    [RequireComponent(typeof(CharacterController))]
+    public class ServerCharacterMovement : NetworkBehaviour
     {
-        throw new NotImplementedException();
-    }
+        [SerializeField] private CharacterController characterController;
+        [SerializeField] private Transform followTarget;
 
-    public void ForceMovement(Vector3 targetDirection, float speed)
-    {
-        isForceMoving = true;
-        forceMoveSpeed = speed;
-        forceMoveTargetPosition = transform.position + targetDirection;
-    }
+        public float fixedGroundedGravity = -5f;
+        public Vector2 moveInput { get; set; }
+        public bool IsSprinting { get; set; }
+        public Vector2 lookInput { get; set; }
+        public bool IsNPC { get; set; } = true;
+        public bool JumpRequested { get; set; }
 
-    public void ForceMovement(Vector3 direction, float speed, float time)
-    {
-        throw new NotImplementedException();
-    }
+        //TODO refactor into net state
+        [SerializeField] private float jumpHeight = 3;
+        [SerializeField] private float groundCheckRadius = 0.05f;
+        [SerializeField] private SettingFloat sensitivity;
+        protected float moveSpeed = 5;
+        protected float sprintSpeedMultiplier = 2;
+        private float gravity = Physics.gravity.y * 2f;
 
-    public override void NetworkStart()
-    {
-        base.NetworkStart();
-        if (!IsServer)
+        private float yRotation;
+        private float xRotation;
+        private bool isGrounded;
+        private Vector3 yVelocity;
+
+        private bool isForceMoving;
+        private Vector3 forceMoveTargetPosition;
+        private float forceMoveSpeed;
+
+        public void Teleport(Vector3 targetPosition)
         {
-            enabled = false;
-            return;
-        }
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        if (isForceMoving && Vector3.Distance(transform.position, forceMoveTargetPosition) < 0.5f)
-        {
-            isForceMoving = false;
-        }
-        GroundCheck();
-        characterController.stepOffset = isGrounded ? 0.3f : 0f;
-        ApplyMovement();
-        if (!IsNPC)
-        {
-            yRotation += lookInput.x * sensitivity.Value;
-            yRotation %= 360; //keep the number small
-
-            transform.rotation =
-                Quaternion.Euler(transform.rotation.eulerAngles.x, yRotation, transform.rotation.eulerAngles.z);
-
-            xRotation += lookInput.y * sensitivity.Value;
-            xRotation = Mathf.Clamp(xRotation, -90f, 70f);
-            followTarget.rotation = Quaternion.Euler(xRotation, followTarget.rotation.eulerAngles.y,
-                followTarget.rotation.eulerAngles.z);
+            throw new NotImplementedException();
         }
 
-        if (JumpRequested)
+        public void ForceMovement(Vector3 targetDirection, float speed)
         {
-            if (isGrounded)
+            isForceMoving = true;
+            forceMoveSpeed = speed;
+            forceMoveTargetPosition = transform.position + targetDirection;
+        }
+
+        public void ForceMovement(Vector3 direction, float speed, float time)
+        {
+            throw new NotImplementedException();
+        }
+
+        public override void NetworkStart()
+        {
+            base.NetworkStart();
+            if (!IsServer)
             {
-                Jump();
+                enabled = false;
+                return;
+            }
+        }
+
+        // Update is called once per frame
+        void Update()
+        {
+            if (isForceMoving && Vector3.Distance(transform.position, forceMoveTargetPosition) < 0.5f)
+            {
+                isForceMoving = false;
+            }
+            GroundCheck();
+            characterController.stepOffset = isGrounded ? 0.3f : 0f;
+            ApplyMovement();
+            if (!IsNPC)
+            {
+                yRotation += lookInput.x * sensitivity.Value;
+                yRotation %= 360; //keep the number small
+
+                transform.rotation =
+                    Quaternion.Euler(transform.rotation.eulerAngles.x, yRotation, transform.rotation.eulerAngles.z);
+
+                xRotation += lookInput.y * sensitivity.Value;
+                xRotation = Mathf.Clamp(xRotation, -90f, 70f);
+                followTarget.rotation = Quaternion.Euler(xRotation, followTarget.rotation.eulerAngles.y,
+                    followTarget.rotation.eulerAngles.z);
             }
 
-            JumpRequested = false;
+            if (JumpRequested)
+            {
+                if (isGrounded)
+                {
+                    Jump();
+                }
+
+                JumpRequested = false;
+            }
+
+            ApplyGravity();
         }
 
-        ApplyGravity();
-    }
-
-    private void GroundCheck()
-    {
-        var pos = transform.position;
-        pos.y -= characterController.skinWidth;
-        isGrounded = Physics.CheckSphere(pos, groundCheckRadius,
-            1 << LayerMask.NameToLayer("Ground"));
-    }
-
-    private void OnDrawGizmos()
-    {
-        var pos = transform.position;
-        pos.y -= characterController.skinWidth;
-        Gizmos.DrawSphere(pos, groundCheckRadius);
-    }
-
-    protected virtual void ApplyMovement()
-    {
-        Vector3 finalMove = Vector3.zero;
-        if (isForceMoving)
+        private void GroundCheck()
         {
-            var targetDirection = (forceMoveTargetPosition - transform.position).normalized;
-            finalMove = targetDirection * (Time.deltaTime * forceMoveSpeed);
+            var pos = transform.position;
+            pos.y -= characterController.skinWidth;
+            isGrounded = Physics.CheckSphere(pos, groundCheckRadius,
+                1 << LayerMask.NameToLayer("Ground"));
         }
-        else
+
+        private void OnDrawGizmos()
         {
-            finalMove = moveInput.x * transform.right;
-            finalMove += moveInput.y * transform.forward;
-            finalMove.Normalize();
-            finalMove *= IsSprinting ? moveSpeed * sprintSpeedMultiplier : moveSpeed;
-            finalMove *= Time.deltaTime;
+            var pos = transform.position;
+            pos.y -= characterController.skinWidth;
+            Gizmos.DrawSphere(pos, groundCheckRadius);
         }
 
-        characterController.Move(finalMove);
-    }
-
-    private void Jump()
-    {
-        // yVelocity.y = jumpHeight;
-        yVelocity.y = Mathf.Sqrt(jumpHeight * -2f * gravity);
-        // JumpRequested = false;
-    }
-
-    private void ApplyGravity()
-    {
-        if (isGrounded && yVelocity.y <= 0)
+        protected virtual void ApplyMovement()
         {
-            yVelocity.y = fixedGroundedGravity;
-        }
-        else
-        {
-            yVelocity.y += gravity * Time.deltaTime;
+            Vector3 finalMove = Vector3.zero;
+            if (isForceMoving)
+            {
+                var targetDirection = (forceMoveTargetPosition - transform.position).normalized;
+                finalMove = targetDirection * (Time.deltaTime * forceMoveSpeed);
+            }
+            else
+            {
+                finalMove = moveInput.x * transform.right;
+                finalMove += moveInput.y * transform.forward;
+                finalMove.Normalize();
+                finalMove *= IsSprinting ? moveSpeed * sprintSpeedMultiplier : moveSpeed;
+                finalMove *= Time.deltaTime;
+            }
+
+            characterController.Move(finalMove);
         }
 
-        characterController.Move(yVelocity * Time.deltaTime);
+        private void Jump()
+        {
+            // yVelocity.y = jumpHeight;
+            yVelocity.y = Mathf.Sqrt(jumpHeight * -2f * gravity);
+            // JumpRequested = false;
+        }
+
+        private void ApplyGravity()
+        {
+            if (isGrounded && yVelocity.y <= 0)
+            {
+                yVelocity.y = fixedGroundedGravity;
+            }
+            else
+            {
+                yVelocity.y += gravity * Time.deltaTime;
+            }
+
+            characterController.Move(yVelocity * Time.deltaTime);
+        }
     }
 }

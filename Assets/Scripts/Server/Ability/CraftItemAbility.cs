@@ -1,7 +1,7 @@
 using MLAPI.Spawning;
-using Server.Ability;
+using Shared.Abilities;
 
-namespace Shared.Abilities
+namespace Server.Ability
 {
     public class CraftItemAbility : Ability
     {

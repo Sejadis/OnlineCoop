@@ -1,6 +1,7 @@
 ﻿using MLAPI;
+using Shared.Abilities;
 
-namespace Shared.Abilities
+namespace Server.Ability
 {
     public abstract class ServerPlaceableObject : NetworkBehaviour
     {

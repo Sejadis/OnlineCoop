@@ -1,36 +1,36 @@
 using System;
 using System.Collections.Generic;
-using DefaultNamespace;
+using Runnable;
+using Server.Ability.TargetEffects;
+using Server.Character;
 using Shared.Abilities;
 using Shared.Data;
 using UnityEngine;
 
 namespace Server.Ability
 {
-    public class AbilityHandler
+    public class AbilityRunner : Runner<AbilityBase, AbilityRuntimeParams>
     {
         private readonly List<AbilityBase> blockingAbilities = new List<AbilityBase>();
-
-        private readonly List<AbilityBase> nonBlockingAbilities = new List<AbilityBase>();
 
         private readonly Dictionary<AbilityType, float> abilityCooldowns = new Dictionary<AbilityType, float>();
         private readonly ServerCharacter serverCharacter;
 
-        public AbilityHandler(ServerCharacter serverCharacter)
+        public AbilityRunner(ServerCharacter serverCharacter)
         {
             this.serverCharacter = serverCharacter;
         }
         // Start is called before the first frame update
 
         // Update is called once per frame
-        public void Update()
+        public override void Update()
         {
             if (blockingAbilities.Count > 0)
             {
                 var ability = blockingAbilities[0];
                 if (!ability.IsBlocking())
                 {
-                    nonBlockingAbilities.Add(ability);
+                    CurrentRunnables.Add(ability);
                     AdvanceAbilityQueue();
                 }
                 else
@@ -42,14 +42,14 @@ namespace Server.Ability
                 }
             }
 
-            for (int i = nonBlockingAbilities.Count - 1; i >= 0; i--)
+            for (int i = CurrentRunnables.Count - 1; i >= 0; i--)
             {
-                if (!UpdateAbility(nonBlockingAbilities[i]))
+                if (!UpdateAbility(CurrentRunnables[i]))
                 {
-                    nonBlockingAbilities[i].End();
-                    TryStartCooldown(nonBlockingAbilities[0]);
+                    CurrentRunnables[i].End();
+                    TryStartCooldown(CurrentRunnables[0]);
 
-                    nonBlockingAbilities.RemoveAt(i);
+                    CurrentRunnables.RemoveAt(i);
                 }
             }
         }
@@ -75,12 +75,12 @@ namespace Server.Ability
             RunAbility();
         }
 
-        public void StartAbility(ref AbilityRuntimeParams runtimeParams)
+        public override void AddRunnable(ref AbilityRuntimeParams runtimeParams)
         {
             if (GameDataManager.TryGetAbilityDescriptionByType(runtimeParams.AbilityType, out var description))
             {
                 //dont go for reactivation if we are currently in a hitEffect instead of normal ability
-                if (runtimeParams.EffectType == TargetEffectType.None && description.isUnique)
+                if (description.isUnique)
                 {
                     //try to find this ability in queue
                     AbilityBase match = null;
@@ -92,7 +92,7 @@ namespace Server.Ability
 
                     if (match == null)
                     {
-                        foreach (var nonBlockingAbility in nonBlockingAbilities)
+                        foreach (var nonBlockingAbility in CurrentRunnables)
                         {
                             if (nonBlockingAbility.Description.abilityType == description.abilityType)
                             {
@@ -115,9 +115,8 @@ namespace Server.Ability
                                 //reactivate returned false, end the ability
                                 match.End();
                                 TryStartCooldown(match);
-                                nonBlockingAbilities.Remove(match);
+                                CurrentRunnables.Remove(match);
                             }
-                            
                         }
                         else
                         {
@@ -130,7 +129,7 @@ namespace Server.Ability
                     //ability not found, create a new one normally
                 }
 
-                var ability = Ability.CreateAbility(ref runtimeParams);
+                var ability = GetRunnable(ref runtimeParams);
                 blockingAbilities.Add(ability);
                 if (blockingAbilities.Count == 1)
                 {
@@ -139,18 +138,23 @@ namespace Server.Ability
             }
         }
 
+        protected override AbilityBase GetRunnable(ref AbilityRuntimeParams runtimeParams)
+        {
+            return Ability.CreateAbility(ref runtimeParams);
+        }
+
         private void RunAbility()
         {
             if (blockingAbilities.Count > 0)
             {
                 var ability = blockingAbilities[0];
                 var description = ability.Description;
-                var canUse = ability.AbilityRuntimeParams.EffectType != TargetEffectType.None //we have an effect type, which cant have a cooldown
-                    || description.cooldown == 0f //ability has no cooldown
-                             || !abilityCooldowns.TryGetValue(description.abilityType,
-                                 out var lastUseTime) //ability has cooldown but we havent used it yet
-                             || Time.time - description.cooldown >
-                             lastUseTime; //ability has cooldown and was used before but cooldown is expired
+                var canUse =
+                    description.cooldown == 0f //ability has no cooldown
+                    || !abilityCooldowns.TryGetValue(description.abilityType,
+                        out var lastUseTime) //ability has cooldown but we havent used it yet
+                    || Time.time - description.cooldown >
+                    lastUseTime; //ability has cooldown and was used before but cooldown is expired
                 if (canUse)
                 {
                     if (description.isInterruptable && serverCharacter is ServerPlayerCharacter playerCharacter)
@@ -159,6 +163,7 @@ namespace Server.Ability
                         //this prevents the ability to immediately be canceled if we cast it during movement
                         playerCharacter.CancelMovement();
                     }
+
                     ability.StartTime = Time.time;
 
                     var shouldEnd = !ability.Start();
@@ -175,7 +180,7 @@ namespace Server.Ability
 
                     if (!ability.IsBlocking())
                     {
-                        nonBlockingAbilities.Add(ability);
+                        CurrentRunnables.Add(ability);
                         AdvanceAbilityQueue();
                     }
                 }

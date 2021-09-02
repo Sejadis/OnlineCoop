@@ -3,7 +3,7 @@ using MLAPI.Messaging;
 using MLAPI.Spawning;
 using UnityEngine;
 
-namespace Shared.Abilities
+namespace Server.Ability
 {
     [RequireComponent(typeof(CapsuleCollider))]
     public class ServerElectroPole : ServerPlaceableObject

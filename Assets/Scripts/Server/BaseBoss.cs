@@ -3,6 +3,7 @@ using System.Linq;
 using MLAPI;
 using MLAPI.SceneManagement;
 using MLAPI.Spawning;
+using Server.Character;
 using Shared;
 using UnityEngine;
 

@@ -1,11 +1,7 @@
-﻿using System;
-using MLAPI;
-using MLAPI.Spawning;
-using Server;
-using Server.Ability;
+﻿using MLAPI;
 using UnityEngine;
 
-namespace Shared.Abilities
+namespace Server.Ability
 {
     public class ServerProjectile : NetworkBehaviour
     {

@@ -1,7 +1,7 @@
 using System;
-using DefaultNamespace;
 using MLAPI;
 using MLAPI.Spawning;
+using Server.Ability.TargetEffects;
 using Shared;
 using Shared.Abilities;
 using Shared.Data;
@@ -35,7 +35,6 @@ namespace Server.Ability
         }
 
 
-
         //TODO probably take better parameter than collider
         public virtual void RunHitEffects(Collider other, Vector3 targetPosition, Vector3 targetDirection,
             Vector3 startPosition, Transform abilityObject = null)
@@ -65,47 +64,41 @@ namespace Server.Ability
                     continue;
                 }
 
-                var runtimeParams = new AbilityRuntimeParams(
-                    abilityType: Description.abilityType,
-                    actor: AbilityRuntimeParams.Actor,
-                    targetEntity: netObject.NetworkObjectId,
-                    targetPosition: targetPosition,
-                    targetDirection: targetDirection,
-                    startPosition: startPosition,
-                    effectType: hitEffect.EffectType);
-
-                if (hitEffect.TargetType != AbilityTargetType.None)
+                var target = hitEffect.TargetType switch
                 {
-                    runtimeParams.TargetEntity = hitEffect.TargetType switch
-                    {
-                        AbilityTargetType.Self => abilityObject?.GetComponent<NetworkObject>()?.NetworkObjectId
-                                                  ?? throw new InvalidOperationException(
-                                                      "Can not target self on an ability without NetworkObject component"),
-                        AbilityTargetType.Actor => AbilityRuntimeParams.Actor,
-                        _ => throw new ArgumentOutOfRangeException()
-                    };
-                }
+                    AbilityTargetType.None => netObject.NetworkObjectId,
+                    AbilityTargetType.Self => abilityObject?.GetComponent<NetworkObject>()?.NetworkObjectId
+                                              ?? throw new InvalidOperationException(
+                                                  "Can not target self on an ability without NetworkObject component"),
+                    AbilityTargetType.Actor => AbilityRuntimeParams.Actor,
+                    _ => throw new ArgumentOutOfRangeException()
+                };
 
-                actor.CastAbilityServerRpc(runtimeParams);
+                var runtimeParams = new TargetEffectParameter(
+                    target: target,
+                    actor: AbilityRuntimeParams.Actor,
+                    targetDirection: targetDirection,
+                    abilityType: Description.abilityType
+                    // targetPosition: targetPosition,
+                    // startPosition: startPosition,
+                    // effectType: hitEffect.EffectType,
+                );
+
+                TargetEffect.GetEffectByType(hitEffect.EffectType, runtimeParams).Run();
             }
         }
 
         public static AbilityBase CreateAbility(ref AbilityRuntimeParams runtimeParams)
         {
-            if (runtimeParams.EffectType == TargetEffectType.None)
+            if (GameDataManager.TryGetAbilityDescriptionByType(
+                runtimeParams.AbilityType, out var abilityDescription))
             {
-                if (GameDataManager.TryGetAbilityDescriptionByType(
-                    runtimeParams.AbilityType, out var abilityDescription))
-                {
-                    return GetAbilityByEffectType(abilityDescription.effect, ref runtimeParams);
-                }
-                else
-                {
-                    throw new ArgumentException("Unhandled AbilityType");
-                }
+                return GetAbilityByEffectType(abilityDescription.effect, ref runtimeParams);
             }
-
-            return GetAbilityByEffectType(runtimeParams.EffectType, ref runtimeParams);
+            else
+            {
+                throw new ArgumentException("Unhandled AbilityType");
+            }
         }
 
         private static AbilityBase GetAbilityByEffectType(AbilityEffectType effectType,
@@ -121,19 +114,6 @@ namespace Server.Ability
                 AbilityEffectType.SpawnObject => new SpawnObjectAbility(ref runtimeParams),
                 AbilityEffectType.ChargeAoeOneShot => new ChargedAoeAbility(ref runtimeParams),
                 _ => throw new Exception("Unhandled AbilityEffectType"),
-            };
-        }
-
-        private static AbilityBase GetAbilityByEffectType(TargetEffectType effectType,
-            ref AbilityRuntimeParams runtimeParams)
-        {
-            return effectType switch
-            {
-                TargetEffectType.Damage => new DamageAbility(ref runtimeParams),
-                TargetEffectType.Destroy => new DestroyAbility(ref runtimeParams),
-                TargetEffectType.Heal => new HealAbility(ref runtimeParams),
-                TargetEffectType.ForceMove => new ForceMoveAbility(ref runtimeParams),
-                _ => throw new Exception("Unhandled TargetEffectType"),
             };
         }
     }

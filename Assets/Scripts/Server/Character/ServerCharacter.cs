@@ -1,17 +1,18 @@
 using System;
-using System.Collections.Generic;
 using MLAPI;
 using Server.Ability;
 using Shared;
 using Shared.Abilities;
+using StatusEffects;
 using UnityEngine;
 
-namespace Server
+namespace Server.Character
 {
     [RequireComponent(typeof(NetworkCharacterState), typeof(ServerCharacterMovement), typeof(NetworkObject))]
-    public class ServerCharacter : NetworkBehaviour, IDamagable, IHealable
+    public class ServerCharacter : NetworkBehaviour, IDamagable, IHealable, IBuffable
     {
-        protected AbilityHandler abilityHandler;
+        protected AbilityRunner AbilityRunner;
+        protected StatusEffectRunner StatusEffectRunner;
         protected NetworkCharacterState networkCharacterState;
 
         protected ServerCharacterMovement serverCharacterMovement;
@@ -24,7 +25,8 @@ namespace Server
 
         private void Awake()
         {
-            abilityHandler = new AbilityHandler(this);
+            AbilityRunner = new AbilityRunner(this);
+            StatusEffectRunner = new StatusEffectRunner();
         }
 
         // Update is called once per frame
@@ -43,7 +45,7 @@ namespace Server
 
         protected virtual void Update()
         {
-            abilityHandler.Update();
+            AbilityRunner.Update();
         }
 
         public void ForceMove(Vector3 targetPosition, float speed)
@@ -53,9 +55,10 @@ namespace Server
 
         protected void OnAbilityCast(AbilityRuntimeParams runtimeParams)
         {
-            abilityHandler.StartAbility(ref runtimeParams);
+            AbilityRunner.AddRunnable(ref runtimeParams);
         }
 
+        public event Action<ulong, ulong> OnDeath;
         public virtual void Damage(ulong actor, int amount)
         {
             networkCharacterState.NetHealthState.CurrentHealth.Value -= amount;
@@ -65,13 +68,16 @@ namespace Server
             }
         }
 
-        public event Action<ulong, ulong> OnDeath;
-
         public virtual void Heal(ulong actor, int amount)
         {
             var health = amount + networkCharacterState.NetHealthState.CurrentHealth.Value;
             health = Mathf.Clamp(health, 0, networkCharacterState.NetHealthState.MaxHealth.Value);
             networkCharacterState.NetHealthState.CurrentHealth.Value = health;
+        }
+
+        public void AddStatusEffect(StatusEffect statusEffect)
+        {
+            // StatusEffectRunner.AddRunnable();
         }
     }
 }

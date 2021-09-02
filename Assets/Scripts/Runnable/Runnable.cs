@@ -1,4 +1,4 @@
-﻿namespace DefaultNamespace
+﻿namespace Runnable
 {
     public abstract class Runnable
     {

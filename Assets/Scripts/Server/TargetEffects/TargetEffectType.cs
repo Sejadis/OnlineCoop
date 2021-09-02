@@ -1,4 +1,4 @@
-﻿namespace Shared.Abilities
+﻿namespace Server.Ability.TargetEffects
 {
     public enum TargetEffectType
     {

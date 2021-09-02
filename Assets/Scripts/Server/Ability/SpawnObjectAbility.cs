@@ -1,7 +1,7 @@
-﻿using Server.Ability;
+﻿using Shared.Abilities;
 using UnityEngine;
 
-namespace Shared.Abilities
+namespace Server.Ability
 {
     public class SpawnObjectAbility : Ability
     {
