@@ -1,7 +1,6 @@
 ﻿using MLAPI.Spawning;
-using Shared.Abilities;
 
-namespace Server.Ability.TargetEffects
+namespace Server.TargetEffects
 {
     public class DestroyAbility : TargetEffect
     {

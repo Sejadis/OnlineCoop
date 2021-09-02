@@ -1,6 +1,6 @@
 ﻿using Shared.Abilities;
 using Shared.Data;
-using StatusEffects;
+using Shared.StatusEffects;
 using UnityEditor;
 using UnityEngine;
 

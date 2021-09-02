@@ -1,8 +1,7 @@
 ﻿using MLAPI.Spawning;
 using Shared;
-using Shared.Abilities;
 
-namespace Server.Ability.TargetEffects
+namespace Server.TargetEffects
 {
     public class HealAbility : TargetEffect
     {

@@ -1,7 +1,6 @@
-﻿using Shared.Abilities;
-using UnityEngine;
+﻿using UnityEngine;
 
-namespace StatusEffects
+namespace Shared.StatusEffects
 {
     [CreateAssetMenu(menuName = "StatusEffect")]
     public class StatusEffectDescription : CoreDescription

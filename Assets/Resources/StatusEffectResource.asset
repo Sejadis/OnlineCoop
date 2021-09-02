@@ -9,7 +9,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 0}
+  m_Script: {fileID: 11500000, guid: a038bf9bd75e4267bfe3ec2559ad489e, type: 3}
   m_Name: StatusEffectResource
-  m_EditorClassIdentifier: Assembly-CSharp:Shared.Data:StatusEffectResource
+  m_EditorClassIdentifier: 
   statusEffects: []

@@ -1,9 +1,10 @@
 ﻿using System;
+using Shared;
 using Shared.Abilities;
 using Shared.Data;
-using StatusEffects;
+using Shared.StatusEffects;
 
-namespace Server.Ability.TargetEffects
+namespace Server.TargetEffects
 {
     public abstract class TargetEffect
     {
@@ -26,7 +27,8 @@ namespace Server.Ability.TargetEffects
                 TargetEffectType.Destroy => new DestroyAbility(runtimeParams),
                 TargetEffectType.Heal => new HealAbility(runtimeParams),
                 TargetEffectType.ForceMove => new ForceMoveAbility(runtimeParams),
-                _ => throw new Exception("Unhandled TargetEffectType"),
+                TargetEffectType.Buff => new StatusEffectAbility(runtimeParams),
+            _ => throw new Exception("Unhandled TargetEffectType"),
             };
         }
 

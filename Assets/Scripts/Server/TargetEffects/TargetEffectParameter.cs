@@ -1,8 +1,8 @@
 ﻿using Shared.Abilities;
-using StatusEffects;
+using Shared.StatusEffects;
 using UnityEngine;
 
-namespace Server.Ability.TargetEffects
+namespace Server.TargetEffects
 {
     public struct TargetEffectParameter
     {

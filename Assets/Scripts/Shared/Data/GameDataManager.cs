@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 using Shared.Abilities;
-using StatusEffects;
+using Shared.StatusEffects;
 using UnityEngine;
 
 namespace Shared.Data
@@ -49,10 +49,5 @@ namespace Shared.Data
 
             return statusEffectTypeMap.TryGetValue(statusEffectType, out statusEffectDescription);
         }
-    }
-
-    public class StatusEffectResource : ScriptableObject
-    {
-        public List<StatusEffectDescription> statusEffects = new List<StatusEffectDescription>();
     }
 }

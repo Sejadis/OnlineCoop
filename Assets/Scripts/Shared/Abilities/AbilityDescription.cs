@@ -1,4 +1,3 @@
-using StatusEffects;
 using UnityEngine;
 
 namespace Shared.Abilities

@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using Runnable;
-using Server.Ability.TargetEffects;
 using Server.Character;
 using Shared.Abilities;
 using Shared.Data;
@@ -89,7 +88,7 @@ namespace Server.Ability
                     {
                         match = blockingAbilities[0];
                     }
-
+                    
                     if (match == null)
                     {
                         foreach (var nonBlockingAbility in CurrentRunnables)

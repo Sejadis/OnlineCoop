@@ -50,6 +50,11 @@ namespace Client.Character
 
             networkCharacterState.OnStartCooldown += abilityUI.TriggerCooldown;
 
+            var statusEffectUI = GameObject.FindWithTag("StatusEffectUI").GetComponent<StatusEffectUI>();
+
+            networkCharacterState.OnClientStatusEffectAdded +=
+                runtimeParams => statusEffectUI.AddStatusEffect(ref runtimeParams);
+
             InputManager.OnMovement += OnMovement;
             InputManager.OnSprint += OnSprint;
             InputManager.OnJump += OnJump;

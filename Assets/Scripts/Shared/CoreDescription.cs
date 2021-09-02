@@ -1,6 +1,4 @@
-﻿using Shared;
-
-namespace StatusEffects
+﻿namespace Shared
 {
     public abstract class CoreDescription : Description
     {

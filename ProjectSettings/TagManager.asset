@@ -6,6 +6,7 @@ TagManager:
   tags:
   - PartyUI
   - AbilityUI
+  - StatusEffectUI
   layers:
   - Default
   - TransparentFX

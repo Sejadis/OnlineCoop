@@ -1,9 +1,7 @@
 ﻿using MLAPI.Spawning;
 using Shared;
-using Shared.Abilities;
-using StatusEffects;
 
-namespace Server.Ability.TargetEffects
+namespace Server.TargetEffects
 {
     public class DamageAbility : TargetEffect
     {

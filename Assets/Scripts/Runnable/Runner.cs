@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using UnityEngine;
 
 namespace Runnable
 {
@@ -22,6 +23,7 @@ namespace Runnable
             if (currentRunnables.Count > 0)
             {
                 var runnable = currentRunnables[0];
+                runnable.StartTime = Time.time;
                 var shouldEnd = !runnable.Start();
                 if (shouldEnd)
                 {

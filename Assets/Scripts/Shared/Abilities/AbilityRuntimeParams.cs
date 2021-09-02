@@ -1,5 +1,5 @@
 using MLAPI.Serialization;
-using Server.Ability.TargetEffects;
+using Server.TargetEffects;
 using UnityEngine;
 
 namespace Shared.Abilities

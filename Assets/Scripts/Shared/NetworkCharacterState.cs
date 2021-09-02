@@ -3,6 +3,7 @@ using MLAPI;
 using MLAPI.Messaging;
 using MLAPI.NetworkVariable;
 using Shared.Abilities;
+using Shared.StatusEffects;
 using UnityEngine;
 
 namespace Shared
@@ -20,13 +21,14 @@ namespace Shared
         public NetworkVariableString IconName = new NetworkVariableString();
         public NetworkVariable<int[]> equippedAbilities = new NetworkVariable<int[]>();
 
-        public Action<Vector2> OnMoveInputReceived;
-        public Action<Vector2> OnLookInputReceived;
-        public Action<bool> OnSprintReceived;
-        public Action OnJumpReceived;
-        public Action<AbilityType, float> OnStartCooldown;
-        public Action<AbilityRuntimeParams> OnServerAbilityCast;
-        public Action<AbilityRuntimeParams> OnClientAbilityCast;
+        public event Action<Vector2> OnMoveInputReceived;
+        public event Action<Vector2> OnLookInputReceived;
+        public event Action<bool> OnSprintReceived;
+        public event Action OnJumpReceived;
+        public event Action<AbilityType, float> OnStartCooldown;
+        public event Action<AbilityRuntimeParams> OnServerAbilityCast;
+        public event Action<AbilityRuntimeParams> OnClientAbilityCast;
+        public event Action<StatusEffectRuntimeParams> OnClientStatusEffectAdded;
     
         [ServerRpc(RequireOwnership = false)]
         public void CastAbilityServerRpc(AbilityRuntimeParams runtimeParams)
@@ -42,12 +44,18 @@ namespace Shared
 
         public NetworkHealthState NetHealthState { get; private set; }
 
+        [ClientRpc]
+        public void StatusEffectAddedClientRpc(StatusEffectRuntimeParams runtimeParams)
+        {
+            OnClientStatusEffectAdded?.Invoke(runtimeParams);
+        }
+
         [ServerRpc(RequireOwnership = false)]
         public void SendMoveInputServerRpc(Vector2 input)
         {
             OnMoveInputReceived?.Invoke(input);
         }
-    
+
         [ServerRpc(RequireOwnership = false)]
         public void SendLookInputServerRpc(Vector2 input)
         {

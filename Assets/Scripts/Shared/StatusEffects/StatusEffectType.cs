@@ -1,4 +1,4 @@
-﻿namespace StatusEffects
+﻿namespace Shared.StatusEffects
 {
     public enum StatusEffectType
     {

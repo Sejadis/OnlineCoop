@@ -1,7 +1,7 @@
 using System;
 using MLAPI;
 using MLAPI.Spawning;
-using Server.Ability.TargetEffects;
+using Server.TargetEffects;
 using Shared;
 using Shared.Abilities;
 using Shared.Data;
@@ -74,15 +74,26 @@ namespace Server.Ability
                     _ => throw new ArgumentOutOfRangeException()
                 };
 
-                var runtimeParams = new TargetEffectParameter(
-                    target: target,
-                    actor: AbilityRuntimeParams.Actor,
-                    targetDirection: targetDirection,
-                    abilityType: Description.abilityType
-                    // targetPosition: targetPosition,
-                    // startPosition: startPosition,
-                    // effectType: hitEffect.EffectType,
-                );
+                //TODO refactor to move logic outside
+                var runtimeParams = hitEffect.EffectType == TargetEffectType.Buff
+                    ? new TargetEffectParameter(
+                        target: target,
+                        actor: AbilityRuntimeParams.Actor,
+                        targetDirection: targetDirection,
+                        statusEffectType: hitEffect.StatusEffectType
+                        // targetPosition: targetPosition,
+                        // startPosition: startPosition,
+                        // effectType: hitEffect.EffectType,
+                    )
+                    : new TargetEffectParameter(
+                        target: target,
+                        actor: AbilityRuntimeParams.Actor,
+                        targetDirection: targetDirection,
+                        abilityType: Description.abilityType
+                        // targetPosition: targetPosition,
+                        // startPosition: startPosition,
+                        // effectType: hitEffect.EffectType,
+                    );
 
                 TargetEffect.GetEffectByType(hitEffect.EffectType, runtimeParams).Run();
             }

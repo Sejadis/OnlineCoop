@@ -4,7 +4,7 @@ namespace Client.VFX
 {
     public class ZoneFxScaler : VisualFXScaler
     {
-        [SerializeField] private new ParticleSystem particleSystem;
+        [SerializeField] private ParticleSystem particleSystem;
         public override void Scale(float scale)
         {
             particleSystem.gameObject.transform.localScale *= scale;

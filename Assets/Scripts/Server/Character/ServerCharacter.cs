@@ -1,9 +1,10 @@
 using System;
 using MLAPI;
 using Server.Ability;
+using Server.StatusEffects;
 using Shared;
 using Shared.Abilities;
-using StatusEffects;
+using Shared.StatusEffects;
 using UnityEngine;
 
 namespace Server.Character
@@ -46,11 +47,12 @@ namespace Server.Character
         protected virtual void Update()
         {
             AbilityRunner.Update();
+            StatusEffectRunner.Update();
         }
 
         public void ForceMove(Vector3 targetPosition, float speed)
         {
-            serverCharacterMovement.ForceMovement(targetPosition,speed);
+            serverCharacterMovement.ForceMovement(targetPosition, speed);
         }
 
         protected void OnAbilityCast(AbilityRuntimeParams runtimeParams)
@@ -59,6 +61,7 @@ namespace Server.Character
         }
 
         public event Action<ulong, ulong> OnDeath;
+
         public virtual void Damage(ulong actor, int amount)
         {
             networkCharacterState.NetHealthState.CurrentHealth.Value -= amount;
@@ -75,9 +78,9 @@ namespace Server.Character
             networkCharacterState.NetHealthState.CurrentHealth.Value = health;
         }
 
-        public void AddStatusEffect(StatusEffect statusEffect)
+        public void AddStatusEffect(ref StatusEffectRuntimeParams runtimeParams)
         {
-            // StatusEffectRunner.AddRunnable();
+            StatusEffectRunner.AddRunnable(ref runtimeParams);
         }
     }
 }

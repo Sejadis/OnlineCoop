@@ -1,4 +1,4 @@
-﻿namespace Server.Ability.TargetEffects
+﻿namespace Server.TargetEffects
 {
     public enum TargetEffectType
     {
@@ -6,6 +6,7 @@
         Damage,
         Heal,
         ForceMove,
-        Destroy
+        Destroy,
+        Buff
     }
 }
