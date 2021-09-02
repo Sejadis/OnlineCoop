@@ -11,7 +11,7 @@ namespace Server.Ability
 {
     public abstract class Ability : AbilityBase
     {
-        protected bool DidCastTimePass => Description.castTime == 0 || Time.time - StartTime >= Description.castTime;
+        protected bool DidCastTimePass => Description.castTime == 0 || Time.time - StartTime >= Description.castTime;//TODO refactor not to use Time.time
         private int hitCount = 0;
 
         public Ability(ref AbilityRuntimeParams abilityRuntimeParams) : base(ref abilityRuntimeParams)

@@ -22,14 +22,14 @@ namespace Client.UI
 
         private IEnumerator UpdateDuration(float duration)
         {
-            var finish = Time.time + duration;
+            var elapsedTime = 0f;
             var progress = 0f;
             do
             {
-                var timeLeft = finish - Time.time;
                 durationFillImage.fillAmount = progress;
-                durationText.text = timeLeft.ToString("0");
-                progress = 1 - timeLeft / duration;
+                durationText.text = (duration - elapsedTime).ToString("0");
+                progress = 1 - elapsedTime / duration;
+                elapsedTime += Time.deltaTime;
                 yield return null;
             } while (progress < 1);
 

@@ -8,20 +8,19 @@ namespace Server.StatusEffects
 {
     public class OverTimeStatusEffect : StatusEffect
     {
-        private float nextTick;
+        private float elapsedTime;
 
         public override bool Start()
         {
             base.Start();
-            nextTick = Time.time + Description.delay;
             return true;
         }
 
         public override bool Update()
         {
-            if (Time.time > nextTick)
+            elapsedTime += Time.deltaTime;
+            if (Description.delay <= elapsedTime)
             {
-                nextTick = Time.time + Description.delay;
                 RunEffects();
             }
 

@@ -11,9 +11,9 @@ namespace Client.UI
         [SerializeField] private Image cooldownOverlay;
         [SerializeField] private TMP_Text cooldownText;
 
-        private float cooldownStartTime;
         private float cooldown;
         private bool isCooldownRunning;
+        private float elapsedTime;
         public AbilityType AbilityType { get; private set; }
 
         private void Start()
@@ -35,7 +35,6 @@ namespace Client.UI
         public void SetCooldown(float cooldown)
         {
             this.cooldown = cooldown;
-            cooldownStartTime = Time.time;
             cooldownOverlay.fillAmount = 1;
             cooldownOverlay.gameObject.SetActive(true);
             cooldownText.gameObject.SetActive(true);
@@ -47,7 +46,7 @@ namespace Client.UI
         {
             if (isCooldownRunning)
             {
-                var elapsedTime = Time.time - cooldownStartTime;
+                elapsedTime += Time.deltaTime;
                 var progress = elapsedTime / cooldown;
                 cooldownOverlay.fillAmount = 1 - progress;
                 cooldownText.text = Mathf.CeilToInt(cooldown - elapsedTime).ToString();

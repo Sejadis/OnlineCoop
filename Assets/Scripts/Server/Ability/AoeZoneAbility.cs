@@ -5,20 +5,19 @@ namespace Server.Ability
 {
     public class AoeZoneAbility : AoeAbility
     {
-        private float nextTickTime;
+        private float elapsedTime;
 
         public override bool Start()
         {
             base.Start();
-            nextTickTime = Time.time + Description.delay;
             return true;
         }
 
         public override bool Update()
         {
-            if (DidCastTimePass && Time.time > nextTickTime)
+            elapsedTime += Time.deltaTime;
+            if (DidCastTimePass && Description.delay <= elapsedTime)
             {
-                nextTickTime = Time.time + Description.delay;
                 RunHitCheck();
                 if (!didStart)
                 {

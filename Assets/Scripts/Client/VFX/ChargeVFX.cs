@@ -22,13 +22,14 @@ namespace Client.VFX
 
         private IEnumerator ChargeUp()
         {
-            var startTime = Time.time;
+            var elapsedTime = 0f;
             var progress = 0f;
             while (progress < 1)
             {
-                progress = (Time.time - startTime) / duration;
+                progress = elapsedTime / duration;
                 transform.localScale = Vector3.Lerp(Vector3.zero, Vector3.one * (size * 2), progress);
                 yield return null;
+                elapsedTime += Time.deltaTime;
             }
         }
     }
