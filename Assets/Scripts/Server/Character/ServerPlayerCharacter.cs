@@ -1,7 +1,8 @@
+using System;
 using MLAPI;
 using UnityEngine;
 
-namespace Server
+namespace Server.Character
 {
     public class ServerPlayerCharacter : ServerCharacter
     {
@@ -70,3 +71,4 @@ namespace Server
         }
     }
 }
+

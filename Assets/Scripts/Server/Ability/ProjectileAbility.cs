@@ -1,10 +1,9 @@
 using System.Diagnostics;
 using MLAPI;
-using Server.Ability;
+using Shared.Abilities;
 using UnityEngine;
-using Debug = UnityEngine.Debug;
 
-namespace Shared.Abilities
+namespace Server.Ability
 {
     public class ProjectileAbility : Ability
     {

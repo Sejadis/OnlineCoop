@@ -1,4 +1,6 @@
 ﻿using Shared.Abilities;
+using Shared.Data;
+using StatusEffects;
 using UnityEditor;
 using UnityEngine;
 
@@ -8,6 +10,13 @@ namespace Editor
     public static class DataGrabber
     {
         static DataGrabber()
+        {
+            GrabAbilities();
+            GrabStatusEffects();
+            AssetDatabase.SaveAssets();
+        }
+
+        private static void GrabAbilities()
         {
             var abilityResource = Resources.Load<AbilityResource>("AbilityResource");
             if (abilityResource == null)
@@ -24,8 +33,25 @@ namespace Editor
                 abilityResource.abilities
                     .Add(AssetDatabase.LoadAssetAtPath<AbilityDescription>(AssetDatabase.GUIDToAssetPath(guid)));
             }
+        }
 
-            AssetDatabase.SaveAssets();
+        private static void GrabStatusEffects()
+        {
+            var statusEffectResource = Resources.Load<StatusEffectResource>("StatusEffectResource");
+            if (statusEffectResource == null)
+            {
+                var res = ScriptableObject.CreateInstance<StatusEffectResource>();
+                AssetDatabase.CreateAsset(res, "Assets/Resources/StatusEffectResource.asset");
+                statusEffectResource = res;
+            }
+
+            var statusEffectDescriptions = AssetDatabase.FindAssets("t:StatusEffectDescription");
+            statusEffectResource.statusEffects.Clear();
+            foreach (var guid in statusEffectDescriptions)
+            {
+                statusEffectResource.statusEffects
+                    .Add(AssetDatabase.LoadAssetAtPath<StatusEffectDescription>(AssetDatabase.GUIDToAssetPath(guid)));
+            }
         }
     }
 }

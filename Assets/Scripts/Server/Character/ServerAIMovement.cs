@@ -1,9 +1,8 @@
-﻿using System;
-using System.Collections;
+﻿using System.Collections;
 using MLAPI;
 using UnityEngine;
 
-namespace Server
+namespace Server.Character
 {
     public class ServerAIMovement : NetworkBehaviour
     {

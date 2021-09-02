@@ -1,9 +1,10 @@
+using StatusEffects;
 using UnityEngine;
 
 namespace Shared.Abilities
 {
     [CreateAssetMenu(menuName = "Ability")]
-    public class AbilityDescription : Description
+    public class AbilityDescription : CoreDescription
     {
         public AbilityType abilityType;
         public AbilityEffectType effect;
@@ -11,14 +12,10 @@ namespace Shared.Abilities
         public bool isInterruptable;
         public float cooldown;
         public int charges;
-        public float mainValue;
         public float speed;
-        public float duration;
         public float size;
         public float range;
-        public float delay;
         public float castTime;
-        public float force;
         public bool rootsDuringCast;
         public bool isTracking;
         public AbilityDescription followUpAbility;

@@ -1,7 +1,9 @@
 ﻿using MLAPI.Spawning;
+using Shared;
+using Shared.Abilities;
 using UnityEngine;
 
-namespace Shared.Abilities
+namespace Server.Ability
 {
     public class ChargedAoeAbility : AoeAbility
     {
