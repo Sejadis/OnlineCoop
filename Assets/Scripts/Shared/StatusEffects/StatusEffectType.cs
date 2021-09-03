@@ -5,5 +5,6 @@
         None,
         Fire,
         TouchOfLife,
+        ArenaBossWallCollision,
     }
 }

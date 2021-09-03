@@ -10,7 +10,7 @@ namespace Server.TargetEffects
 
         public override void Run()
         {
-            if(NetworkSpawnManager.SpawnedObjects.TryGetValue(EffectParameter.Target, out var obj))
+            if(NetworkSpawnManager.SpawnedObjects.TryGetValue(EffectParameter.Targets[0], out var obj))
             {
                obj.Despawn(true); 
             }

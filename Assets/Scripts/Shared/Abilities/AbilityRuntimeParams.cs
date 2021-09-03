@@ -9,19 +9,19 @@ namespace Shared.Abilities
         public AbilityType AbilityType;
         // public TargetEffectType EffectType;
         public ulong Actor;
-        public ulong TargetEntity;
+        public ulong[] Targets;
         public Vector3 TargetPosition;
         public Vector3 TargetDirection;
         public Vector3 StartPosition;
 
 
         public AbilityRuntimeParams(AbilityType abilityType, ulong actor,
-            ulong targetEntity, Vector3 targetPosition, Vector3 targetDirection, Vector3 startPosition, TargetEffectType effectType = TargetEffectType.None)
+            ulong[] targets, Vector3 targetPosition, Vector3 targetDirection, Vector3 startPosition, TargetEffectType effectType = TargetEffectType.None)
         {
             AbilityType = abilityType;
             // EffectType = effectType;
             Actor = actor;
-            TargetEntity = targetEntity;
+            Targets = targets;
             TargetPosition = targetPosition;
             TargetDirection = targetDirection;
             StartPosition = startPosition;
@@ -32,7 +32,7 @@ namespace Shared.Abilities
             AbilityType = abilityRuntimeParams.AbilityType;
             // EffectType = abilityRuntimeParams.EffectType;
             Actor = abilityRuntimeParams.Actor;
-            TargetEntity = abilityRuntimeParams.TargetEntity;
+            Targets = abilityRuntimeParams.Targets;
             TargetPosition = abilityRuntimeParams.TargetPosition;
             TargetDirection = abilityRuntimeParams.TargetDirection;
             StartPosition = abilityRuntimeParams.StartPosition;
@@ -43,7 +43,7 @@ namespace Shared.Abilities
             serializer.Serialize(ref AbilityType);
             // serializer.Serialize(ref EffectType);
             serializer.Serialize(ref Actor);
-            serializer.Serialize(ref TargetEntity);
+            serializer.Serialize(ref Targets);
             serializer.Serialize(ref TargetPosition);
             serializer.Serialize(ref TargetDirection);
             serializer.Serialize(ref StartPosition);

@@ -9,7 +9,7 @@ namespace Server.Ability
         public override bool Start()
         {
             //CraftingManager.CraftItem(Description.IDs[0])....
-            NetworkSpawnManager.SpawnedObjects[AbilityRuntimeParams.TargetEntity].GetComponent<PlayerInventory>().AddItem();
+            NetworkSpawnManager.SpawnedObjects[AbilityRuntimeParams.Targets[0]].GetComponent<PlayerInventory>().AddItem();
             return false;
         }
 

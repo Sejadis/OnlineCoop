@@ -12,7 +12,7 @@ namespace Server.StatusEffects
         protected ulong source => runtimeParams.source;
 
         protected ServerCharacter target =>
-            NetworkSpawnManager.SpawnedObjects.TryGetValue(runtimeParams.target, out var netObj)
+            NetworkSpawnManager.SpawnedObjects.TryGetValue(runtimeParams.targets[0], out var netObj)
                 ? netObj.GetComponent<ServerCharacter>()
                 : null;
 
@@ -52,7 +52,9 @@ namespace Server.StatusEffects
         {
             return runtimeParams.EffectType switch
             {
+                //refactor, should reference logic not actual abilities
                 StatusEffectType.TouchOfLife => new OverTimeStatusEffect(ref runtimeParams),
+                StatusEffectType.ArenaBossWallCollision => new IgnoreCollisionStatusEffect(ref runtimeParams),
                 _ => throw new ArgumentOutOfRangeException()
             };
         }

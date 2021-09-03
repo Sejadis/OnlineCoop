@@ -89,7 +89,7 @@ namespace Client.Character
 
         private AbilityRuntimeParams CreateRuntimeParams(AbilityType abilityType)
         {
-            var runtimeParams = new AbilityRuntimeParams(abilityType, NetworkObjectId, 0,
+            var runtimeParams = new AbilityRuntimeParams(abilityType, NetworkObjectId, new ulong[]{0},
                 transform.position + aimTarget.forward,
                 aimTarget.forward, aimTarget.TransformPoint(localAbilitySpawnOffset));
             return runtimeParams;

@@ -11,7 +11,7 @@ namespace Server.TargetEffects
 
         public override void Run()
         {
-            if (NetworkSpawnManager.SpawnedObjects.TryGetValue(EffectParameter.Target, out var netObj))
+            if (NetworkSpawnManager.SpawnedObjects.TryGetValue(EffectParameter.Targets[0], out var netObj))
             {
                 netObj.GetComponent<IHealable>()?.Heal(EffectParameter.Actor, (int) SourceDescription.mainValue);
             }

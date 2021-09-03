@@ -30,7 +30,7 @@ namespace Server.StatusEffects
         {
             elapsedTime = 0;
             var effectRuntimeParams = new TargetEffectParameter(
-                target: actor,
+                targets: new[] {actor},
                 actor: source,
                 targetDirection: Vector3.zero,
                 statusEffectType: type

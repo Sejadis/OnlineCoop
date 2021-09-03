@@ -1,4 +1,5 @@
-﻿using MLAPI.Spawning;
+﻿using MLAPI;
+using MLAPI.Spawning;
 using Shared;
 using Shared.Abilities;
 using UnityEngine;
@@ -40,6 +41,7 @@ namespace Server.Ability
                     actor.CastAbilityClientRpc(
                         AbilityRuntimeParams); //TODO needs to happen outside of abilities, (maybe ability handler?)
                 }
+
                 return false;
             }
 
@@ -54,7 +56,8 @@ namespace Server.Ability
             for (var i = 0; i < resultCount; i++)
             {
                 var result = overlapResults[i];
-                RunHitEffects(result,
+                var targets = ConvertHitToTargets(result);
+                RunHitEffects(targets,
                     result.transform.position,
                     result.transform.position - AbilityRuntimeParams.TargetPosition,
                     AbilityRuntimeParams.TargetPosition);

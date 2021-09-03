@@ -6,12 +6,12 @@ namespace Shared.StatusEffects
     {
         public StatusEffectType EffectType;
         public ulong source;
-        public ulong target;
+        public ulong[] targets;
         public void NetworkSerialize(NetworkSerializer serializer)
         {
             serializer.Serialize(ref EffectType);
             serializer.Serialize(ref source);
-            serializer.Serialize(ref target);
+            serializer.Serialize(ref targets);
         }
     }
 }

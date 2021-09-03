@@ -1,0 +1,41 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9105942b25715f24fb6c3ec31ff40496, type: 3}
+  m_Name: ArenaBossWallPhaseShift
+  m_EditorClassIdentifier: 
+  name: 
+  description: 
+  icon: {fileID: 21300000, guid: ea26259e0f9f2bc4f9ec66d13933c8b2, type: 3}
+  duration: 0
+  delay: 0
+  mainValue: 0
+  force: 0
+  abilityType: 6
+  effect: 11
+  isUnique: 0
+  isInterruptable: 0
+  cooldown: 0
+  charges: 0
+  speed: 0
+  size: 0
+  range: 0
+  castTime: 0
+  rootsDuringCast: 0
+  isTracking: 0
+  followUpAbility: {fileID: 0}
+  Prefabs: []
+  HitEffects:
+  - EffectType: 5
+    Conditions: []
+    StatusEffectType: 3
+    TargetType: 0
+  targetingPrefab: {fileID: 0}

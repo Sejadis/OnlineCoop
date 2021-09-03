@@ -548,6 +548,7 @@ GameObject:
   - component: {fileID: 747944860}
   - component: {fileID: 747944859}
   - component: {fileID: 747944858}
+  - component: {fileID: 747944861}
   m_Layer: 0
   m_Name: Cube (4)
   m_TagString: Untagged
@@ -632,6 +633,23 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 747944856}
   m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!114 &747944861
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 747944856}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d5a57f767e5e46a458fc5d3c628d0cbb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  NetworkInstanceId: 0
+  PrefabHash: 11793733056013691619
+  PrefabHashGenerator: Cube (4)
+  AlwaysReplicateAsRoot: 0
+  DontDestroyWithOwner: 0
 --- !u!1 &863674427
 GameObject:
   m_ObjectHideFlags: 0
@@ -751,6 +769,7 @@ GameObject:
   - component: {fileID: 975779540}
   - component: {fileID: 975779539}
   - component: {fileID: 975779538}
+  - component: {fileID: 975779541}
   m_Layer: 0
   m_Name: Cube (5)
   m_TagString: Untagged
@@ -835,6 +854,23 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 975779536}
   m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!114 &975779541
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 975779536}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d5a57f767e5e46a458fc5d3c628d0cbb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  NetworkInstanceId: 0
+  PrefabHash: 11793734155525319764
+  PrefabHashGenerator: Cube (5)
+  AlwaysReplicateAsRoot: 0
+  DontDestroyWithOwner: 0
 --- !u!1 &1553880030
 GameObject:
   m_ObjectHideFlags: 0
@@ -1409,17 +1445,21 @@ PrefabInstance:
       value: 4.62
       objectReference: {fileID: 0}
     - target: {fileID: 5077415545571129672, guid: cd9ffed8fd73d9144998dae732eccc9b, type: 3}
+      propertyPath: wallCollisionAbility
+      value: 6
+      objectReference: {fileID: 0}
+    - target: {fileID: 5077415545571129672, guid: cd9ffed8fd73d9144998dae732eccc9b, type: 3}
       propertyPath: energyWalls.Array.size
       value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 5077415545571129672, guid: cd9ffed8fd73d9144998dae732eccc9b, type: 3}
       propertyPath: energyWalls.Array.data[0]
       value: 
-      objectReference: {fileID: 747944858}
+      objectReference: {fileID: 747944861}
     - target: {fileID: 5077415545571129672, guid: cd9ffed8fd73d9144998dae732eccc9b, type: 3}
       propertyPath: energyWalls.Array.data[1]
       value: 
-      objectReference: {fileID: 975779538}
+      objectReference: {fileID: 975779541}
     - target: {fileID: 5077415545571129679, guid: cd9ffed8fd73d9144998dae732eccc9b, type: 3}
       propertyPath: m_Height
       value: 1

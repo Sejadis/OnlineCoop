@@ -5,6 +5,7 @@ using MLAPI.SceneManagement;
 using MLAPI.Spawning;
 using Server.Character;
 using Shared;
+using Shared.Abilities;
 using UnityEngine;
 
 namespace Server
@@ -17,7 +18,8 @@ namespace Server
         [SerializeField] private Transform[] shardPositions;
         [SerializeField] private GameObject shardPrefab;
         [SerializeField] private GameObject shieldObject;
-        [SerializeField] private Collider[] energyWalls;
+        [SerializeField] private NetworkObject[] energyWalls;
+        [SerializeField] private AbilityType wallCollisionAbility;
         private bool isImmuneToDamage;
 
         private int shardsAlive = 0;
@@ -69,19 +71,27 @@ namespace Server
             NetworkSceneManager.SwitchScene("SampleScene");
         }
 
-        private void OnShardDeath(ulong objId, ulong actor)
+        private void OnShardDeath(ulong objId, ulong source)
         {
             NetworkSpawnManager.SpawnedObjects[objId].Despawn(true);
             shardsAlive--;
             if (shardsAlive == 0)
             {
                 shieldObject.SetActive(false);
-                if (NetworkSpawnManager.SpawnedObjects.TryGetValue(actor, out var playerCollider))
+                //TODO why am i doing this check?
+                if (NetworkSpawnManager.SpawnedObjects.TryGetValue(source, out var playerCollider))
                 {
+                    var targets = new ulong[energyWalls.Length + 1];
+                    var i = 0;
+                    targets[i++] = source;
                     foreach (var energyWall in energyWalls)
                     {
-                        Physics.IgnoreCollision(energyWall,playerCollider.GetComponent<Collider>());
+                        targets[i++] = energyWall.NetworkObjectId;
                     }
+
+                    var runtimeParams = new AbilityRuntimeParams(wallCollisionAbility, NetworkObjectId, targets,
+                        Vector3.zero, Vector3.zero, Vector3.zero);
+                    NetworkCharacterState.CastAbilityServerRpc(runtimeParams);
                 }
             }
         }

@@ -33,7 +33,8 @@ namespace Server.Ability
                 return;
             }
 
-            ability.RunHitEffects(other, Vector3.zero, transform.forward,transform.position, transform);
+            var targets = Ability.ConvertHitToTargets(other);
+            ability.RunHitEffects(targets, Vector3.zero, transform.forward, transform.position, transform);
         }
 
 

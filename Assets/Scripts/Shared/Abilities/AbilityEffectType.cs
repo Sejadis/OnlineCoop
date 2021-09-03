@@ -10,6 +10,7 @@ namespace Shared.Abilities
         SpawnObject = 8,
         AoeOneShot = 9,
         ChargeAoeOneShot = 10,
+        InstantTarget = 11,
     }
 }
 

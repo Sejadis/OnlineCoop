@@ -8,5 +8,6 @@
         PoisonZone,
         LightningStrike,
         Explosion,
+        ArenaBossWallCollision
     }
 }
