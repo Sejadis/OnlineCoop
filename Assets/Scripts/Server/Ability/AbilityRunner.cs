@@ -8,9 +8,9 @@ using UnityEngine;
 
 namespace Server.Ability
 {
-    public class AbilityRunner : Runner<AbilityBase, AbilityRuntimeParams>
+    public class AbilityRunner : Runner<Ability, AbilityRuntimeParams>
     {
-        private readonly List<AbilityBase> blockingAbilities = new List<AbilityBase>();
+        private readonly List<Ability> blockingAbilities = new List<Ability>();
 
         private readonly Dictionary<AbilityType, float> abilityCooldowns = new Dictionary<AbilityType, float>();
         private readonly ServerCharacter serverCharacter;
@@ -53,7 +53,7 @@ namespace Server.Ability
             }
         }
 
-        private bool UpdateAbility(AbilityBase ability)
+        private bool UpdateAbility(Ability ability)
         {
             var isActive = ability.Update();
             var canExpire = ability.Description.duration > 0;
@@ -82,7 +82,7 @@ namespace Server.Ability
                 if (description.isUnique)
                 {
                     //try to find this ability in queue
-                    AbilityBase match = null;
+                    Ability match = null;
                     if (blockingAbilities.Count > 0 &&
                         blockingAbilities[0].Description.abilityType == description.abilityType)
                     {
@@ -137,7 +137,7 @@ namespace Server.Ability
             }
         }
 
-        protected override AbilityBase GetRunnable(ref AbilityRuntimeParams runtimeParams)
+        protected override Ability GetRunnable(ref AbilityRuntimeParams runtimeParams)
         {
             return Ability.CreateAbility(ref runtimeParams);
         }
@@ -191,7 +191,7 @@ namespace Server.Ability
             }
         }
 
-        private bool TryStartCooldown(AbilityBase ability)
+        private bool TryStartCooldown(Ability ability)
         {
             if (!ability.ShouldStartCooldown()) return false; //cooldown not started
 

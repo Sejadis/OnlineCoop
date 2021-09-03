@@ -1,4 +1,6 @@
-﻿namespace Runnable
+﻿using System;
+
+namespace Runnable
 {
     public abstract class Runnable
     {
@@ -12,5 +14,10 @@
         public abstract void End();
 
         public abstract void Cancel();
+        public virtual bool Reactivate()
+        {
+            throw new NotSupportedException(
+                $"Can not call Runnable.Reactivate() on an class that doesnt support it");
+        }
     }
 }

@@ -1,5 +1,4 @@
-﻿using System;
-using System.Linq;
+﻿using System.Linq;
 using Shared.Abilities;
 using UnityEngine;
 
@@ -19,7 +18,7 @@ namespace Client.UI
         public void TriggerCooldown(AbilityType abilityType, float cooldown)
         {
             var frame = abilityFrames.FirstOrDefault(frame => frame.AbilityType == abilityType);
-            frame.SetCooldown(cooldown);
+            frame.SetCooldown(cooldown); 
         }
     }
 }

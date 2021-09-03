@@ -92,7 +92,6 @@ GameObject:
   m_Component:
   - component: {fileID: 8768814622032708873}
   - component: {fileID: 1897731272965337848}
-  - component: {fileID: 3876542208877731748}
   - component: {fileID: 6012572985534844241}
   m_Layer: 0
   m_Name: AoeZone
@@ -133,18 +132,6 @@ MonoBehaviour:
   PrefabHashGenerator: GameObject
   AlwaysReplicateAsRoot: 0
   DontDestroyWithOwner: 0
---- !u!114 &3876542208877731748
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5254192734729807541}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ee9a47d303fb4b0d829c74387c4b533d, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!135 &6012572985534844241
 SphereCollider:
   m_ObjectHideFlags: 0

@@ -24,14 +24,14 @@ namespace Client.UI
         {
             var elapsedTime = 0f;
             var progress = 0f;
-            do
+            while (progress <= 1)
             {
+                progress = elapsedTime / duration;
                 durationFillImage.fillAmount = progress;
                 durationText.text = (duration - elapsedTime).ToString("0");
-                progress = 1 - elapsedTime / duration;
-                elapsedTime += Time.deltaTime;
                 yield return null;
-            } while (progress < 1);
+                elapsedTime += Time.deltaTime;
+            }
 
             Destroy(gameObject);
         }

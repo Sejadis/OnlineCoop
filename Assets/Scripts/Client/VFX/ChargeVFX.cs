@@ -1,36 +1,43 @@
-﻿using System.Collections;
+﻿using Server.TargetEffects;
 using Shared.Abilities;
-using Shared.Data;
 using UnityEngine;
 
 namespace Client.VFX
 {
-    public class ChargeVFX : VisualFX
+    public class ChargeVFX : AbilityVfx
     {
         private float duration;
         private float size;
+        private float elapsedTime;
 
-        public override void Init(ref AbilityRuntimeParams runtimeParams)
+        public override bool Start()
         {
-            if (GameDataManager.TryGetAbilityDescriptionByType(runtimeParams.AbilityType, out var description))
-            {
-                duration = description.duration;
-                size = description.size;
-                StartCoroutine(ChargeUp());
-            }
+            duration = Description.duration;
+            size = Description.size;
+            return true;
         }
 
-        private IEnumerator ChargeUp()
+        public override bool Update()
         {
-            var elapsedTime = 0f;
-            var progress = 0f;
-            while (progress < 1)
-            {
-                progress = elapsedTime / duration;
-                transform.localScale = Vector3.Lerp(Vector3.zero, Vector3.one * (size * 2), progress);
-                yield return null;
-                elapsedTime += Time.deltaTime;
-            }
+            var progress = elapsedTime / duration;
+            EffectTransform.localScale = Vector3.Lerp(Vector3.zero, Vector3.one * (size * 2), progress);
+            elapsedTime += Time.deltaTime;
+            return progress <= 1;
+        }
+
+        public override bool Reactivate()
+        {
+            return false; //leads to calling end
+        }
+
+        public override void Cancel()
+        {
+            throw new System.NotImplementedException();
+        }
+
+        public ChargeVFX(ref AbilityRuntimeParams abilityRuntimeParams, Transform effectTransform) : base(
+            ref abilityRuntimeParams, effectTransform)
+        {
         }
     }
 }

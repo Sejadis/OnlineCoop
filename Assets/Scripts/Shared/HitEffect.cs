@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using Server.TargetEffects;
 using Shared.StatusEffects;
-using UnityEngine;
 
 namespace Shared
 {

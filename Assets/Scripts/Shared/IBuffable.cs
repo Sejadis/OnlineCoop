@@ -1,5 +1,4 @@
-﻿using Server.StatusEffects;
-using Shared.StatusEffects;
+﻿using Shared.StatusEffects;
 
 namespace Shared
 {

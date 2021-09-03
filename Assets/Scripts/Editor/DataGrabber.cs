@@ -2,12 +2,14 @@
 using Shared.Data;
 using Shared.StatusEffects;
 using UnityEditor;
+using UnityEditor.Build;
+using UnityEditor.Build.Reporting;
 using UnityEngine;
 
 namespace Editor
 {
     [InitializeOnLoad]
-    public static class DataGrabber
+    public class DataGrabber : IPreprocessBuildWithReport
     {
         static DataGrabber()
         {
@@ -52,6 +54,12 @@ namespace Editor
                 statusEffectResource.statusEffects
                     .Add(AssetDatabase.LoadAssetAtPath<StatusEffectDescription>(AssetDatabase.GUIDToAssetPath(guid)));
             }
+        }
+
+        public int callbackOrder { get; }
+        public void OnPreprocessBuild(BuildReport report)
+        {
+            GrabAbilities();
         }
     }
 }

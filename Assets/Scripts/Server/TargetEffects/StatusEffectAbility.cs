@@ -1,6 +1,4 @@
 ﻿using MLAPI.Spawning;
-using Server.Character;
-using Server.StatusEffects;
 using Shared;
 using Shared.StatusEffects;
 

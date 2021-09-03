@@ -13,17 +13,8 @@ namespace Server.Ability
     {
         protected bool DidCastTimePass => Description.castTime == 0 || Time.time - StartTime >= Description.castTime;//TODO refactor not to use Time.time
         private int hitCount = 0;
-
-        public Ability(ref AbilityRuntimeParams abilityRuntimeParams) : base(ref abilityRuntimeParams)
-        {
-        }
-
-
-        public virtual bool Reactivate()
-        {
-            throw new NotSupportedException(
-                $"Can not call Ability.Reactivate() on an ability that doesnt support it ({Description.abilityType})");
-        }
+        private bool didCooldownStart = false;
+        protected virtual bool CanStartCooldown { get; set; } = true;
 
         public override void End()
         {
@@ -34,6 +25,17 @@ namespace Server.Ability
             CanStartCooldown = false;
         }
 
+        public bool IsBlocking()
+        {
+            return Description.castTime > 0 && Time.time - StartTime < Description.castTime;
+        }
+
+        public bool ShouldStartCooldown()
+        {
+            var currentValue = didCooldownStart;
+            didCooldownStart = didCooldownStart || CanStartCooldown;
+            return !currentValue && CanStartCooldown;
+        }
 
         //TODO probably take better parameter than collider
         public virtual void RunHitEffects(Collider other, Vector3 targetPosition, Vector3 targetDirection,
@@ -99,7 +101,7 @@ namespace Server.Ability
             }
         }
 
-        public static AbilityBase CreateAbility(ref AbilityRuntimeParams runtimeParams)
+        public static Ability CreateAbility(ref AbilityRuntimeParams runtimeParams)
         {
             if (GameDataManager.TryGetAbilityDescriptionByType(
                 runtimeParams.AbilityType, out var abilityDescription))
@@ -112,7 +114,7 @@ namespace Server.Ability
             }
         }
 
-        private static AbilityBase GetAbilityByEffectType(AbilityEffectType effectType,
+        private static Ability GetAbilityByEffectType(AbilityEffectType effectType,
             ref AbilityRuntimeParams runtimeParams)
         {
             return effectType switch
@@ -126,6 +128,10 @@ namespace Server.Ability
                 AbilityEffectType.ChargeAoeOneShot => new ChargedAoeAbility(ref runtimeParams),
                 _ => throw new Exception("Unhandled AbilityEffectType"),
             };
+        }
+
+        protected Ability(ref AbilityRuntimeParams abilityRuntimeParams) : base(ref abilityRuntimeParams)
+        {
         }
     }
 }

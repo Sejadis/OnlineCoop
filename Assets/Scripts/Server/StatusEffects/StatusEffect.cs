@@ -32,7 +32,7 @@ namespace Server.StatusEffects
                 }
                 else
                 {
-                    throw new ArgumentException("Unhandled AbilityType");
+                    throw new ArgumentException("Unhandled StatusEffectType when accessing Description");
                 }
             }
         }

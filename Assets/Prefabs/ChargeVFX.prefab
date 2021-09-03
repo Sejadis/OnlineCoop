@@ -11,7 +11,6 @@ GameObject:
   - component: {fileID: 1556073165841505145}
   - component: {fileID: 1556073165841505094}
   - component: {fileID: 1556073165841505095}
-  - component: {fileID: 1556073165841505144}
   m_Layer: 0
   m_Name: ChargeVFX
   m_TagString: Untagged
@@ -83,15 +82,3 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!114 &1556073165841505144
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1556073165841505093}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 744ff0ea9a6f46b2b3df99f3fed65e2a, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 

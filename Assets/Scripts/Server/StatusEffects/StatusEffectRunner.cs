@@ -6,12 +6,6 @@ namespace Server.StatusEffects
 {
     public class StatusEffectRunner : Runner<StatusEffect, StatusEffectRuntimeParams>
     {
-        // public override void AddRunnable(ref StatusEffectRuntimeParams runtimeParameter)
-        // {
-        //     base.AddRunnable(ref runtimeParameter);
-        //     
-        // }
-
         protected override StatusEffect GetRunnable(ref StatusEffectRuntimeParams runtimeParams)
         {
             return StatusEffect.CreateStatusEffect(ref runtimeParams);
@@ -19,6 +13,7 @@ namespace Server.StatusEffects
 
         protected override bool UpdateRunnable(StatusEffect runnable)
         {
+            //TODO extract so expirable Runnable
             var core = base.UpdateRunnable(runnable);
             var canExpire = runnable.Description.duration > 0;
             var isExpired = canExpire && runnable.StartTime + runnable.Description.duration < Time.time;

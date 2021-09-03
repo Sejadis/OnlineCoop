@@ -1,6 +1,4 @@
-﻿using MLAPI.Spawning;
-using Server.Character;
-using Server.TargetEffects;
+﻿using Server.TargetEffects;
 using Shared.StatusEffects;
 using UnityEngine;
 
@@ -13,6 +11,7 @@ namespace Server.StatusEffects
         public override bool Start()
         {
             base.Start();
+            RunEffects();
             return true;
         }
 
@@ -29,9 +28,10 @@ namespace Server.StatusEffects
 
         private void RunEffects()
         {
-            var runtimeParams = new TargetEffectParameter(
+            elapsedTime = 0;
+            var effectRuntimeParams = new TargetEffectParameter(
                 target: actor,
-                actor: actor,
+                actor: source,
                 targetDirection: Vector3.zero,
                 statusEffectType: type
                 // targetPosition: targetPosition,
@@ -40,7 +40,7 @@ namespace Server.StatusEffects
             );
             foreach (var effect in Description.HitEffects)
             {
-                TargetEffect.GetEffectByType(effect.EffectType, runtimeParams).Run();
+                TargetEffect.GetEffectByType(effect.EffectType, effectRuntimeParams).Run();
             }
         }
 

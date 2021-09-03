@@ -24,13 +24,17 @@ namespace Runnable
             {
                 var runnable = currentRunnables[0];
                 runnable.StartTime = Time.time;
-                var shouldEnd = !runnable.Start();
-                if (shouldEnd)
+                if (!runnable.Start())
                 {
-                    runnable.End();
-                    currentRunnables.Remove(runnable);
+                    EndRunnable(runnable);
                 }
             }
+        }
+
+        protected void EndRunnable(T runnable)
+        {
+            runnable.End();
+            currentRunnables.Remove(runnable);
         }
 
         public virtual void Update()
