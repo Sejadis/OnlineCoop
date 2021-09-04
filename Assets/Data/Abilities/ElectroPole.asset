@@ -15,24 +15,25 @@ MonoBehaviour:
   name: 
   description: 
   icon: {fileID: 21300000, guid: b2adbe8fcbeb7214dba4306b789be6bf, type: 3}
+  duration: 5
+  delay: 0
+  mainValue: 0
+  force: 0
   abilityType: 2
   effect: 8
+  targetRequirement: 3
   isUnique: 0
   isInterruptable: 0
   cooldown: 0
   charges: 0
-  mainValue: 0
   speed: 0
-  duration: 5
   size: 0
   range: 15
-  delay: 0
   castTime: 0
-  force: 0
   rootsDuringCast: 0
   isTracking: 0
   followUpAbility: {fileID: 0}
   Prefabs:
   - {fileID: 6455037696114408690, guid: 3892c155312889d4f89849d12031046a, type: 3}
-  HitEffects: 
+  HitEffects: []
   targetingPrefab: {fileID: 0}

@@ -16,6 +16,7 @@ namespace Server.Character
     [RequireComponent(typeof(ClientVisualizer))] //cant have more than 3 components in the attribute
     public class ServerCharacter : NetworkBehaviour, IDamagable, IHealable, IBuffable
     {
+        [SerializeField] private AbilityTargetType faction;
         protected AbilityRunner AbilityRunner;
         protected StatusEffectRunner StatusEffectRunner;
         protected NetworkCharacterState networkCharacterState;
@@ -27,6 +28,7 @@ namespace Server.Character
         protected float sprintSpeedMultiplier = 2;
 
         public NetworkCharacterState NetworkCharacterState => networkCharacterState;
+        public AbilityTargetType Faction => faction;
 
         private void Awake()
         {

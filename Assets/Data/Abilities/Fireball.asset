@@ -15,20 +15,21 @@ MonoBehaviour:
   name: 
   description: 
   icon: {fileID: 21300000, guid: 6b37369797a6ad34a92448f1340dedfa, type: 3}
+  duration: 0
+  delay: 0
+  mainValue: 10
+  force: 15
   abilityType: 1
   effect: 1
+  targetRequirement: 3
   isUnique: 1
   isInterruptable: 1
   cooldown: 0.5
   charges: 0
-  mainValue: 10
   speed: 50
-  duration: 0
   size: 0
   range: 50
-  delay: 0
   castTime: 0
-  force: 15
   rootsDuringCast: 0
   isTracking: 0
   followUpAbility: {fileID: 0}
@@ -36,18 +37,22 @@ MonoBehaviour:
   - {fileID: 2912867827282859571, guid: 292f1bbbe6de41a4ab3de164c5210cdf, type: 3}
   HitEffects:
   - EffectType: 1
-    TargetType: 0
     Conditions: []
+    StatusEffectType: 0
+    TargetType: 0
   - EffectType: 2
+    Conditions: []
+    StatusEffectType: 0
     TargetType: 2
-    Conditions: []
   - EffectType: 3
-    TargetType: 0
     Conditions: []
+    StatusEffectType: 0
+    TargetType: 0
   - EffectType: 4
-    TargetType: 1
     Conditions:
     - CompareValue: 2
       Comparer: 1
-      ConditionValue: 0
+      conditionTypeValue: 0
+    StatusEffectType: 0
+    TargetType: 1
   targetingPrefab: {fileID: 0}

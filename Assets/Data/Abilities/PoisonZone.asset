@@ -21,6 +21,7 @@ MonoBehaviour:
   force: 0
   abilityType: 3
   effect: 6
+  targetRequirement: 3
   isUnique: 0
   isInterruptable: 0
   cooldown: 2

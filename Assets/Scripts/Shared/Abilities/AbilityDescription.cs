@@ -7,6 +7,7 @@ namespace Shared.Abilities
     {
         public AbilityType abilityType;
         public AbilityEffectType effect;
+        public AbilityTargetType targetRequirement;
         public bool isUnique;
         public bool isInterruptable;
         public float cooldown;

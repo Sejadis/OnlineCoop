@@ -1,6 +1,7 @@
 using System;
 using MLAPI;
 using MLAPI.Spawning;
+using Server.Character;
 using Server.TargetEffects;
 using Shared;
 using Shared.Abilities;
@@ -123,7 +124,9 @@ namespace Server.Ability
 
 //TODO catch self (target mask)
             var primaryTarget = NetworkSpawnManager.SpawnedObjects[targets[0]];
-            if (primaryTarget == null)
+            if (primaryTarget == null ||
+                (Description.targetRequirement != AbilityTargetType.None
+                 && primaryTarget.GetComponent<ServerCharacter>().Faction != Description.targetRequirement))
             {
                 return;
             }
