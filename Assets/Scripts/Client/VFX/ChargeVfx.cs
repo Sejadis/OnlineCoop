@@ -1,5 +1,4 @@
-﻿using Server.TargetEffects;
-using Shared.Abilities;
+﻿using Shared.Abilities;
 using UnityEngine;
 
 namespace Client.VFX
