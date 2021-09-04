@@ -18,6 +18,7 @@ GameObject:
   - component: {fileID: 5077415545571129675}
   - component: {fileID: 5077415545571129679}
   - component: {fileID: 5077415545571129676}
+  - component: {fileID: 3368849186461903241}
   m_Layer: 0
   m_Name: Body
   m_TagString: Untagged
@@ -145,6 +146,7 @@ MonoBehaviour:
   shardPrefab: {fileID: 101531357787089844, guid: 5abaf5d20186be54683323fc523015a0, type: 3}
   shieldObject: {fileID: 5077415546111510266}
   energyWalls: []
+  wallCollisionAbility: 0
 --- !u!114 &5077415545571129677
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -217,6 +219,18 @@ MonoBehaviour:
   jumpHeight: 3
   groundCheckRadius: 0.05
   sensitivity: {fileID: 0}
+--- !u!114 &3368849186461903241
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5077415545571129666}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 492416620cd14ed1854dc0c7f300e8eb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &5077415545801770467
 GameObject:
   m_ObjectHideFlags: 0

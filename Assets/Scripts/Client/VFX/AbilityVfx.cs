@@ -24,7 +24,7 @@ namespace Client.VFX
                 runtimeParams.AbilityType, out var abilityDescription))
             {
                 var obj = Object.Instantiate(abilityDescription.Prefabs[0], runtimeParams.TargetPosition,
-                    Quaternion.identity);
+                    Quaternion.identity); //TODO possibly change spawn responsibility to the effect?
 
                 return GetAbilityByEffectType(abilityDescription, ref runtimeParams, obj.transform);
             }
@@ -47,11 +47,11 @@ namespace Client.VFX
             {
                 // AbilityEffectType.Projectile => new ProjectileAbility(ref runtimeParams),
                 // AbilityEffectType.Craft => new CraftItemAbility(ref runtimeParams),
-                // AbilityEffectType.AoeZone => new AoeZoneAbility(ref runtimeParams),
+                AbilityEffectType.AoeZone => new AoeZoneVfx(ref runtimeParams, effectTransform),
                 // AbilityEffectType.AoeOneShot => new AoeAbility(ref runtimeParams),
                 // AbilityEffectType.Log => new LogAbility(ref runtimeParams),
                 // AbilityEffectType.SpawnObject => new SpawnObjectAbility(ref runtimeParams),
-                AbilityEffectType.ChargeAoeOneShot => new ChargeVFX(ref runtimeParams, effectTransform),
+                AbilityEffectType.ChargeAoeOneShot => new ChargeVfx(ref runtimeParams, effectTransform),
                 _ => throw new Exception("Unhandled AbilityEffectType when creating VFX"),
             };
         }

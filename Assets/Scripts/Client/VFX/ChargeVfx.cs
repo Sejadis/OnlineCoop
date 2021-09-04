@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace Client.VFX
 {
-    public class ChargeVFX : AbilityVfx
+    public class ChargeVfx : AbilityVfx
     {
         private float duration;
         private float size;
@@ -35,7 +35,7 @@ namespace Client.VFX
             throw new System.NotImplementedException();
         }
 
-        public ChargeVFX(ref AbilityRuntimeParams abilityRuntimeParams, Transform effectTransform) : base(
+        public ChargeVfx(ref AbilityRuntimeParams abilityRuntimeParams, Transform effectTransform) : base(
             ref abilityRuntimeParams, effectTransform)
         {
         }

@@ -1,4 +1,5 @@
 using System;
+using Client.Character;
 using MLAPI;
 using Server.Ability;
 using Server.StatusEffects;
@@ -9,7 +10,10 @@ using UnityEngine;
 
 namespace Server.Character
 {
-    [RequireComponent(typeof(NetworkCharacterState), typeof(ServerCharacterMovement), typeof(NetworkObject))]
+    [RequireComponent(typeof(NetworkCharacterState),
+        typeof(ServerCharacterMovement),
+        typeof(NetworkObject))]
+    [RequireComponent(typeof(ClientVisualizer))] //cant have more than 3 components in the attribute
     public class ServerCharacter : NetworkBehaviour, IDamagable, IHealable, IBuffable
     {
         protected AbilityRunner AbilityRunner;

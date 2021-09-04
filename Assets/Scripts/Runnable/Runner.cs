@@ -11,11 +11,8 @@ namespace Runnable
         public virtual void AddRunnable(ref TY runtimeParameter)
         {
             var runnable = GetRunnable(ref runtimeParameter);
-            currentRunnables.Add(runnable);
-            if (currentRunnables.Count == 1)
-            {
-                StartRunnable();
-            }
+            currentRunnables.Insert(0, runnable);
+            StartRunnable();
         }
 
         private void StartRunnable()

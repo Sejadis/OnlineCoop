@@ -18,10 +18,12 @@ namespace Server.Ability
             elapsedTime += Time.deltaTime;
             if (DidCastTimePass && Description.delay <= elapsedTime)
             {
+                elapsedTime = 0;
                 RunHitCheck();
                 if (!didStart)
                 {
                     actor.CastAbilityClientRpc(AbilityRuntimeParams);
+                    didStart = true;
                 }
             }
 
