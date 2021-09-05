@@ -114,7 +114,9 @@ namespace Server.Ability
                                 //reactivate returned false, end the ability
                                 match.End();
                                 TryStartCooldown(match);
+                                //TODO shouldn't need to remove from both, call it only on correct queue 
                                 CurrentRunnables.Remove(match);
+                                blockingAbilities.Remove(match);
                             }
                         }
                         else
@@ -160,6 +162,8 @@ namespace Server.Ability
                     {
                         //ability is canceled by movement so before starting the ability we will instead cancel movement
                         //this prevents the ability to immediately be canceled if we cast it during movement
+                        
+                        //TODO dont even allow casting interruptable abilities when moving
                         playerCharacter.CancelMovement();
                     }
 
