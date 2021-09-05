@@ -45,6 +45,7 @@ namespace Server.Character
             isForceMoving = true;
             forceMoveSpeed = speed;
             forceMoveTargetPosition = transform.position + targetDirection;
+            forceMoveTargetPosition.y = transform.position.y; //TODO change when force movement allows for vertical pushes
         }
 
         public void ForceMovement(Vector3 direction, float speed, float time)
