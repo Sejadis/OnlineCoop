@@ -11,6 +11,7 @@ namespace Client.Input
 
         public static event Action<InputAction.CallbackContext> OnCore1;
         public static event Action<InputAction.CallbackContext> OnCore2;
+
         public static event Action<InputAction.CallbackContext> OnCore3;
         // public Action<InputAction.CallbackContext> OnWeaponBase;
         // public Action<InputAction.CallbackContext> OnWeaponSpecial;
@@ -22,12 +23,13 @@ namespace Client.Input
 
         public static event Action<InputAction.CallbackContext> OnSprint;
 
-        public static event Action<InputAction.CallbackContext> OnInteraction;
+        // public static event Action<InputAction.CallbackContext> OnInteraction;
 
-        // public Action<InputAction.CallbackContext> OnAbilityUI;
-        // public Action<InputAction.CallbackContext> OnBackUI;
-        // public Action<InputAction.CallbackContext> OnInventoryUI;
-        // public Action<InputAction.CallbackContext> OnCraftingUI;
+        public static event Action<InputAction.CallbackContext> OnBackUI;
+        public static event Action<InputAction.CallbackContext> OnInventoryUI;
+        public static event Action<InputAction.CallbackContext> OnCraftingUI;
+        public static event Action<InputAction.CallbackContext> OnAbilityUI;
+        public static event Action<InputAction.CallbackContext> OnGameHudUI;
 
         // Start is called before the first frame update
         static InputManager()
@@ -40,9 +42,9 @@ namespace Client.Input
 
             HookUpAbilities();
             PlayerInput.Abilities.Enable();
-        
-            // HookUpUI();
-            // PlayerInput.UI.Enable();
+
+            HookUpUI();
+            PlayerInput.UI.Enable();
         }
 
         private static void HookUpControls()
@@ -50,14 +52,14 @@ namespace Client.Input
             PlayerInput.Controls.Movement.started += ctx => OnMovement?.Invoke(ctx);
             PlayerInput.Controls.Movement.performed += ctx => OnMovement?.Invoke(ctx);
             PlayerInput.Controls.Movement.canceled += ctx => OnMovement?.Invoke(ctx);
-        
-            PlayerInput.Controls.Interaction.performed += ctx => OnInteraction?.Invoke(ctx);
+
+            // PlayerInput.Controls.Interaction.performed += ctx => OnInteraction?.Invoke(ctx);
 
 
             PlayerInput.Controls.Look.started += ctx => OnLook?.Invoke(ctx);
             PlayerInput.Controls.Look.performed += ctx => OnLook?.Invoke(ctx);
             PlayerInput.Controls.Look.canceled += ctx => OnLook?.Invoke(ctx);
-        
+
             // PlayerInput.Controls.Zoom.started += ctx => OnZoom?.Invoke(ctx);
             PlayerInput.Controls.Zoom.performed += ctx => OnZoom?.Invoke(ctx);
             // PlayerInput.Controls.Zoom.canceled += ctx => OnZoom?.Invoke(ctx);
@@ -96,17 +98,19 @@ namespace Client.Input
 
         private static void HookUpUI()
         {
-            // // PlayerInput.UI.Upgrade.started += ctx => OnUpgradeUI?.Invoke(ctx);
-            // PlayerInput.UI.Ability.performed += ctx => OnAbilityUI?.Invoke(ctx);
-            // // PlayerInput.UI.Upgrade.canceled += ctx => OnUpgradeUI?.Invoke(ctx);
-            //
-            // // PlayerInput.UI.Upgrade.started += ctx => OnUpgradeUI?.Invoke(ctx);
-            // PlayerInput.UI.Back.performed += ctx => OnBackUI?.Invoke(ctx);
-            // // PlayerInput.UI.Upgrade.canceled += ctx => OnUpgradeUI?.Invoke(ctx);
-            //
-            // PlayerInput.UI.Inventory.performed += ctx => OnInventoryUI?.Invoke(ctx);
-            //
-            // PlayerInput.UI.Crafting.performed += ctx => OnCraftingUI?.Invoke(ctx);
+            // PlayerInput.UI.Upgrade.started += ctx => OnUpgradeUI?.Invoke(ctx);
+            PlayerInput.UI.Ability.performed += ctx => OnAbilityUI?.Invoke(ctx);
+            // PlayerInput.UI.Upgrade.canceled += ctx => OnUpgradeUI?.Invoke(ctx);
+
+            // PlayerInput.UI.Upgrade.started += ctx => OnUpgradeUI?.Invoke(ctx);
+            PlayerInput.UI.Back.performed += ctx => OnBackUI?.Invoke(ctx);
+            // PlayerInput.UI.Upgrade.canceled += ctx => OnUpgradeUI?.Invoke(ctx);
+
+            PlayerInput.UI.Inventory.performed += ctx => OnInventoryUI?.Invoke(ctx);
+
+            PlayerInput.UI.Crafting.performed += ctx => OnCraftingUI?.Invoke(ctx);
+
+            PlayerInput.UI.GameHud.performed += ctx => OnGameHudUI?.Invoke(ctx);
         }
     }
 }

@@ -3,7 +3,7 @@ using UnityEngine;
 
 namespace Client.UI
 {
-    public class StatusEffectUI : MonoBehaviour
+    public class StatusEffectUI : UIScreen
     {
         [SerializeField] private Transform gridParent;
         [SerializeField] private GameObject effectPrefab;

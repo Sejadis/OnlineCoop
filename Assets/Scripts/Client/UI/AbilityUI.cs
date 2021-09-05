@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace Client.UI
 {
-    public class AbilityUI : MonoBehaviour
+    public class AbilityUI : UIScreen
     {
         [SerializeField] private AbilityFrame[] abilityFrames;
 

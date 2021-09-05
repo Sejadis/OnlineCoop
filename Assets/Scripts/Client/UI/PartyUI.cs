@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace Client.UI
 {
-    public class PartyUI : MonoBehaviour
+    public class PartyUI : UIScreen
     {
         [SerializeField] private PlayerFrame playerFrame;
 

@@ -1,4 +1,3 @@
-using System;
 using Client.UI;
 using MLAPI;
 using MLAPI.Messaging;
@@ -9,7 +8,7 @@ using UnityEngine.InputSystem;
 
 namespace Shared.UI
 {
-    public class Chat : NetworkBehaviour
+    public class ChatHandler : NetworkBehaviour
     {
         [SerializeField] private GameObject chatLinePrefab;
 
@@ -41,7 +40,7 @@ namespace Shared.UI
                 }
             }
             SendMessageServerRPC(message);
-            inputField.text = String.Empty;
+            inputField.text = string.Empty;
         }
 
         [ServerRpc(RequireOwnership = false)]
