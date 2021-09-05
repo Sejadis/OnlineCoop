@@ -40,6 +40,7 @@ namespace Client.UI
             cooldownText.gameObject.SetActive(true);
             cooldownText.text = cooldown.ToString();
             isCooldownRunning = true;
+            elapsedTime = 0f;
         }
 
         private void Update()

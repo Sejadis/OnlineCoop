@@ -45,7 +45,13 @@ MonoBehaviour:
     StatusEffectType: 0
     TargetType: 0
   - EffectType: 5
-    Conditions: []
+    Conditions:
+    - CompareValue: 1
+      Comparer: 0
+      conditionTypeValue: 1
+    - CompareValue: 3
+      Comparer: 1
+      conditionTypeValue: 0
     StatusEffectType: 2
     TargetType: 2
   targetingPrefab: {fileID: 0}

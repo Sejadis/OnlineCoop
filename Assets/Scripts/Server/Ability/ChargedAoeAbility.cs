@@ -8,7 +8,7 @@ namespace Server.Ability
     public class ChargedAoeAbility : AoeAbility
     {
         private bool didActivate = false;
-
+        private float elapsedTime;
         public ChargedAoeAbility(ref AbilityRuntimeParams abilityRuntimeParams) : base(ref abilityRuntimeParams)
         {
         }
@@ -24,17 +24,19 @@ namespace Server.Ability
             actor.CastAbilityClientRpc(
                 AbilityRuntimeParams); //TODO needs to happen outside of abilities, (maybe ability handler?)
             CanStartCooldown = false;
+            elapsedTime = 0f; //kinda unnecessary but explicit
             return true;
         }
 
         public override bool Update()
         {
-            return true;
+            elapsedTime += Time.deltaTime;
+            return elapsedTime < Description.castTime;
         }
 
         public override bool Reactivate()
         {
-            var chargeProgress = (Time.time - StartTime) / Description.duration;
+            var chargeProgress = elapsedTime / Description.castTime;
             chargeProgress = Mathf.Clamp01(chargeProgress);
             var size = chargeProgress * Description.size;
             Debug.DrawRay(AbilityRuntimeParams.TargetPosition, Vector3.up * size, Color.red, 10f);

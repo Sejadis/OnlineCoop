@@ -1,5 +1,4 @@
 ﻿using Shared.Abilities;
-using UnityEngine;
 
 namespace Client.VFX
 {
