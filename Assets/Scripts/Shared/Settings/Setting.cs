@@ -1,4 +1,5 @@
 ﻿using System;
+using Attributes;
 using UnityEngine;
 
 namespace Shared.Settings
@@ -9,7 +10,7 @@ namespace Shared.Settings
         protected string _name;
         [SerializeField,TextArea]
         protected string _hint;
-        [SerializeField]
+        [SerializeField, GetSet("Value")]
         protected T _value;
         public string Name => _name;
         public string Hint => _hint;

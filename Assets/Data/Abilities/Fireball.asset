@@ -24,7 +24,7 @@ MonoBehaviour:
   targetRequirement: 3
   isUnique: 1
   isInterruptable: 1
-  cooldown: 0.5
+  cooldown: 2
   charges: 0
   speed: 50
   size: 0
