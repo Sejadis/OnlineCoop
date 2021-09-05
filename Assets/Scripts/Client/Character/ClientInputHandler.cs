@@ -31,7 +31,7 @@ namespace Client.Character
                     .RegisterPartyMember("Player " + NetworkObjectId, networkCharacterState);
                 return;
             }
-            
+
             GameObject.FindWithTag("PartyUI").GetComponent<PartyUI>().RegisterPlayer("Player " + NetworkObjectId,
                 networkCharacterState);
             var abilityUI = GameObject.FindWithTag("AbilityUI").GetComponent<AbilityUI>();
@@ -52,6 +52,9 @@ namespace Client.Character
             networkCharacterState.OnClientStatusEffectAdded +=
                 runtimeParams => statusEffectUI.AddStatusEffect(ref runtimeParams);
 
+            GameObject.FindWithTag("AbilityProgressUI").GetComponent<AbilityProgressUI>()
+                .Init(networkCharacterState);
+
             InputManager.OnMovement += OnMovement;
             InputManager.OnSprint += OnSprint;
             InputManager.OnJump += OnJump;
@@ -61,8 +64,6 @@ namespace Client.Character
             InputManager.OnCore2 += OnCore2;
             InputManager.OnCore3 += OnCore3;
         }
-
-
 
 
         private void OnCore1(InputAction.CallbackContext obj)
@@ -89,7 +90,7 @@ namespace Client.Character
 
         private AbilityRuntimeParams CreateRuntimeParams(AbilityType abilityType)
         {
-            var runtimeParams = new AbilityRuntimeParams(abilityType, NetworkObjectId, new ulong[]{0},
+            var runtimeParams = new AbilityRuntimeParams(abilityType, NetworkObjectId, new ulong[] {0},
                 transform.position + aimTarget.forward,
                 aimTarget.forward, aimTarget.TransformPoint(localAbilitySpawnOffset));
             return runtimeParams;

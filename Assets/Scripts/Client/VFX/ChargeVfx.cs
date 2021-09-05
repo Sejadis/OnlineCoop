@@ -11,8 +11,9 @@ namespace Client.VFX
 
         public override bool Start()
         {
-            duration = Description.duration;
+            duration = Description.castTime;
             size = Description.size;
+            SpawnPrefab();
             return true;
         }
 
@@ -34,8 +35,8 @@ namespace Client.VFX
             throw new System.NotImplementedException();
         }
 
-        public ChargeVfx(ref AbilityRuntimeParams abilityRuntimeParams, Transform effectTransform) : base(
-            ref abilityRuntimeParams, effectTransform)
+        public ChargeVfx(ref AbilityRuntimeParams abilityRuntimeParams) : base(
+            ref abilityRuntimeParams)
         {
         }
     }

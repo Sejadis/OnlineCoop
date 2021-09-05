@@ -19,12 +19,12 @@ namespace Server.Ability
         {
             actor = NetworkSpawnManager.SpawnedObjects[AbilityRuntimeParams.Actor]
                 .GetComponent<NetworkCharacterState>();
+            //TODO needs to happen outside of abilities, (maybe ability handler?)
+            actor.CastAbilityClientRpc(AbilityRuntimeParams);
             if (DidCastTimePass)
             {
                 didStart = true;
                 RunHitCheck();
-                actor.CastAbilityClientRpc(
-                    AbilityRuntimeParams); //TODO needs to happen outside of abilities, (maybe ability handler?)
             }
 
             return false;
@@ -35,11 +35,11 @@ namespace Server.Ability
             if (DidCastTimePass)
             {
                 RunHitCheck();
-                if (!didStart)
-                {
-                    actor.CastAbilityClientRpc(
-                        AbilityRuntimeParams); //TODO needs to happen outside of abilities, (maybe ability handler?)
-                }
+                // if (!didStart)
+                // {
+                //     actor.CastAbilityClientRpc(
+                //         AbilityRuntimeParams); //TODO needs to happen outside of abilities, (maybe ability handler?)
+                // }
 
                 return false;
             }

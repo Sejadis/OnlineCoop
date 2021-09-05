@@ -12,10 +12,9 @@ namespace Client.VFX
 
         protected Transform EffectTransform => effectTransform;
 
-        public AbilityVfx(ref AbilityRuntimeParams abilityRuntimeParams, Transform effectTransform) : base(
+        public AbilityVfx(ref AbilityRuntimeParams abilityRuntimeParams) : base(
             ref abilityRuntimeParams)
         {
-            this.effectTransform = effectTransform;
         }
 
         public static AbilityVfx CreateVfx(ref AbilityRuntimeParams runtimeParams)
@@ -23,15 +22,35 @@ namespace Client.VFX
             if (GameDataManager.TryGetAbilityDescriptionByType(
                 runtimeParams.AbilityType, out var abilityDescription))
             {
-                var obj = Object.Instantiate(abilityDescription.Prefabs[0], runtimeParams.TargetPosition,
-                    Quaternion.identity); //TODO possibly change spawn responsibility to the effect?
-
-                return GetAbilityByEffectType(abilityDescription, ref runtimeParams, obj.transform);
+                return GetAbilityByEffectType(abilityDescription, ref runtimeParams);
             }
             else
             {
                 throw new ArgumentException("Unhandled AbilityType when creating VFX");
             }
+        }
+
+        protected void SpawnPrefab(int prefabIndex = 0)
+        {
+            effectTransform = Object.Instantiate(Description.Prefabs[prefabIndex], AbilityRuntimeParams.TargetPosition,
+                Quaternion.identity).transform;
+        }
+
+        protected virtual bool TrySpawnPrefab(int prefabIndex = 0)
+        {
+            if (effectTransform == null && StartTime + Description.castTime <= Time.time)
+            {
+                SpawnPrefab(prefabIndex);
+                return true;
+            }
+
+            return false;
+        }
+
+        public override bool Update()
+        {
+            TrySpawnPrefab();
+            return true;
         }
 
         public override void End()
@@ -41,17 +60,17 @@ namespace Client.VFX
         }
 
         private static AbilityVfx GetAbilityByEffectType(AbilityDescription description,
-            ref AbilityRuntimeParams runtimeParams, Transform effectTransform)
+            ref AbilityRuntimeParams runtimeParams)
         {
             return description.effect switch
             {
                 // AbilityEffectType.Projectile => new ProjectileAbility(ref runtimeParams),
                 // AbilityEffectType.Craft => new CraftItemAbility(ref runtimeParams),
-                AbilityEffectType.AoeZone => new AoeZoneVfx(ref runtimeParams, effectTransform),
+                AbilityEffectType.AoeZone => new AoeZoneVfx(ref runtimeParams),
                 // AbilityEffectType.AoeOneShot => new AoeAbility(ref runtimeParams),
                 // AbilityEffectType.Log => new LogAbility(ref runtimeParams),
                 // AbilityEffectType.SpawnObject => new SpawnObjectAbility(ref runtimeParams),
-                AbilityEffectType.ChargeAoeOneShot => new ChargeVfx(ref runtimeParams, effectTransform),
+                AbilityEffectType.ChargeAoeOneShot => new ChargeVfx(ref runtimeParams),
                 _ => throw new Exception("Unhandled AbilityEffectType when creating VFX"),
             };
         }

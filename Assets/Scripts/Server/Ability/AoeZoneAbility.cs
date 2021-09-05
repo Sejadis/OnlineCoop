@@ -20,11 +20,11 @@ namespace Server.Ability
             {
                 elapsedTime = 0;
                 RunHitCheck();
-                if (!didStart)
-                {
-                    actor.CastAbilityClientRpc(AbilityRuntimeParams);
-                    didStart = true;
-                }
+                // if (!didStart)
+                // {
+                //     actor.CastAbilityClientRpc(AbilityRuntimeParams);
+                //     didStart = true;
+                // }
             }
 
             return true;

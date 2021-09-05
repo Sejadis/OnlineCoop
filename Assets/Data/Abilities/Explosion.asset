@@ -15,7 +15,7 @@ MonoBehaviour:
   name: 
   description: 
   icon: {fileID: 21300000, guid: ffdb0945b88293a4bada5c70ab411cd0, type: 3}
-  duration: 4
+  duration: 0
   delay: 0
   mainValue: 5
   force: 100
@@ -29,7 +29,7 @@ MonoBehaviour:
   speed: 0
   size: 6
   range: 0
-  castTime: 0
+  castTime: 4
   rootsDuringCast: 0
   isTracking: 0
   followUpAbility: {fileID: 0}
