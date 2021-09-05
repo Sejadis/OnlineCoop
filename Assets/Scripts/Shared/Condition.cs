@@ -10,6 +10,7 @@ namespace Shared
         public ConditionComparer Comparer;
         public TargetEffectConditionType conditionTypeValue;
 
+
         public static bool Compare(float value1, float value2, ConditionComparer comparer)
         {
             return comparer switch
@@ -21,15 +22,22 @@ namespace Shared
             };
         }
 
-        public bool Evaluate(float values)
+        public bool Evaluate(ConditionParameter values)
         {
             var value2 = conditionTypeValue switch
             {
-                TargetEffectConditionType.HitCount => values,
+                TargetEffectConditionType.HitCount => values.HitCount,
+                TargetEffectConditionType.TriggerCount => values.TriggerCount,
                 _ => throw new ArgumentOutOfRangeException()
             };
 
             return Compare(CompareValue, value2, Comparer);
+        }
+
+        public struct ConditionParameter
+        {
+            public int HitCount;
+            public int TriggerCount;
         }
     }
 }

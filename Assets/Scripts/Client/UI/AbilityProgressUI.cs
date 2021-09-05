@@ -1,5 +1,4 @@
-﻿using System;
-using Shared;
+﻿using Shared;
 using Shared.Abilities;
 using Shared.Data;
 using UnityEngine;
@@ -7,7 +6,7 @@ using UnityEngine.UI;
 
 namespace Client.UI
 {
-    public class AbilityProgressUI : MonoBehaviour
+    public class AbilityProgressUI : UIScreen
     {
         [SerializeField] private Image progressImage;
         [SerializeField] private GameObject container;
