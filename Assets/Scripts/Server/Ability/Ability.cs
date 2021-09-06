@@ -99,8 +99,12 @@ namespace Server.Ability
                 //all conditions met, increase count
                 hitEffectTriggerCount[hitEffect] += 1;
 
+                //we do not want to override the provided targets, just change them for the current effect so we make a copy
+                var effectTargets = new ulong[targets.Length];
+                targets.CopyTo(effectTargets,0);
+                
                 //set main target (index 0) depending on selected target type
-                targets[0] = hitEffect.TargetType switch
+                effectTargets[0] = hitEffect.TargetType switch
                 {
                     AbilityTargetType.None => targets[0],
                     AbilityTargetType.Self => abilityObject?.GetComponent<NetworkObject>()?.NetworkObjectId
@@ -113,7 +117,7 @@ namespace Server.Ability
                 //TODO refactor to move logic outside
                 var runtimeParams = hitEffect.EffectType == TargetEffectType.Buff
                     ? new TargetEffectParameter(
-                        targets: targets,
+                        targets: effectTargets,
                         actor: AbilityRuntimeParams.Actor,
                         targetDirection: targetDirection,
                         statusEffectType: hitEffect.StatusEffectType
@@ -122,7 +126,7 @@ namespace Server.Ability
                         // effectType: hitEffect.EffectType,
                     )
                     : new TargetEffectParameter(
-                        targets: targets,
+                        targets: effectTargets,
                         actor: AbilityRuntimeParams.Actor,
                         targetDirection: targetDirection,
                         abilityType: Description.abilityType
