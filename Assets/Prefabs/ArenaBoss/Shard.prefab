@@ -113,7 +113,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c94f8dabab7b37f49aafc58b67356003, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  camera: {fileID: 0}
+  targetCamera: {fileID: 0}
 --- !u!1 &101531357787089844
 GameObject:
   m_ObjectHideFlags: 0
@@ -128,7 +128,9 @@ GameObject:
   - component: {fileID: 101531357787089846}
   - component: {fileID: 101531357787089843}
   - component: {fileID: 101531357787089853}
-  - component: {fileID: 5333611516615380246}
+  - component: {fileID: 6890734957389828278}
+  - component: {fileID: -7425552397584991659}
+  - component: {fileID: 4284627807793249583}
   m_Layer: 0
   m_Name: Shard
   m_TagString: Untagged
@@ -228,9 +230,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   MaxHealth:
-    m_InternalValue: 100
+    m_InternalValue: 10
   CurrentHealth:
-    m_InternalValue: 50
+    m_InternalValue: 10
 --- !u!114 &101531357787089853
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -248,7 +250,7 @@ MonoBehaviour:
   PrefabHashGenerator: Shard1
   AlwaysReplicateAsRoot: 0
   DontDestroyWithOwner: 0
---- !u!114 &5333611516615380246
+--- !u!114 &6890734957389828278
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -257,10 +259,43 @@ MonoBehaviour:
   m_GameObject: {fileID: 101531357787089844}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b447fcbbf8d581c43b00534199dfb784, type: 3}
+  m_Script: {fileID: 11500000, guid: 9cb1d16ae3927ba4db4a6e632cc4aadb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  networkHealthState: {fileID: 101531357787089843}
+  IsSprinting:
+    m_InternalValue: 0
+  PlayerName:
+    m_InternalValue: 
+  IconName:
+    m_InternalValue: 
+  equippedAbilities:
+    m_InternalValue: 
+--- !u!114 &-7425552397584991659
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 101531357787089844}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 492416620cd14ed1854dc0c7f300e8eb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &4284627807793249583
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 101531357787089844}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e255947409a06e14d84694dd22bef79b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  faction: 3
+  isStaticCharacter: 1
 --- !u!1001 &101531358140537670
 PrefabInstance:
   m_ObjectHideFlags: 0

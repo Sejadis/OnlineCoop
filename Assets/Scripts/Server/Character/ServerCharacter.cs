@@ -11,12 +11,12 @@ using UnityEngine;
 namespace Server.Character
 {
     [RequireComponent(typeof(NetworkCharacterState),
-        typeof(ServerCharacterMovement),
         typeof(NetworkObject))]
     [RequireComponent(typeof(ClientVisualizer))] //cant have more than 3 components in the attribute
     public class ServerCharacter : NetworkBehaviour, IDamagable, IHealable, IBuffable
     {
         [SerializeField] private AbilityTargetType faction;
+        [SerializeField] private bool isStaticCharacter;
         protected AbilityRunner AbilityRunner;
         protected StatusEffectRunner StatusEffectRunner;
         protected NetworkCharacterState networkCharacterState;
@@ -58,7 +58,10 @@ namespace Server.Character
 
         public void ForceMove(Vector3 targetPosition, float speed)
         {
-            serverCharacterMovement.ForceMovement(targetPosition, speed);
+            if (!isStaticCharacter)
+            {
+                serverCharacterMovement.ForceMovement(targetPosition, speed);
+            }
         }
 
         protected void OnAbilityCast(AbilityRuntimeParams runtimeParams)

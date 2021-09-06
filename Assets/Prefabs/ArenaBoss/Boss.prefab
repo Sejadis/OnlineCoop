@@ -136,6 +136,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d6f2c41d2dd94354198f44588d76b2e5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  faction: 3
   maxHealth: 100
   healthTriggers: 4b0000003200000019000000
   shardPositions:

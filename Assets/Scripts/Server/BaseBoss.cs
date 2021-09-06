@@ -55,7 +55,7 @@ namespace Server
                 {
                     shardsAlive++;
                     var shard = Instantiate(shardPrefab, shardPos.position, Quaternion.identity);
-                    shard.GetComponent<ServerDestructibleObject>().OnDeath += OnShardDeath;
+                    shard.GetComponent<ServerCharacter>().OnDeath += OnShardDeath;
                     shard.GetComponent<NetworkObject>().Spawn();
                 }
             }

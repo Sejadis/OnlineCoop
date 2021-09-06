@@ -8,7 +8,7 @@ namespace Server.StatusEffects
     public class IgnoreCollisionStatusEffect : StatusEffect
     {
         private Collider targetCollider;
-        private List<Collider> otherCollider = new List<Collider>();
+        private List<Collider> otherColliders = new List<Collider>();
 
         public IgnoreCollisionStatusEffect(ref StatusEffectRuntimeParams runtimeParams) : base(ref runtimeParams)
         {
@@ -20,9 +20,10 @@ namespace Server.StatusEffects
             targetCollider = target.GetComponent<Collider>();
             for (int i = 1; i < runtimeParams.targets.Length; i++)
             {
-                otherCollider.Add(NetworkSpawnManager.SpawnedObjects[runtimeParams.targets[i]]
-                    .GetComponent<Collider>());
-                Physics.IgnoreCollision(targetCollider, otherCollider[i], true);
+                var collider = NetworkSpawnManager.SpawnedObjects[runtimeParams.targets[i]]
+                    .GetComponent<Collider>();
+                otherColliders.Add(collider);
+                Physics.IgnoreCollision(targetCollider, otherColliders[i - 1], true);
             }
 
             return core;
@@ -35,10 +36,9 @@ namespace Server.StatusEffects
 
         public override void End()
         {
-            foreach (var collider in otherCollider)
+            foreach (var collider in otherColliders)
             {
                 Physics.IgnoreCollision(targetCollider, collider, false);
-
             }
         }
 

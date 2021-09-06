@@ -11,9 +11,10 @@ namespace Client.UI
         [SerializeField] private PartyUI partyUI;
         [SerializeField] private AbilityProgressUI abilityProgressUI;
         [SerializeField] private StatusEffectUI statusEffectUI;
-
+        
         public void InitPlayer(NetworkCharacterState playerState, string playerName)
         {
+            Show();
             //setup player frame
             partyUI.RegisterPlayer(playerName, playerState);
 
