@@ -25,6 +25,7 @@ namespace Client.Character
 
             if (!IsLocalPlayer)
             {
+                playerCamera.SetActive(false);
                 UIManager.Instance.GameHUD.InitPartyMember(networkCharacterState, "Player " + NetworkObjectId);
                 return;
             }
