@@ -137,6 +137,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   faction: 3
+  isStaticCharacter: 1
   maxHealth: 100
   healthTriggers: 4b0000003200000019000000
   shardPositions:
