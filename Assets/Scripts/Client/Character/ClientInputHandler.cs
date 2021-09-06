@@ -1,7 +1,6 @@
 using Client.Input;
 using Client.UI;
 using Shared;
-using Shared.Data;
 using Shared.Settings;
 using Shared.Abilities;
 using MLAPI;
@@ -26,34 +25,11 @@ namespace Client.Character
 
             if (!IsLocalPlayer)
             {
-                playerCamera.SetActive(false);
-                GameObject.FindWithTag("PartyUI").GetComponent<PartyUI>()
-                    .RegisterPartyMember("Player " + NetworkObjectId, networkCharacterState);
+                UIManager.Instance.GameHUD.InitPartyMember(networkCharacterState, "Player " + NetworkObjectId);
                 return;
             }
 
-            GameObject.FindWithTag("PartyUI").GetComponent<PartyUI>().RegisterPlayer("Player " + NetworkObjectId,
-                networkCharacterState);
-            var abilityUI = GameObject.FindWithTag("AbilityUI").GetComponent<AbilityUI>();
-
-            for (int i = 0; i < 3; i++)
-            {
-                var type = (AbilityType) networkCharacterState.equippedAbilities.Value[i];
-                if (GameDataManager.TryGetAbilityDescriptionByType(type, out var ability))
-                {
-                    abilityUI.SetAbility(ability, i);
-                }
-            }
-
-            networkCharacterState.OnStartCooldown += abilityUI.TriggerCooldown;
-
-            var statusEffectUI = GameObject.FindWithTag("StatusEffectUI").GetComponent<StatusEffectUI>();
-
-            networkCharacterState.OnClientStatusEffectAdded +=
-                runtimeParams => statusEffectUI.AddStatusEffect(ref runtimeParams);
-
-            GameObject.FindWithTag("AbilityProgressUI").GetComponent<AbilityProgressUI>()
-                .Init(networkCharacterState);
+            UIManager.Instance.GameHUD.InitPlayer(networkCharacterState, "Player " + NetworkObjectId);
 
             InputManager.OnMovement += OnMovement;
             InputManager.OnSprint += OnSprint;

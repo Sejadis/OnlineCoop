@@ -6,12 +6,14 @@ using System.Collections.Generic;
 using UnityEngine.InputSystem;
 using UnityEngine.InputSystem.Utilities;
 
-public class @PlayerInput : IInputActionCollection, IDisposable
+namespace Client.Input
 {
-    public InputActionAsset asset { get; }
-    public @PlayerInput()
+    public class @PlayerInput : IInputActionCollection, IDisposable
     {
-        asset = InputActionAsset.FromJson(@"{
+        public InputActionAsset asset { get; }
+        public @PlayerInput()
+        {
+            asset = InputActionAsset.FromJson(@"{
     ""name"": ""PlayerInput"",
     ""maps"": [
         {
@@ -463,309 +465,310 @@ public class @PlayerInput : IInputActionCollection, IDisposable
     ],
     ""controlSchemes"": []
 }");
+            // Controls
+            m_Controls = asset.FindActionMap("Controls", throwIfNotFound: true);
+            m_Controls_Movement = m_Controls.FindAction("Movement", throwIfNotFound: true);
+            m_Controls_Sprint = m_Controls.FindAction("Sprint", throwIfNotFound: true);
+            m_Controls_Interaction = m_Controls.FindAction("Interaction", throwIfNotFound: true);
+            m_Controls_Look = m_Controls.FindAction("Look", throwIfNotFound: true);
+            m_Controls_Zoom = m_Controls.FindAction("Zoom", throwIfNotFound: true);
+            m_Controls_Jump = m_Controls.FindAction("Jump", throwIfNotFound: true);
+            // Abilities
+            m_Abilities = asset.FindActionMap("Abilities", throwIfNotFound: true);
+            m_Abilities_Core1 = m_Abilities.FindAction("Core1", throwIfNotFound: true);
+            m_Abilities_Core2 = m_Abilities.FindAction("Core2", throwIfNotFound: true);
+            m_Abilities_Core3 = m_Abilities.FindAction("Core3", throwIfNotFound: true);
+            m_Abilities_WeaponBase = m_Abilities.FindAction("WeaponBase", throwIfNotFound: true);
+            m_Abilities_WeaponSpecial = m_Abilities.FindAction("WeaponSpecial", throwIfNotFound: true);
+            m_Abilities_Movement = m_Abilities.FindAction("Movement", throwIfNotFound: true);
+            // UI
+            m_UI = asset.FindActionMap("UI", throwIfNotFound: true);
+            m_UI_Ability = m_UI.FindAction("Ability", throwIfNotFound: true);
+            m_UI_Back = m_UI.FindAction("Back", throwIfNotFound: true);
+            m_UI_Inventory = m_UI.FindAction("Inventory", throwIfNotFound: true);
+            m_UI_Crafting = m_UI.FindAction("Crafting", throwIfNotFound: true);
+            m_UI_GameHud = m_UI.FindAction("GameHud", throwIfNotFound: true);
+        }
+
+        public void Dispose()
+        {
+            UnityEngine.Object.Destroy(asset);
+        }
+
+        public InputBinding? bindingMask
+        {
+            get => asset.bindingMask;
+            set => asset.bindingMask = value;
+        }
+
+        public ReadOnlyArray<InputDevice>? devices
+        {
+            get => asset.devices;
+            set => asset.devices = value;
+        }
+
+        public ReadOnlyArray<InputControlScheme> controlSchemes => asset.controlSchemes;
+
+        public bool Contains(InputAction action)
+        {
+            return asset.Contains(action);
+        }
+
+        public IEnumerator<InputAction> GetEnumerator()
+        {
+            return asset.GetEnumerator();
+        }
+
+        IEnumerator IEnumerable.GetEnumerator()
+        {
+            return GetEnumerator();
+        }
+
+        public void Enable()
+        {
+            asset.Enable();
+        }
+
+        public void Disable()
+        {
+            asset.Disable();
+        }
+
         // Controls
-        m_Controls = asset.FindActionMap("Controls", throwIfNotFound: true);
-        m_Controls_Movement = m_Controls.FindAction("Movement", throwIfNotFound: true);
-        m_Controls_Sprint = m_Controls.FindAction("Sprint", throwIfNotFound: true);
-        m_Controls_Interaction = m_Controls.FindAction("Interaction", throwIfNotFound: true);
-        m_Controls_Look = m_Controls.FindAction("Look", throwIfNotFound: true);
-        m_Controls_Zoom = m_Controls.FindAction("Zoom", throwIfNotFound: true);
-        m_Controls_Jump = m_Controls.FindAction("Jump", throwIfNotFound: true);
+        private readonly InputActionMap m_Controls;
+        private IControlsActions m_ControlsActionsCallbackInterface;
+        private readonly InputAction m_Controls_Movement;
+        private readonly InputAction m_Controls_Sprint;
+        private readonly InputAction m_Controls_Interaction;
+        private readonly InputAction m_Controls_Look;
+        private readonly InputAction m_Controls_Zoom;
+        private readonly InputAction m_Controls_Jump;
+        public struct ControlsActions
+        {
+            private @PlayerInput m_Wrapper;
+            public ControlsActions(@PlayerInput wrapper) { m_Wrapper = wrapper; }
+            public InputAction @Movement => m_Wrapper.m_Controls_Movement;
+            public InputAction @Sprint => m_Wrapper.m_Controls_Sprint;
+            public InputAction @Interaction => m_Wrapper.m_Controls_Interaction;
+            public InputAction @Look => m_Wrapper.m_Controls_Look;
+            public InputAction @Zoom => m_Wrapper.m_Controls_Zoom;
+            public InputAction @Jump => m_Wrapper.m_Controls_Jump;
+            public InputActionMap Get() { return m_Wrapper.m_Controls; }
+            public void Enable() { Get().Enable(); }
+            public void Disable() { Get().Disable(); }
+            public bool enabled => Get().enabled;
+            public static implicit operator InputActionMap(ControlsActions set) { return set.Get(); }
+            public void SetCallbacks(IControlsActions instance)
+            {
+                if (m_Wrapper.m_ControlsActionsCallbackInterface != null)
+                {
+                    @Movement.started -= m_Wrapper.m_ControlsActionsCallbackInterface.OnMovement;
+                    @Movement.performed -= m_Wrapper.m_ControlsActionsCallbackInterface.OnMovement;
+                    @Movement.canceled -= m_Wrapper.m_ControlsActionsCallbackInterface.OnMovement;
+                    @Sprint.started -= m_Wrapper.m_ControlsActionsCallbackInterface.OnSprint;
+                    @Sprint.performed -= m_Wrapper.m_ControlsActionsCallbackInterface.OnSprint;
+                    @Sprint.canceled -= m_Wrapper.m_ControlsActionsCallbackInterface.OnSprint;
+                    @Interaction.started -= m_Wrapper.m_ControlsActionsCallbackInterface.OnInteraction;
+                    @Interaction.performed -= m_Wrapper.m_ControlsActionsCallbackInterface.OnInteraction;
+                    @Interaction.canceled -= m_Wrapper.m_ControlsActionsCallbackInterface.OnInteraction;
+                    @Look.started -= m_Wrapper.m_ControlsActionsCallbackInterface.OnLook;
+                    @Look.performed -= m_Wrapper.m_ControlsActionsCallbackInterface.OnLook;
+                    @Look.canceled -= m_Wrapper.m_ControlsActionsCallbackInterface.OnLook;
+                    @Zoom.started -= m_Wrapper.m_ControlsActionsCallbackInterface.OnZoom;
+                    @Zoom.performed -= m_Wrapper.m_ControlsActionsCallbackInterface.OnZoom;
+                    @Zoom.canceled -= m_Wrapper.m_ControlsActionsCallbackInterface.OnZoom;
+                    @Jump.started -= m_Wrapper.m_ControlsActionsCallbackInterface.OnJump;
+                    @Jump.performed -= m_Wrapper.m_ControlsActionsCallbackInterface.OnJump;
+                    @Jump.canceled -= m_Wrapper.m_ControlsActionsCallbackInterface.OnJump;
+                }
+                m_Wrapper.m_ControlsActionsCallbackInterface = instance;
+                if (instance != null)
+                {
+                    @Movement.started += instance.OnMovement;
+                    @Movement.performed += instance.OnMovement;
+                    @Movement.canceled += instance.OnMovement;
+                    @Sprint.started += instance.OnSprint;
+                    @Sprint.performed += instance.OnSprint;
+                    @Sprint.canceled += instance.OnSprint;
+                    @Interaction.started += instance.OnInteraction;
+                    @Interaction.performed += instance.OnInteraction;
+                    @Interaction.canceled += instance.OnInteraction;
+                    @Look.started += instance.OnLook;
+                    @Look.performed += instance.OnLook;
+                    @Look.canceled += instance.OnLook;
+                    @Zoom.started += instance.OnZoom;
+                    @Zoom.performed += instance.OnZoom;
+                    @Zoom.canceled += instance.OnZoom;
+                    @Jump.started += instance.OnJump;
+                    @Jump.performed += instance.OnJump;
+                    @Jump.canceled += instance.OnJump;
+                }
+            }
+        }
+        public ControlsActions @Controls => new ControlsActions(this);
+
         // Abilities
-        m_Abilities = asset.FindActionMap("Abilities", throwIfNotFound: true);
-        m_Abilities_Core1 = m_Abilities.FindAction("Core1", throwIfNotFound: true);
-        m_Abilities_Core2 = m_Abilities.FindAction("Core2", throwIfNotFound: true);
-        m_Abilities_Core3 = m_Abilities.FindAction("Core3", throwIfNotFound: true);
-        m_Abilities_WeaponBase = m_Abilities.FindAction("WeaponBase", throwIfNotFound: true);
-        m_Abilities_WeaponSpecial = m_Abilities.FindAction("WeaponSpecial", throwIfNotFound: true);
-        m_Abilities_Movement = m_Abilities.FindAction("Movement", throwIfNotFound: true);
+        private readonly InputActionMap m_Abilities;
+        private IAbilitiesActions m_AbilitiesActionsCallbackInterface;
+        private readonly InputAction m_Abilities_Core1;
+        private readonly InputAction m_Abilities_Core2;
+        private readonly InputAction m_Abilities_Core3;
+        private readonly InputAction m_Abilities_WeaponBase;
+        private readonly InputAction m_Abilities_WeaponSpecial;
+        private readonly InputAction m_Abilities_Movement;
+        public struct AbilitiesActions
+        {
+            private @PlayerInput m_Wrapper;
+            public AbilitiesActions(@PlayerInput wrapper) { m_Wrapper = wrapper; }
+            public InputAction @Core1 => m_Wrapper.m_Abilities_Core1;
+            public InputAction @Core2 => m_Wrapper.m_Abilities_Core2;
+            public InputAction @Core3 => m_Wrapper.m_Abilities_Core3;
+            public InputAction @WeaponBase => m_Wrapper.m_Abilities_WeaponBase;
+            public InputAction @WeaponSpecial => m_Wrapper.m_Abilities_WeaponSpecial;
+            public InputAction @Movement => m_Wrapper.m_Abilities_Movement;
+            public InputActionMap Get() { return m_Wrapper.m_Abilities; }
+            public void Enable() { Get().Enable(); }
+            public void Disable() { Get().Disable(); }
+            public bool enabled => Get().enabled;
+            public static implicit operator InputActionMap(AbilitiesActions set) { return set.Get(); }
+            public void SetCallbacks(IAbilitiesActions instance)
+            {
+                if (m_Wrapper.m_AbilitiesActionsCallbackInterface != null)
+                {
+                    @Core1.started -= m_Wrapper.m_AbilitiesActionsCallbackInterface.OnCore1;
+                    @Core1.performed -= m_Wrapper.m_AbilitiesActionsCallbackInterface.OnCore1;
+                    @Core1.canceled -= m_Wrapper.m_AbilitiesActionsCallbackInterface.OnCore1;
+                    @Core2.started -= m_Wrapper.m_AbilitiesActionsCallbackInterface.OnCore2;
+                    @Core2.performed -= m_Wrapper.m_AbilitiesActionsCallbackInterface.OnCore2;
+                    @Core2.canceled -= m_Wrapper.m_AbilitiesActionsCallbackInterface.OnCore2;
+                    @Core3.started -= m_Wrapper.m_AbilitiesActionsCallbackInterface.OnCore3;
+                    @Core3.performed -= m_Wrapper.m_AbilitiesActionsCallbackInterface.OnCore3;
+                    @Core3.canceled -= m_Wrapper.m_AbilitiesActionsCallbackInterface.OnCore3;
+                    @WeaponBase.started -= m_Wrapper.m_AbilitiesActionsCallbackInterface.OnWeaponBase;
+                    @WeaponBase.performed -= m_Wrapper.m_AbilitiesActionsCallbackInterface.OnWeaponBase;
+                    @WeaponBase.canceled -= m_Wrapper.m_AbilitiesActionsCallbackInterface.OnWeaponBase;
+                    @WeaponSpecial.started -= m_Wrapper.m_AbilitiesActionsCallbackInterface.OnWeaponSpecial;
+                    @WeaponSpecial.performed -= m_Wrapper.m_AbilitiesActionsCallbackInterface.OnWeaponSpecial;
+                    @WeaponSpecial.canceled -= m_Wrapper.m_AbilitiesActionsCallbackInterface.OnWeaponSpecial;
+                    @Movement.started -= m_Wrapper.m_AbilitiesActionsCallbackInterface.OnMovement;
+                    @Movement.performed -= m_Wrapper.m_AbilitiesActionsCallbackInterface.OnMovement;
+                    @Movement.canceled -= m_Wrapper.m_AbilitiesActionsCallbackInterface.OnMovement;
+                }
+                m_Wrapper.m_AbilitiesActionsCallbackInterface = instance;
+                if (instance != null)
+                {
+                    @Core1.started += instance.OnCore1;
+                    @Core1.performed += instance.OnCore1;
+                    @Core1.canceled += instance.OnCore1;
+                    @Core2.started += instance.OnCore2;
+                    @Core2.performed += instance.OnCore2;
+                    @Core2.canceled += instance.OnCore2;
+                    @Core3.started += instance.OnCore3;
+                    @Core3.performed += instance.OnCore3;
+                    @Core3.canceled += instance.OnCore3;
+                    @WeaponBase.started += instance.OnWeaponBase;
+                    @WeaponBase.performed += instance.OnWeaponBase;
+                    @WeaponBase.canceled += instance.OnWeaponBase;
+                    @WeaponSpecial.started += instance.OnWeaponSpecial;
+                    @WeaponSpecial.performed += instance.OnWeaponSpecial;
+                    @WeaponSpecial.canceled += instance.OnWeaponSpecial;
+                    @Movement.started += instance.OnMovement;
+                    @Movement.performed += instance.OnMovement;
+                    @Movement.canceled += instance.OnMovement;
+                }
+            }
+        }
+        public AbilitiesActions @Abilities => new AbilitiesActions(this);
+
         // UI
-        m_UI = asset.FindActionMap("UI", throwIfNotFound: true);
-        m_UI_Ability = m_UI.FindAction("Ability", throwIfNotFound: true);
-        m_UI_Back = m_UI.FindAction("Back", throwIfNotFound: true);
-        m_UI_Inventory = m_UI.FindAction("Inventory", throwIfNotFound: true);
-        m_UI_Crafting = m_UI.FindAction("Crafting", throwIfNotFound: true);
-        m_UI_GameHud = m_UI.FindAction("GameHud", throwIfNotFound: true);
-    }
-
-    public void Dispose()
-    {
-        UnityEngine.Object.Destroy(asset);
-    }
-
-    public InputBinding? bindingMask
-    {
-        get => asset.bindingMask;
-        set => asset.bindingMask = value;
-    }
-
-    public ReadOnlyArray<InputDevice>? devices
-    {
-        get => asset.devices;
-        set => asset.devices = value;
-    }
-
-    public ReadOnlyArray<InputControlScheme> controlSchemes => asset.controlSchemes;
-
-    public bool Contains(InputAction action)
-    {
-        return asset.Contains(action);
-    }
-
-    public IEnumerator<InputAction> GetEnumerator()
-    {
-        return asset.GetEnumerator();
-    }
-
-    IEnumerator IEnumerable.GetEnumerator()
-    {
-        return GetEnumerator();
-    }
-
-    public void Enable()
-    {
-        asset.Enable();
-    }
-
-    public void Disable()
-    {
-        asset.Disable();
-    }
-
-    // Controls
-    private readonly InputActionMap m_Controls;
-    private IControlsActions m_ControlsActionsCallbackInterface;
-    private readonly InputAction m_Controls_Movement;
-    private readonly InputAction m_Controls_Sprint;
-    private readonly InputAction m_Controls_Interaction;
-    private readonly InputAction m_Controls_Look;
-    private readonly InputAction m_Controls_Zoom;
-    private readonly InputAction m_Controls_Jump;
-    public struct ControlsActions
-    {
-        private @PlayerInput m_Wrapper;
-        public ControlsActions(@PlayerInput wrapper) { m_Wrapper = wrapper; }
-        public InputAction @Movement => m_Wrapper.m_Controls_Movement;
-        public InputAction @Sprint => m_Wrapper.m_Controls_Sprint;
-        public InputAction @Interaction => m_Wrapper.m_Controls_Interaction;
-        public InputAction @Look => m_Wrapper.m_Controls_Look;
-        public InputAction @Zoom => m_Wrapper.m_Controls_Zoom;
-        public InputAction @Jump => m_Wrapper.m_Controls_Jump;
-        public InputActionMap Get() { return m_Wrapper.m_Controls; }
-        public void Enable() { Get().Enable(); }
-        public void Disable() { Get().Disable(); }
-        public bool enabled => Get().enabled;
-        public static implicit operator InputActionMap(ControlsActions set) { return set.Get(); }
-        public void SetCallbacks(IControlsActions instance)
+        private readonly InputActionMap m_UI;
+        private IUIActions m_UIActionsCallbackInterface;
+        private readonly InputAction m_UI_Ability;
+        private readonly InputAction m_UI_Back;
+        private readonly InputAction m_UI_Inventory;
+        private readonly InputAction m_UI_Crafting;
+        private readonly InputAction m_UI_GameHud;
+        public struct UIActions
         {
-            if (m_Wrapper.m_ControlsActionsCallbackInterface != null)
+            private @PlayerInput m_Wrapper;
+            public UIActions(@PlayerInput wrapper) { m_Wrapper = wrapper; }
+            public InputAction @Ability => m_Wrapper.m_UI_Ability;
+            public InputAction @Back => m_Wrapper.m_UI_Back;
+            public InputAction @Inventory => m_Wrapper.m_UI_Inventory;
+            public InputAction @Crafting => m_Wrapper.m_UI_Crafting;
+            public InputAction @GameHud => m_Wrapper.m_UI_GameHud;
+            public InputActionMap Get() { return m_Wrapper.m_UI; }
+            public void Enable() { Get().Enable(); }
+            public void Disable() { Get().Disable(); }
+            public bool enabled => Get().enabled;
+            public static implicit operator InputActionMap(UIActions set) { return set.Get(); }
+            public void SetCallbacks(IUIActions instance)
             {
-                @Movement.started -= m_Wrapper.m_ControlsActionsCallbackInterface.OnMovement;
-                @Movement.performed -= m_Wrapper.m_ControlsActionsCallbackInterface.OnMovement;
-                @Movement.canceled -= m_Wrapper.m_ControlsActionsCallbackInterface.OnMovement;
-                @Sprint.started -= m_Wrapper.m_ControlsActionsCallbackInterface.OnSprint;
-                @Sprint.performed -= m_Wrapper.m_ControlsActionsCallbackInterface.OnSprint;
-                @Sprint.canceled -= m_Wrapper.m_ControlsActionsCallbackInterface.OnSprint;
-                @Interaction.started -= m_Wrapper.m_ControlsActionsCallbackInterface.OnInteraction;
-                @Interaction.performed -= m_Wrapper.m_ControlsActionsCallbackInterface.OnInteraction;
-                @Interaction.canceled -= m_Wrapper.m_ControlsActionsCallbackInterface.OnInteraction;
-                @Look.started -= m_Wrapper.m_ControlsActionsCallbackInterface.OnLook;
-                @Look.performed -= m_Wrapper.m_ControlsActionsCallbackInterface.OnLook;
-                @Look.canceled -= m_Wrapper.m_ControlsActionsCallbackInterface.OnLook;
-                @Zoom.started -= m_Wrapper.m_ControlsActionsCallbackInterface.OnZoom;
-                @Zoom.performed -= m_Wrapper.m_ControlsActionsCallbackInterface.OnZoom;
-                @Zoom.canceled -= m_Wrapper.m_ControlsActionsCallbackInterface.OnZoom;
-                @Jump.started -= m_Wrapper.m_ControlsActionsCallbackInterface.OnJump;
-                @Jump.performed -= m_Wrapper.m_ControlsActionsCallbackInterface.OnJump;
-                @Jump.canceled -= m_Wrapper.m_ControlsActionsCallbackInterface.OnJump;
-            }
-            m_Wrapper.m_ControlsActionsCallbackInterface = instance;
-            if (instance != null)
-            {
-                @Movement.started += instance.OnMovement;
-                @Movement.performed += instance.OnMovement;
-                @Movement.canceled += instance.OnMovement;
-                @Sprint.started += instance.OnSprint;
-                @Sprint.performed += instance.OnSprint;
-                @Sprint.canceled += instance.OnSprint;
-                @Interaction.started += instance.OnInteraction;
-                @Interaction.performed += instance.OnInteraction;
-                @Interaction.canceled += instance.OnInteraction;
-                @Look.started += instance.OnLook;
-                @Look.performed += instance.OnLook;
-                @Look.canceled += instance.OnLook;
-                @Zoom.started += instance.OnZoom;
-                @Zoom.performed += instance.OnZoom;
-                @Zoom.canceled += instance.OnZoom;
-                @Jump.started += instance.OnJump;
-                @Jump.performed += instance.OnJump;
-                @Jump.canceled += instance.OnJump;
+                if (m_Wrapper.m_UIActionsCallbackInterface != null)
+                {
+                    @Ability.started -= m_Wrapper.m_UIActionsCallbackInterface.OnAbility;
+                    @Ability.performed -= m_Wrapper.m_UIActionsCallbackInterface.OnAbility;
+                    @Ability.canceled -= m_Wrapper.m_UIActionsCallbackInterface.OnAbility;
+                    @Back.started -= m_Wrapper.m_UIActionsCallbackInterface.OnBack;
+                    @Back.performed -= m_Wrapper.m_UIActionsCallbackInterface.OnBack;
+                    @Back.canceled -= m_Wrapper.m_UIActionsCallbackInterface.OnBack;
+                    @Inventory.started -= m_Wrapper.m_UIActionsCallbackInterface.OnInventory;
+                    @Inventory.performed -= m_Wrapper.m_UIActionsCallbackInterface.OnInventory;
+                    @Inventory.canceled -= m_Wrapper.m_UIActionsCallbackInterface.OnInventory;
+                    @Crafting.started -= m_Wrapper.m_UIActionsCallbackInterface.OnCrafting;
+                    @Crafting.performed -= m_Wrapper.m_UIActionsCallbackInterface.OnCrafting;
+                    @Crafting.canceled -= m_Wrapper.m_UIActionsCallbackInterface.OnCrafting;
+                    @GameHud.started -= m_Wrapper.m_UIActionsCallbackInterface.OnGameHud;
+                    @GameHud.performed -= m_Wrapper.m_UIActionsCallbackInterface.OnGameHud;
+                    @GameHud.canceled -= m_Wrapper.m_UIActionsCallbackInterface.OnGameHud;
+                }
+                m_Wrapper.m_UIActionsCallbackInterface = instance;
+                if (instance != null)
+                {
+                    @Ability.started += instance.OnAbility;
+                    @Ability.performed += instance.OnAbility;
+                    @Ability.canceled += instance.OnAbility;
+                    @Back.started += instance.OnBack;
+                    @Back.performed += instance.OnBack;
+                    @Back.canceled += instance.OnBack;
+                    @Inventory.started += instance.OnInventory;
+                    @Inventory.performed += instance.OnInventory;
+                    @Inventory.canceled += instance.OnInventory;
+                    @Crafting.started += instance.OnCrafting;
+                    @Crafting.performed += instance.OnCrafting;
+                    @Crafting.canceled += instance.OnCrafting;
+                    @GameHud.started += instance.OnGameHud;
+                    @GameHud.performed += instance.OnGameHud;
+                    @GameHud.canceled += instance.OnGameHud;
+                }
             }
         }
-    }
-    public ControlsActions @Controls => new ControlsActions(this);
-
-    // Abilities
-    private readonly InputActionMap m_Abilities;
-    private IAbilitiesActions m_AbilitiesActionsCallbackInterface;
-    private readonly InputAction m_Abilities_Core1;
-    private readonly InputAction m_Abilities_Core2;
-    private readonly InputAction m_Abilities_Core3;
-    private readonly InputAction m_Abilities_WeaponBase;
-    private readonly InputAction m_Abilities_WeaponSpecial;
-    private readonly InputAction m_Abilities_Movement;
-    public struct AbilitiesActions
-    {
-        private @PlayerInput m_Wrapper;
-        public AbilitiesActions(@PlayerInput wrapper) { m_Wrapper = wrapper; }
-        public InputAction @Core1 => m_Wrapper.m_Abilities_Core1;
-        public InputAction @Core2 => m_Wrapper.m_Abilities_Core2;
-        public InputAction @Core3 => m_Wrapper.m_Abilities_Core3;
-        public InputAction @WeaponBase => m_Wrapper.m_Abilities_WeaponBase;
-        public InputAction @WeaponSpecial => m_Wrapper.m_Abilities_WeaponSpecial;
-        public InputAction @Movement => m_Wrapper.m_Abilities_Movement;
-        public InputActionMap Get() { return m_Wrapper.m_Abilities; }
-        public void Enable() { Get().Enable(); }
-        public void Disable() { Get().Disable(); }
-        public bool enabled => Get().enabled;
-        public static implicit operator InputActionMap(AbilitiesActions set) { return set.Get(); }
-        public void SetCallbacks(IAbilitiesActions instance)
+        public UIActions @UI => new UIActions(this);
+        public interface IControlsActions
         {
-            if (m_Wrapper.m_AbilitiesActionsCallbackInterface != null)
-            {
-                @Core1.started -= m_Wrapper.m_AbilitiesActionsCallbackInterface.OnCore1;
-                @Core1.performed -= m_Wrapper.m_AbilitiesActionsCallbackInterface.OnCore1;
-                @Core1.canceled -= m_Wrapper.m_AbilitiesActionsCallbackInterface.OnCore1;
-                @Core2.started -= m_Wrapper.m_AbilitiesActionsCallbackInterface.OnCore2;
-                @Core2.performed -= m_Wrapper.m_AbilitiesActionsCallbackInterface.OnCore2;
-                @Core2.canceled -= m_Wrapper.m_AbilitiesActionsCallbackInterface.OnCore2;
-                @Core3.started -= m_Wrapper.m_AbilitiesActionsCallbackInterface.OnCore3;
-                @Core3.performed -= m_Wrapper.m_AbilitiesActionsCallbackInterface.OnCore3;
-                @Core3.canceled -= m_Wrapper.m_AbilitiesActionsCallbackInterface.OnCore3;
-                @WeaponBase.started -= m_Wrapper.m_AbilitiesActionsCallbackInterface.OnWeaponBase;
-                @WeaponBase.performed -= m_Wrapper.m_AbilitiesActionsCallbackInterface.OnWeaponBase;
-                @WeaponBase.canceled -= m_Wrapper.m_AbilitiesActionsCallbackInterface.OnWeaponBase;
-                @WeaponSpecial.started -= m_Wrapper.m_AbilitiesActionsCallbackInterface.OnWeaponSpecial;
-                @WeaponSpecial.performed -= m_Wrapper.m_AbilitiesActionsCallbackInterface.OnWeaponSpecial;
-                @WeaponSpecial.canceled -= m_Wrapper.m_AbilitiesActionsCallbackInterface.OnWeaponSpecial;
-                @Movement.started -= m_Wrapper.m_AbilitiesActionsCallbackInterface.OnMovement;
-                @Movement.performed -= m_Wrapper.m_AbilitiesActionsCallbackInterface.OnMovement;
-                @Movement.canceled -= m_Wrapper.m_AbilitiesActionsCallbackInterface.OnMovement;
-            }
-            m_Wrapper.m_AbilitiesActionsCallbackInterface = instance;
-            if (instance != null)
-            {
-                @Core1.started += instance.OnCore1;
-                @Core1.performed += instance.OnCore1;
-                @Core1.canceled += instance.OnCore1;
-                @Core2.started += instance.OnCore2;
-                @Core2.performed += instance.OnCore2;
-                @Core2.canceled += instance.OnCore2;
-                @Core3.started += instance.OnCore3;
-                @Core3.performed += instance.OnCore3;
-                @Core3.canceled += instance.OnCore3;
-                @WeaponBase.started += instance.OnWeaponBase;
-                @WeaponBase.performed += instance.OnWeaponBase;
-                @WeaponBase.canceled += instance.OnWeaponBase;
-                @WeaponSpecial.started += instance.OnWeaponSpecial;
-                @WeaponSpecial.performed += instance.OnWeaponSpecial;
-                @WeaponSpecial.canceled += instance.OnWeaponSpecial;
-                @Movement.started += instance.OnMovement;
-                @Movement.performed += instance.OnMovement;
-                @Movement.canceled += instance.OnMovement;
-            }
+            void OnMovement(InputAction.CallbackContext context);
+            void OnSprint(InputAction.CallbackContext context);
+            void OnInteraction(InputAction.CallbackContext context);
+            void OnLook(InputAction.CallbackContext context);
+            void OnZoom(InputAction.CallbackContext context);
+            void OnJump(InputAction.CallbackContext context);
         }
-    }
-    public AbilitiesActions @Abilities => new AbilitiesActions(this);
-
-    // UI
-    private readonly InputActionMap m_UI;
-    private IUIActions m_UIActionsCallbackInterface;
-    private readonly InputAction m_UI_Ability;
-    private readonly InputAction m_UI_Back;
-    private readonly InputAction m_UI_Inventory;
-    private readonly InputAction m_UI_Crafting;
-    private readonly InputAction m_UI_GameHud;
-    public struct UIActions
-    {
-        private @PlayerInput m_Wrapper;
-        public UIActions(@PlayerInput wrapper) { m_Wrapper = wrapper; }
-        public InputAction @Ability => m_Wrapper.m_UI_Ability;
-        public InputAction @Back => m_Wrapper.m_UI_Back;
-        public InputAction @Inventory => m_Wrapper.m_UI_Inventory;
-        public InputAction @Crafting => m_Wrapper.m_UI_Crafting;
-        public InputAction @GameHud => m_Wrapper.m_UI_GameHud;
-        public InputActionMap Get() { return m_Wrapper.m_UI; }
-        public void Enable() { Get().Enable(); }
-        public void Disable() { Get().Disable(); }
-        public bool enabled => Get().enabled;
-        public static implicit operator InputActionMap(UIActions set) { return set.Get(); }
-        public void SetCallbacks(IUIActions instance)
+        public interface IAbilitiesActions
         {
-            if (m_Wrapper.m_UIActionsCallbackInterface != null)
-            {
-                @Ability.started -= m_Wrapper.m_UIActionsCallbackInterface.OnAbility;
-                @Ability.performed -= m_Wrapper.m_UIActionsCallbackInterface.OnAbility;
-                @Ability.canceled -= m_Wrapper.m_UIActionsCallbackInterface.OnAbility;
-                @Back.started -= m_Wrapper.m_UIActionsCallbackInterface.OnBack;
-                @Back.performed -= m_Wrapper.m_UIActionsCallbackInterface.OnBack;
-                @Back.canceled -= m_Wrapper.m_UIActionsCallbackInterface.OnBack;
-                @Inventory.started -= m_Wrapper.m_UIActionsCallbackInterface.OnInventory;
-                @Inventory.performed -= m_Wrapper.m_UIActionsCallbackInterface.OnInventory;
-                @Inventory.canceled -= m_Wrapper.m_UIActionsCallbackInterface.OnInventory;
-                @Crafting.started -= m_Wrapper.m_UIActionsCallbackInterface.OnCrafting;
-                @Crafting.performed -= m_Wrapper.m_UIActionsCallbackInterface.OnCrafting;
-                @Crafting.canceled -= m_Wrapper.m_UIActionsCallbackInterface.OnCrafting;
-                @GameHud.started -= m_Wrapper.m_UIActionsCallbackInterface.OnGameHud;
-                @GameHud.performed -= m_Wrapper.m_UIActionsCallbackInterface.OnGameHud;
-                @GameHud.canceled -= m_Wrapper.m_UIActionsCallbackInterface.OnGameHud;
-            }
-            m_Wrapper.m_UIActionsCallbackInterface = instance;
-            if (instance != null)
-            {
-                @Ability.started += instance.OnAbility;
-                @Ability.performed += instance.OnAbility;
-                @Ability.canceled += instance.OnAbility;
-                @Back.started += instance.OnBack;
-                @Back.performed += instance.OnBack;
-                @Back.canceled += instance.OnBack;
-                @Inventory.started += instance.OnInventory;
-                @Inventory.performed += instance.OnInventory;
-                @Inventory.canceled += instance.OnInventory;
-                @Crafting.started += instance.OnCrafting;
-                @Crafting.performed += instance.OnCrafting;
-                @Crafting.canceled += instance.OnCrafting;
-                @GameHud.started += instance.OnGameHud;
-                @GameHud.performed += instance.OnGameHud;
-                @GameHud.canceled += instance.OnGameHud;
-            }
+            void OnCore1(InputAction.CallbackContext context);
+            void OnCore2(InputAction.CallbackContext context);
+            void OnCore3(InputAction.CallbackContext context);
+            void OnWeaponBase(InputAction.CallbackContext context);
+            void OnWeaponSpecial(InputAction.CallbackContext context);
+            void OnMovement(InputAction.CallbackContext context);
         }
-    }
-    public UIActions @UI => new UIActions(this);
-    public interface IControlsActions
-    {
-        void OnMovement(InputAction.CallbackContext context);
-        void OnSprint(InputAction.CallbackContext context);
-        void OnInteraction(InputAction.CallbackContext context);
-        void OnLook(InputAction.CallbackContext context);
-        void OnZoom(InputAction.CallbackContext context);
-        void OnJump(InputAction.CallbackContext context);
-    }
-    public interface IAbilitiesActions
-    {
-        void OnCore1(InputAction.CallbackContext context);
-        void OnCore2(InputAction.CallbackContext context);
-        void OnCore3(InputAction.CallbackContext context);
-        void OnWeaponBase(InputAction.CallbackContext context);
-        void OnWeaponSpecial(InputAction.CallbackContext context);
-        void OnMovement(InputAction.CallbackContext context);
-    }
-    public interface IUIActions
-    {
-        void OnAbility(InputAction.CallbackContext context);
-        void OnBack(InputAction.CallbackContext context);
-        void OnInventory(InputAction.CallbackContext context);
-        void OnCrafting(InputAction.CallbackContext context);
-        void OnGameHud(InputAction.CallbackContext context);
+        public interface IUIActions
+        {
+            void OnAbility(InputAction.CallbackContext context);
+            void OnBack(InputAction.CallbackContext context);
+            void OnInventory(InputAction.CallbackContext context);
+            void OnCrafting(InputAction.CallbackContext context);
+            void OnGameHud(InputAction.CallbackContext context);
+        }
     }
 }

@@ -14,12 +14,29 @@ namespace Client.UI
         [SerializeField] private UIScreen gameHudScreen;
         private readonly List<UIScreen> activeScreens = new List<UIScreen>();
 
+        public static UIManager Instance { get; private set; }
+        public GameHudUI GameHUD => (GameHudUI) gameHudScreen;
+
+        private void Awake()
+        {
+            if (Instance != null)
+            {
+                Debug.LogError("UIManager instance already set, there cant be 2");
+                Destroy(this);
+            }
+            else
+            {
+                Instance = this;
+                DontDestroyOnLoad(gameObject);
+            }
+        }
+
         private void Start()
         {
-            ChangeScreenState(abilityScreen, false);
-            ChangeScreenState(menuScreen, false);
-            ChangeScreenState(inventoryScreen, false);
-            ChangeScreenState(craftingScreen, false);
+            // ChangeScreenState(abilityScreen, false);
+            // ChangeScreenState(menuScreen, false);
+            // ChangeScreenState(inventoryScreen, false);
+            // ChangeScreenState(craftingScreen, false);
             // ChangeScreenState(gameHudScreen, false);
 
             InputManager.OnAbilityUI += AbilityUi;

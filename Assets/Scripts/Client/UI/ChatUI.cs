@@ -1,6 +1,6 @@
-using Client.UI;
-
-public class ChatUI : UIScreen
+namespace Client.UI
 {
-    
+    public class ChatUI : UIScreen
+    {
+    }
 }
