@@ -9,6 +9,7 @@ namespace Server.Ability
     {
         private bool didActivate = false;
         private float elapsedTime;
+
         public ChargedAoeAbility(ref AbilityRuntimeParams abilityRuntimeParams) : base(ref abilityRuntimeParams)
         {
         }
@@ -53,6 +54,18 @@ namespace Server.Ability
             {
                 Reactivate();
             }
+        }
+
+        protected override void RunHitEffects()
+        {
+            var chargeProgress = elapsedTime / Description.castTime;
+
+            RunHitEffects(AbilityRuntimeParams.Targets,
+                AbilityRuntimeParams.TargetPosition,
+                AbilityRuntimeParams.TargetDirection,
+                AbilityRuntimeParams.StartPosition,
+                null,
+                Description.valueModifier.Evaluate(chargeProgress));
         }
     }
 }

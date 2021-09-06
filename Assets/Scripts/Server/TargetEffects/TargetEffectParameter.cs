@@ -11,25 +11,38 @@ namespace Server.TargetEffects
         public readonly Vector3 TargetDirection;
         public readonly AbilityType AbilityType;
         public readonly StatusEffectType StatusEffectType;
+        public readonly float? OverrideValue;
 
         private TargetEffectParameter(ulong[] targets, ulong actor, Vector3 targetDirection, AbilityType abilityType,
-            StatusEffectType statusEffectType)
+            StatusEffectType statusEffectType, float? overrideValue)
         {
             Targets = targets;
             Actor = actor;
             TargetDirection = targetDirection;
             AbilityType = abilityType;
             StatusEffectType = statusEffectType;
+            OverrideValue = overrideValue;
         }
 
-        public TargetEffectParameter(ulong[] targets, ulong actor, Vector3 targetDirection, AbilityType abilityType) :
-            this(targets, actor, targetDirection, abilityType, StatusEffectType.None)
+        public TargetEffectParameter(
+            ulong[] targets,
+            ulong actor,
+            Vector3 targetDirection,
+            AbilityType abilityType,
+            float? overrideValue = null)
+            :
+            this(targets, actor, targetDirection, abilityType, StatusEffectType.None, overrideValue)
         {
         }
 
-        public TargetEffectParameter(ulong[] targets, ulong actor, Vector3 targetDirection,
-            StatusEffectType statusEffectType) : this(targets, actor, targetDirection, AbilityType.None,
-            statusEffectType)
+        public TargetEffectParameter(
+            ulong[] targets,
+            ulong actor,
+            Vector3 targetDirection,
+            StatusEffectType statusEffectType,
+            float? overrideValue = null)
+            :
+            this(targets, actor, targetDirection, AbilityType.None, statusEffectType, overrideValue)
         {
         }
     }

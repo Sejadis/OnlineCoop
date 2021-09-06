@@ -2532,9 +2532,8 @@ MonoBehaviour:
     ProtocolVersion: 0
     NetworkTransport: {fileID: 544191327}
     RegisteredScenes:
-    - SampleScene
-    - ArenaBoss
     - Main
+    - ArenaBoss
     AllowRuntimeSceneChanges: 0
     NetworkPrefabs:
     - Prefab: {fileID: 7095745910763030422, guid: 261afd14362e45a449f187f55cca111e, type: 3}

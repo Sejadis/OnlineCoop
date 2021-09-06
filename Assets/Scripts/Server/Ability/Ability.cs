@@ -43,7 +43,7 @@ namespace Server.Ability
             return !currentValue && CanStartCooldown;
         }
 
-        public virtual void RunHitEffects()
+        protected virtual void RunHitEffects()
         {
             RunHitEffects(AbilityRuntimeParams.Targets,
                 AbilityRuntimeParams.TargetPosition,
@@ -52,7 +52,7 @@ namespace Server.Ability
         }
 
         public virtual void RunHitEffects(ulong[] targets, Vector3 targetPosition, Vector3 targetDirection,
-            Vector3 startPosition, Transform abilityObject = null)
+            Vector3 startPosition, Transform abilityObject = null, float? overrideValue = null)
         {
             if (targets.Length == 0)
             {
@@ -86,7 +86,7 @@ namespace Server.Ability
                     HitCount = hitCount,
                     TriggerCount = hitEffectTriggerCount[hitEffect],
                 };
-                
+
                 foreach (var condition in hitEffect.Conditions)
                 {
                     conditionMet = conditionMet && condition.Evaluate(conditionParameter);
@@ -96,13 +96,14 @@ namespace Server.Ability
                 {
                     continue;
                 }
+
                 //all conditions met, increase count
                 hitEffectTriggerCount[hitEffect] += 1;
 
                 //we do not want to override the provided targets, just change them for the current effect so we make a copy
                 var effectTargets = new ulong[targets.Length];
-                targets.CopyTo(effectTargets,0);
-                
+                targets.CopyTo(effectTargets, 0);
+
                 //set main target (index 0) depending on selected target type
                 effectTargets[0] = hitEffect.TargetType switch
                 {
@@ -120,7 +121,8 @@ namespace Server.Ability
                         targets: effectTargets,
                         actor: AbilityRuntimeParams.Actor,
                         targetDirection: targetDirection,
-                        statusEffectType: hitEffect.StatusEffectType
+                        statusEffectType: hitEffect.StatusEffectType,
+                        overrideValue: overrideValue
                         // targetPosition: targetPosition,
                         // startPosition: startPosition,
                         // effectType: hitEffect.EffectType,
@@ -129,7 +131,8 @@ namespace Server.Ability
                         targets: effectTargets,
                         actor: AbilityRuntimeParams.Actor,
                         targetDirection: targetDirection,
-                        abilityType: Description.abilityType
+                        abilityType: Description.abilityType,
+                        overrideValue: overrideValue
                         // targetPosition: targetPosition,
                         // startPosition: startPosition,
                         // effectType: hitEffect.EffectType,

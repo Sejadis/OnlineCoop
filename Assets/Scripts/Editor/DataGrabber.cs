@@ -60,6 +60,8 @@ namespace Editor
         public void OnPreprocessBuild(BuildReport report)
         {
             GrabAbilities();
+            GrabStatusEffects();
+            AssetDatabase.SaveAssets();
         }
     }
 }

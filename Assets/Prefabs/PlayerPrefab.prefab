@@ -993,6 +993,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c2e7c18d37c79ff45bb4e6da2eb0cac8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  faction: 4
+  isStaticCharacter: 0
   followTarget: {fileID: 920960692069537107}
 --- !u!114 &6682196539315854916
 MonoBehaviour:
@@ -1013,7 +1015,7 @@ MonoBehaviour:
   IconName:
     m_InternalValue: 
   equippedAbilities:
-    m_InternalValue: 010000000300000005000000
+    m_InternalValue: 010000000300000007000000
 --- !u!114 &5267219560877045827
 MonoBehaviour:
   m_ObjectHideFlags: 0

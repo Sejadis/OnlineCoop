@@ -5,6 +5,7 @@ namespace Shared.Abilities
     [CreateAssetMenu(menuName = "Ability")]
     public class AbilityDescription : CoreDescription
     {
+        public AnimationCurve valueModifier;
         public AbilityType abilityType;
         public AbilityEffectType effect;
         public AbilityTargetType targetRequirement;
@@ -18,7 +19,6 @@ namespace Shared.Abilities
         public float castTime;
         public bool rootsDuringCast;
         public bool isTracking;
-        public AbilityDescription followUpAbility;
         public GameObject[] Prefabs;
         public AbilityHitEffect[] HitEffects;
         public GameObject targetingPrefab;
