@@ -20,7 +20,7 @@ namespace Client.Character
 
         public override void NetworkStart()
         {
-            //do this always in dependent on local player state
+            //do this always independent on local player state
             networkCharacterState = GetComponent<NetworkCharacterState>();
 
             if (!IsLocalPlayer)
@@ -67,7 +67,7 @@ namespace Client.Character
 
         private AbilityRuntimeParams CreateRuntimeParams(AbilityType abilityType)
         {
-            var runtimeParams = new AbilityRuntimeParams(abilityType, NetworkObjectId, new ulong[] {0},
+            var runtimeParams = new AbilityRuntimeParams(abilityType, NetworkObjectId, new ulong[0],
                 transform.position + aimTarget.forward,
                 aimTarget.forward, aimTarget.TransformPoint(localAbilitySpawnOffset));
             return runtimeParams;

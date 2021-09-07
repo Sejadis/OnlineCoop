@@ -24,23 +24,7 @@ namespace Client.Character
         
         private void OnClientAbilityCast(AbilityRuntimeParams runtimeParams)
         {
-            
             vfxRunner.AddRunnable(ref runtimeParams);
-            
-            // if (GameDataManager.TryGetAbilityDescriptionByType(runtimeParams.AbilityType, out var description))
-            // {
-            // var obj = Instantiate(description.Prefabs[0], runtimeParams.TargetPosition, Quaternion.identity);
-            //     var scaler = obj.GetComponent<VisualFXScaler>();
-            //     if (scaler != null)
-            //     {
-            //         scaler.Scale(description.size);
-            //     }
-            //     else
-            //     {
-            //         obj.transform.localScale = Vector3.one * description.size;
-            //     }
-            //     Destroy(obj, description.duration > 0 ? description.duration : 1f);
-            // }
         }
     }
 }
