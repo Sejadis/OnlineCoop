@@ -13,8 +13,10 @@ MonoBehaviour:
   m_Name: AbilityResource
   m_EditorClassIdentifier: 
   abilities:
+  - {fileID: 11400000, guid: 758069fa74ea0b648998368954331c1b, type: 2}
   - {fileID: 11400000, guid: cff69d9840d27a647b00e4b022c8cf4d, type: 2}
   - {fileID: 11400000, guid: 0b5050877e11c2c4bb0ccc1d62d218c1, type: 2}
   - {fileID: 11400000, guid: 368d20c4caee4ea4abafe28b788b6e2a, type: 2}
+  - {fileID: 11400000, guid: b74601baa34fdaf418a9f7aa4684fae5, type: 2}
   - {fileID: 11400000, guid: eb5b8dd97bd08984f97bc889be02844f, type: 2}
   - {fileID: 11400000, guid: 7d08d6276a20b5c419517372e97d8f5f, type: 2}

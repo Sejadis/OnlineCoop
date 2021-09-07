@@ -11,7 +11,7 @@ namespace Editor
     [InitializeOnLoad]
     public class DataGrabber : IPreprocessBuildWithReport
     {
-        static DataGrabber()
+        public DataGrabber()
         {
             GrabAbilities();
             GrabStatusEffects();
@@ -35,6 +35,8 @@ namespace Editor
                 abilityResource.abilities
                     .Add(AssetDatabase.LoadAssetAtPath<AbilityDescription>(AssetDatabase.GUIDToAssetPath(guid)));
             }
+
+            EditorUtility.SetDirty(abilityResource);
         }
 
         private static void GrabStatusEffects()
@@ -54,9 +56,12 @@ namespace Editor
                 statusEffectResource.statusEffects
                     .Add(AssetDatabase.LoadAssetAtPath<StatusEffectDescription>(AssetDatabase.GUIDToAssetPath(guid)));
             }
+
+            EditorUtility.SetDirty(statusEffectResource);
         }
 
         public int callbackOrder { get; }
+
         public void OnPreprocessBuild(BuildReport report)
         {
             GrabAbilities();
