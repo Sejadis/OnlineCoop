@@ -7,6 +7,7 @@
         Heal,
         ForceMove,
         Destroy,
-        Buff
+        Buff,
+        CrowdControl,
     }
 }
