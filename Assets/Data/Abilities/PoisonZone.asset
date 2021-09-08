@@ -46,4 +46,4 @@ MonoBehaviour:
     StatusEffectType: 0
     CrowdControlType: 0
     TargetType: 0
-  targetingPrefab: {fileID: 387838333247220065, guid: d1381262e1eea7648a51c68ac418776a, type: 3}
+  targetingPrefab: {fileID: 3397274450632148366, guid: 673ad34ddc90de34781ed5e072250bc7, type: 3}

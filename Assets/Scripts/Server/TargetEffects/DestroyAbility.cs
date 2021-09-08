@@ -1,6 +1,4 @@
-﻿using MLAPI.Spawning;
-
-namespace Server.TargetEffects
+﻿namespace Server.TargetEffects
 {
     public class DestroyAbility : TargetEffect
     {

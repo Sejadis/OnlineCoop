@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using Shared.Abilities;
+using UnityEngine;
 
 namespace Client.Ability
 {
@@ -10,50 +11,61 @@ namespace Client.Ability
 
         private Camera targetingCamera;
         private Vector3 screenCenter;
-        private LayerMask groundLayerMask;
+        private static LayerMask groundLayerMask = 1 << 8;
         private Vector3 newPos;
 
-        private void Start()
+        private void Awake()
         {
             targetingCamera = Camera.main;
-            screenCenter = new Vector3(targetingCamera.pixelWidth / 2, targetingCamera.pixelHeight / 2, 0);
-            groundLayerMask = 1 << 8;
-            transform.parent = baseTransform.parent;
-            transform.localPosition = Vector3.zero;
-            transform.localRotation = Quaternion.identity;
         }
 
-        private void GetTargetPosition()
+        public override void GetRuntimeParams(ref AbilityRuntimeParams runtimeParams)
         {
-            var ray = new Ray(baseTransform.position, baseTransform.forward);
-            if (Physics.Raycast(ray, out var hit, abilityDescription.range, groundLayerMask))
-            {
-                // Vector2 hitInXZPlane = new Vector2(hit.point.x, hit.point.z);
-                // var position = camera.transform.position;
-                // Vector2 cameraInXZPlane = new Vector2(position.x, position.z);
-                // float distance = Vector2.Distance(hitInXZPlane, cameraInXZPlane);
-                // newPos.z = distance;
-            }
+            var position = GetValidPosition();
+            runtimeParams.TargetPosition = position;
+            runtimeParams.TargetDirection = runtimeParams.TargetPosition - runtimeParams.StartPosition;
         }
+
+        public override void GetRuntimeParams(ref AbilityRuntimeParams runtimeParams, Camera camera,
+            Transform baseTransform, AbilityDescription abilityDescription)
+        {
+            var position = GetValidPosition(camera, baseTransform, abilityDescription.range);
+            runtimeParams.TargetPosition = position;
+            runtimeParams.TargetDirection = runtimeParams.TargetPosition - runtimeParams.StartPosition;
+        }
+
         private void Update()
         {
-            // Ray ray = camera.ScreenPointToRay(screenCenter);
+            targetVisualParent.transform.position = GetValidPosition();
+        }
 
-            var ray = new Ray(baseTransform.position, baseTransform.forward);
-            if (Physics.Raycast(ray, out var hit, abilityDescription.range, groundLayerMask))
+        private Vector3 GetValidPosition()
+        {
+            return GetValidPosition(targetingCamera, baseTransform, abilityDescription.range);
+        }
+
+        private Vector3 GetValidPosition(Camera camera, Transform baseTransform, float abilityRange)
+        {
+            screenCenter = new Vector3(camera.pixelWidth / 2, camera.pixelHeight / 2, 0);
+            var ray = camera.ScreenPointToRay(screenCenter);
+            var camToPlayerDistance = Vector3.Distance(camera.transform.position, baseTransform.position);
+            var range = abilityRange + camToPlayerDistance;
+            Debug.DrawRay(ray.origin, ray.direction * range, Color.green, 2f);
+            if (Physics.Raycast(ray, out var hitInfo, range, groundLayerMask))
             {
-                Vector2 hitInXZPlane = new Vector2(hit.point.x, hit.point.z);
-                var position = targetingCamera.transform.position;
-                Vector2 cameraInXZPlane = new Vector2(position.x, position.z);
-                float distance = Vector2.Distance(hitInXZPlane, cameraInXZPlane);
-                newPos.z = distance;
+                return hitInfo.point;
             }
             else
             {
-                newPos.z = abilityDescription.range;
+                var rayStart = camera.transform.position + ray.direction * range;
+                Debug.DrawRay(rayStart, Vector3.down * 100f, Color.red, 2f);
+                if (Physics.Raycast(rayStart, Vector3.down, out hitInfo, float.PositiveInfinity, groundLayerMask))
+                {
+                    return hitInfo.point;
+                }
             }
 
-            targetVisualParent.transform.localPosition = newPos;
+            return Vector3.zero;
         }
     }
 }

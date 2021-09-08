@@ -1,5 +1,4 @@
-﻿using MLAPI.Spawning;
-using Server.Character;
+﻿using Server.Character;
 
 namespace Server.TargetEffects
 {

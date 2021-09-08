@@ -1053,6 +1053,7 @@ MonoBehaviour:
   aimTarget: {fileID: 920960692069537107}
   localAbilitySpawnOffset: {x: 0, y: 0, z: 1}
   invertMouseSetting: {fileID: 11400000, guid: ab0c435b9c54485468f32ac5c21af224, type: 2}
+  castMode: {fileID: 11400000, guid: 3821ac34ad870c343ad3c69d52e47616, type: 2}
 --- !u!114 &4612193621415580500
 MonoBehaviour:
   m_ObjectHideFlags: 0

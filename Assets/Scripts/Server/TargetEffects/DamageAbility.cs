@@ -1,5 +1,4 @@
-﻿using MLAPI.Spawning;
-using Shared;
+﻿using Shared;
 
 namespace Server.TargetEffects
 {

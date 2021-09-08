@@ -75,19 +75,19 @@ namespace Client.Input
 
         private static void HookUpAbilities()
         {
-            // PlayerInput.Abilities.Core1.started += ctx => OnCore1?.Invoke(ctx);
-            PlayerInput.Abilities.Core1.performed += ctx => OnCore1?.Invoke(ctx);
-            // PlayerInput.Abilities.Core1.canceled += ctx => OnCore1?.Invoke(ctx);
+            PlayerInput.Abilities.Core1.started += ctx => OnCore1?.Invoke(ctx);
+            // PlayerInput.Abilities.Core1.performed += ctx => OnCore1?.Invoke(ctx);
+            PlayerInput.Abilities.Core1.canceled += ctx => OnCore1?.Invoke(ctx);
             //
-            // PlayerInput.Abilities.Core2.started += ctx => OnCore2?.Invoke(ctx);
-            PlayerInput.Abilities.Core2.performed += ctx => OnCore2?.Invoke(ctx);
-            // PlayerInput.Abilities.Core2.canceled += ctx => OnCore2?.Invoke(ctx);
-            //
-            // PlayerInput.Abilities.Core3.started += ctx => OnCore3?.Invoke(ctx);
-            PlayerInput.Abilities.Core3.performed += ctx => OnCore3?.Invoke(ctx);
-            // PlayerInput.Abilities.Core3.canceled += ctx => OnCore3?.Invoke(ctx);
-            //
-            // // PlayerInput.Abilities.WeaponBase.started += ctx => OnWeaponBase?.Invoke(ctx);
+            PlayerInput.Abilities.Core2.started += ctx => OnCore2?.Invoke(ctx);
+            // PlayerInput.Abilities.Core2.performed += ctx => OnCore2?.Invoke(ctx);
+            PlayerInput.Abilities.Core2.canceled += ctx => OnCore2?.Invoke(ctx);
+            
+            PlayerInput.Abilities.Core3.started += ctx => OnCore3?.Invoke(ctx);
+            // PlayerInput.Abilities.Core3.performed += ctx => OnCore3?.Invoke(ctx);
+            PlayerInput.Abilities.Core3.canceled += ctx => OnCore3?.Invoke(ctx);
+            
+            // PlayerInput.Abilities.WeaponBase.started += ctx => OnWeaponBase?.Invoke(ctx);
             // PlayerInput.Abilities.WeaponBase.performed += ctx => OnWeaponBase?.Invoke(ctx);
             // // PlayerInput.Abilities.WeaponBase.canceled += ctx => OnWeaponBase?.Invoke(ctx);
             //

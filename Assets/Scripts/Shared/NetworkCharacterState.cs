@@ -11,7 +11,7 @@ namespace Shared
     [RequireComponent(typeof(NetworkHealthState))]
     public class NetworkCharacterState : NetworkBehaviour
     {
-        private  void Awake()
+        private void Awake()
         {
             NetHealthState = GetComponent<NetworkHealthState>();
         }
@@ -72,7 +72,7 @@ namespace Shared
         [ClientRpc]
         public void StartCooldownClientRpc(AbilityType type, float cooldown)
         {
-            OnStartCooldown?.Invoke(type,cooldown);
+            OnStartCooldown?.Invoke(type, cooldown);
         }
 
         [ServerRpc(RequireOwnership = false)]

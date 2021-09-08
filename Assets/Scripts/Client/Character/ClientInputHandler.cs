@@ -1,11 +1,11 @@
+using Client.Ability;
 using Client.Input;
 using Client.UI;
-using DefaultNamespace;
 using Shared;
+using Shared.Data;
 using Shared.Settings;
 using Shared.Abilities;
 using MLAPI;
-using Shared.Data;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -17,8 +17,10 @@ namespace Client.Character
         [SerializeField] private Transform aimTarget;
         [SerializeField] private Vector3 localAbilitySpawnOffset;
         [SerializeField] private SettingBool invertMouseSetting;
+        [SerializeField] private SettingCastMode castMode;
 
         private NetworkCharacterState networkCharacterState;
+        private CastHandler castHandler;
 
         public override void NetworkStart()
         {
@@ -34,6 +36,9 @@ namespace Client.Character
 
             UIManager.Instance.GameHUD.InitPlayer(networkCharacterState, "Player " + NetworkObjectId);
 
+            castHandler = CastHandler.CreateCastHandler(castMode.Value);
+            castMode.OnValueChanged += (_, newMode) => castHandler = CastHandler.CreateCastHandler(newMode);
+
             InputManager.OnMovement += OnMovement;
             InputManager.OnSprint += OnSprint;
             InputManager.OnJump += OnJump;
@@ -45,32 +50,58 @@ namespace Client.Character
         }
 
 
-        private void OnCore1(InputAction.CallbackContext obj)
+        private void OnCore1(InputAction.CallbackContext context)
         {
-            CastAbility(0);
+            CastAbility(0, context);
         }
 
-        private void OnCore2(InputAction.CallbackContext obj)
+        private void OnCore2(InputAction.CallbackContext context)
         {
-            CastAbility(1);
+            CastAbility(1, context);
         }
 
-        private void OnCore3(InputAction.CallbackContext obj)
+        private void OnCore3(InputAction.CallbackContext context)
         {
-            CastAbility(2);
+            CastAbility(2, context);
         }
 
-        private void CastAbility(int index)
+        private void CastAbility(int index, InputAction.CallbackContext context)
         {
             var abilityType = (AbilityType) networkCharacterState.equippedAbilities.Value[index];
             var runtimeParams = CreateRuntimeParams(abilityType);
-            if (abilityType == AbilityType.PoisonZone)
+            GameDataManager.TryGetAbilityDescriptionByType(abilityType, out var description);
+            
+            if (context.canceled && !castHandler.IsActive)
             {
-                GameDataManager.TryGetAbilityDescriptionByType(abilityType, out var description);
-                Targeting.GetGroundTarget(ref description, ref runtimeParams);
+                //ignore button up while no ability is being casted
+                return;
             }
 
-            networkCharacterState.CastAbilityServerRpc(runtimeParams);
+            if (context.started && !castHandler.IsActive)
+            {
+                //TODO check for cooldown or request start from server?
+                castHandler.Start(description, aimTarget, ref runtimeParams,
+                    (runtimeParams) => networkCharacterState.CastAbilityServerRpc(runtimeParams));
+            }
+            else
+            {
+                if (castHandler.CurrentAbility == abilityType)
+                {
+                    if (context.started)
+                    {
+                        castHandler.SetInputDown();
+                    }
+                    else if (context.canceled)
+                    {
+                        castHandler.SetInputUp();
+                    }
+                }
+                else
+                {
+                    //TODO determine logic what happens when other ability is activated during active targeting
+                    //cancel old ability or ignore new ability
+                }
+            }
         }
 
         private AbilityRuntimeParams CreateRuntimeParams(AbilityType abilityType)
