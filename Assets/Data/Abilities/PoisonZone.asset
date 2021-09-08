@@ -19,6 +19,12 @@ MonoBehaviour:
   delay: 1
   mainValue: 2
   force: 0
+  valueModifier:
+    serializedVersion: 2
+    m_Curve: []
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
   abilityType: 3
   effect: 6
   targetRequirement: 3
@@ -28,16 +34,16 @@ MonoBehaviour:
   charges: 0
   speed: 0
   size: 3
-  range: 10
-  castTime: 2
+  range: 20
+  castTime: 0
   rootsDuringCast: 0
   isTracking: 0
-  followUpAbility: {fileID: 0}
   Prefabs:
   - {fileID: 3861986476908520211, guid: e9e56c1fb94a2f947b007a0a1194b52e, type: 3}
   HitEffects:
   - EffectType: 1
     Conditions: []
     StatusEffectType: 0
+    CrowdControlType: 0
     TargetType: 0
   targetingPrefab: {fileID: 387838333247220065, guid: d1381262e1eea7648a51c68ac418776a, type: 3}
