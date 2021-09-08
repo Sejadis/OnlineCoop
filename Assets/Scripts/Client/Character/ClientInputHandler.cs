@@ -1,9 +1,11 @@
 using Client.Input;
 using Client.UI;
+using DefaultNamespace;
 using Shared;
 using Shared.Settings;
 using Shared.Abilities;
 using MLAPI;
+using Shared.Data;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -62,14 +64,24 @@ namespace Client.Character
         {
             var abilityType = (AbilityType) networkCharacterState.equippedAbilities.Value[index];
             var runtimeParams = CreateRuntimeParams(abilityType);
+            if (abilityType == AbilityType.PoisonZone)
+            {
+                GameDataManager.TryGetAbilityDescriptionByType(abilityType, out var description);
+                Targeting.GetGroundTarget(ref description, ref runtimeParams);
+            }
+
             networkCharacterState.CastAbilityServerRpc(runtimeParams);
         }
 
         private AbilityRuntimeParams CreateRuntimeParams(AbilityType abilityType)
         {
-            var runtimeParams = new AbilityRuntimeParams(abilityType, NetworkObjectId, new ulong[0],
+            var runtimeParams = new AbilityRuntimeParams(
+                abilityType,
+                NetworkObjectId,
+                new ulong[0],
                 transform.position + aimTarget.forward,
-                aimTarget.forward, aimTarget.TransformPoint(localAbilitySpawnOffset));
+                aimTarget.forward,
+                aimTarget.TransformPoint(localAbilitySpawnOffset));
             return runtimeParams;
         }
 
