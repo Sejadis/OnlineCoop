@@ -11,10 +11,7 @@ namespace Server.TargetEffects
 
         public override void Run()
         {
-            if (NetworkSpawnManager.SpawnedObjects.TryGetValue(EffectParameter.Targets[0], out var netObj))
-            {
-                netObj.GetComponent<IDamagable>()?.Damage(EffectParameter.Actor, (int) SourceDescription.mainValue);
-            }
+            GetTarget<IDamagable>()?.Damage(EffectParameter.Actor, (int) SourceDescription.mainValue);
         }
     }
 }

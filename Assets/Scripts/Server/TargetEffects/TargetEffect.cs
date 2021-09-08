@@ -1,4 +1,7 @@
 ﻿using System;
+using CrowdControl;
+using MLAPI;
+using MLAPI.Spawning;
 using Shared;
 using Shared.Abilities;
 using Shared.Data;
@@ -13,7 +16,7 @@ namespace Server.TargetEffects
 
         protected TargetEffect(TargetEffectParameter targetEffectParameter)
         {
-            this.effectParameter = targetEffectParameter;
+            effectParameter = targetEffectParameter;
         }
 
         public abstract void Run();
@@ -28,7 +31,8 @@ namespace Server.TargetEffects
                 TargetEffectType.Heal => new HealAbility(runtimeParams),
                 TargetEffectType.ForceMove => new ForceMoveAbility(runtimeParams),
                 TargetEffectType.Buff => new StatusEffectAbility(runtimeParams),
-            _ => throw new Exception("Unhandled TargetEffectType"),
+                TargetEffectType.CrowdControl => new CrowdControlAbility(runtimeParams),
+                _ => throw new Exception("Unhandled TargetEffectType"),
             };
         }
 
@@ -59,6 +63,18 @@ namespace Server.TargetEffects
                     throw new ArgumentException("TargetEffect called without source set");
                 }
             }
+        }
+
+        protected virtual NetworkObject GetTarget()
+        {
+            return NetworkSpawnManager.SpawnedObjects.TryGetValue(EffectParameter.Targets[0], out var netObj)
+                ? netObj
+                : null;
+        }
+
+        protected virtual T GetTarget<T>() where T : class
+        {
+            return NetworkSpawnManager.SpawnedObjects.TryGetValue(EffectParameter.Targets[0], out var netObj) ? netObj.GetComponent<T>() : null;
         }
     }
 }

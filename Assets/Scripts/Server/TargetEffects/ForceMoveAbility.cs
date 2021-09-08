@@ -11,10 +11,7 @@ namespace Server.TargetEffects
 
         public override void Run()
         {
-            if (NetworkSpawnManager.SpawnedObjects.TryGetValue(EffectParameter.Targets[0], out var netObj))
-            {
-                netObj.GetComponent<ServerCharacter>()?.ForceMove(EffectParameter.TargetDirection, SourceDescription.force);
-            }
+            GetTarget<ServerCharacter>()?.ForceMove(EffectParameter.TargetDirection, SourceDescription.force);
         }
     }
 }
