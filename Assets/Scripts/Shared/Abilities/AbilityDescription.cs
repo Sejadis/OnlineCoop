@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.Serialization;
 
 namespace Shared.Abilities
 {
@@ -10,7 +11,7 @@ namespace Shared.Abilities
         public AbilityEffectType effect;
         public AbilityTargetType targetRequirement;
         public bool isUnique;
-        public bool isInterruptable;
+        public bool isInterruptible;
         public float cooldown;
         public int charges;
         public float speed;

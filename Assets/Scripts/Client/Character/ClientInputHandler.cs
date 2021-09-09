@@ -70,7 +70,18 @@ namespace Client.Character
             var abilityType = (AbilityType) networkCharacterState.equippedAbilities.Value[index];
             var runtimeParams = CreateRuntimeParams(abilityType);
             GameDataManager.TryGetAbilityDescriptionByType(abilityType, out var description);
-            
+
+            if (description.targetingPrefab == null)
+            {
+                if (context.started)
+                {
+                    networkCharacterState.CastAbilityServerRpc(runtimeParams);
+                }
+                //TODO make this conform to cast mode (make prefabs optional?)
+                return;
+            }
+
+            //we have a targeting prefab, use it
             if (context.canceled && !castHandler.IsActive)
             {
                 //ignore button up while no ability is being casted

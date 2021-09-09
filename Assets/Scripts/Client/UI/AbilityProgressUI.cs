@@ -17,6 +17,14 @@ namespace Client.UI
         public void Init(NetworkCharacterState networkCharacterState)
         {
             networkCharacterState.OnClientAbilityCast += OnClientAbilityCast;
+            networkCharacterState.OnClientAbiltyCastCanceled += OnAbilityCastCanceled;
+        }
+
+        private void OnAbilityCastCanceled()
+        {
+            isCasting = false;
+            container.SetActive(false);
+            //TODO some visual indication for cancel
         }
 
         private void OnClientAbilityCast(AbilityRuntimeParams runtimeParams)

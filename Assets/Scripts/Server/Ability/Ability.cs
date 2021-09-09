@@ -182,5 +182,18 @@ namespace Server.Ability
         protected Ability(ref AbilityRuntimeParams abilityRuntimeParams) : base(ref abilityRuntimeParams)
         {
         }
+
+        public bool TryInterrupt(InterruptType interruptType)
+        {
+            switch (interruptType)
+            {
+                case InterruptType.Movement:
+                    return Description.isInterruptible && !DidCastTimePass; //interrupt if this ability is interruptible and while we are casting
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException(nameof(interruptType), interruptType, null);
+            }
+            return false;
+        }
     }
 }

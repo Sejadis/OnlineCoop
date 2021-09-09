@@ -23,9 +23,9 @@ namespace Server.Character
         {
             while (true)
             {
-                serverCharacterMovement.moveInput = Vector2.left;
+                serverCharacterMovement.MoveInput = Vector2.left;
                 yield return new WaitForSeconds(2);
-                serverCharacterMovement.moveInput = Vector2.right;
+                serverCharacterMovement.MoveInput = Vector2.right;
                 yield return new WaitForSeconds(2);
             }
         }

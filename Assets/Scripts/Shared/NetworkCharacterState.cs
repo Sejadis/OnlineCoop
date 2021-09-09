@@ -26,10 +26,11 @@ namespace Shared
         public event Action<bool> OnSprintReceived;
         public event Action OnJumpReceived;
         public event Action<AbilityType, float> OnStartCooldown;
+        public event Action OnClientAbiltyCastCanceled;
         public event Action<AbilityRuntimeParams> OnServerAbilityCast;
         public event Action<AbilityRuntimeParams> OnClientAbilityCast;
         public event Action<StatusEffectRuntimeParams> OnClientStatusEffectAdded;
-    
+
         [ServerRpc(RequireOwnership = false)]
         public void CastAbilityServerRpc(AbilityRuntimeParams runtimeParams)
         {
@@ -79,6 +80,12 @@ namespace Shared
         public void SetJumpServerRpc()
         {
             OnJumpReceived?.Invoke();
+        }
+
+        [ClientRpc]
+        public void CancelAbilityCastClientRpc()
+        {
+            OnClientAbiltyCastCanceled?.Invoke();
         }
     }
 }

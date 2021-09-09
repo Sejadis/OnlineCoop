@@ -12,8 +12,6 @@ namespace Client.Ability
         private Transform baseTransform;
         protected AbilityRuntimeParams runtimeParams;
 
-        protected ref AbilityRuntimeParams RuntimeParams => ref runtimeParams;
-
         protected Transform BaseTransform => baseTransform;
 
         protected AbilityDescription AbilityDescription => abilityDescription;

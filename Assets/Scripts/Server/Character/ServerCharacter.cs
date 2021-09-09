@@ -46,8 +46,14 @@ namespace Server.Character
             }
 
             serverCharacterMovement = GetComponent<ServerCharacterMovement>();
+            serverCharacterMovement.OnMovementStarted += OnMovementStarted;
             networkCharacterState = GetComponent<NetworkCharacterState>();
             networkCharacterState.OnServerAbilityCast += OnAbilityCast;
+        }
+
+        private void OnMovementStarted()
+        {
+            AbilityRunner.Interrupt(InterruptType.Movement);
         }
 
         protected virtual void Update()
@@ -91,5 +97,10 @@ namespace Server.Character
         {
             StatusEffectRunner.AddRunnable(ref runtimeParams);
         }
+    }
+
+    public enum InterruptType
+    {
+        Movement
     }
 }

@@ -88,7 +88,7 @@ namespace Server.Ability
                     {
                         match = blockingAbilities[0];
                     }
-                    
+
                     if (match == null)
                     {
                         foreach (var nonBlockingAbility in CurrentRunnables)
@@ -158,11 +158,11 @@ namespace Server.Ability
                     lastUseTime; //ability has cooldown and was used before but cooldown is expired
                 if (canUse)
                 {
-                    if (description.isInterruptable && serverCharacter is ServerPlayerCharacter playerCharacter)
+                    if (description.isInterruptible && serverCharacter is ServerPlayerCharacter playerCharacter)
                     {
                         //ability is canceled by movement so before starting the ability we will instead cancel movement
                         //this prevents the ability to immediately be canceled if we cast it during movement
-                        
+
                         //TODO dont even allow casting interruptable abilities when moving
                         playerCharacter.CancelMovement();
                     }
@@ -208,6 +208,19 @@ namespace Server.Ability
             }
 
             return true; //cooldown started
+        }
+
+        public void Interrupt(InterruptType interruptType)
+        {
+            if (blockingAbilities.Count > 0 && blockingAbilities[0].TryInterrupt(interruptType))
+            {
+                blockingAbilities[0].Cancel();
+                if (serverCharacter is ServerPlayerCharacter playerCharacter)
+                {
+                    playerCharacter.NetworkCharacterState.CancelAbilityCastClientRpc();
+                }
+                AdvanceAbilityQueue();
+            }
         }
     }
 }

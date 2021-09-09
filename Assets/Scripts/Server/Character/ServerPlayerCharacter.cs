@@ -41,7 +41,7 @@ namespace Server.Character
             if (!waitsForMovementReset || waitsForMovementReset && input == Vector2.zero)
             {
                 waitsForMovementReset = false;
-                serverCharacterMovement.moveInput = input;
+                serverCharacterMovement.MoveInput = input;
             }
         }
 
@@ -53,8 +53,8 @@ namespace Server.Character
         public void CancelMovement()
         {
             //we will skip all inputs till we got a zero input
-            waitsForMovementReset = serverCharacterMovement.moveInput != Vector2.zero;
-            serverCharacterMovement.moveInput = Vector2.zero;
+            waitsForMovementReset = serverCharacterMovement.MoveInput != Vector2.zero;
+            serverCharacterMovement.MoveInput = Vector2.zero;
         }
 
         // Update is called once per frame

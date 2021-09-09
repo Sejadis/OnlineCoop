@@ -29,13 +29,13 @@ MonoBehaviour:
   effect: 1
   targetRequirement: 3
   isUnique: 1
-  isInterruptable: 1
+  isInterruptible: 1
   cooldown: 2
   charges: 0
   speed: 50
   size: 0
   range: 50
-  castTime: 0
+  castTime: 2
   rootsDuringCast: 0
   isTracking: 0
   Prefabs:

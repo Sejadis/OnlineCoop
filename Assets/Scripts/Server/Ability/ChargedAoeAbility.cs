@@ -22,8 +22,8 @@ namespace Server.Ability
             //TODO make (optionally?) follow target
             // var runtimeParams = new AbilityRuntimeParams(AbilityRuntimeParams);
             // runtimeParams.TargetPosition = AbilityRuntimeParams.StartPosition;
-            actor.CastAbilityClientRpc(
-                AbilityRuntimeParams); //TODO needs to happen outside of abilities, (maybe ability handler?)
+            //TODO needs to happen outside of abilities, (maybe ability handler?)
+            actor.CastAbilityClientRpc(AbilityRuntimeParams);
             CanStartCooldown = false;
             elapsedTime = 0f; //kinda unnecessary but explicit
             return true;

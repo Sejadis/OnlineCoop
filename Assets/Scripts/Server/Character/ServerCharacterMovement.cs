@@ -12,7 +12,28 @@ namespace Server.Character
         [SerializeField] private Transform followTarget;
 
         public float fixedGroundedGravity = -5f;
-        public Vector2 moveInput { get; set; }
+
+        public event Action OnMovementStarted;
+        private Vector2 moveInput;
+
+        public Vector2 MoveInput
+        {
+            get => moveInput;
+            set
+            {
+                if (moveInput == Vector2.zero && value != Vector2.zero)
+                {
+                    //we had no input and got input
+                    //notify about starting to move
+                    //TODO move away from input, as there are other reasons why we may be standing still despite move input
+                    OnMovementStarted?.Invoke();
+                }
+                //do we need a notification when we did move and stopped?
+
+                moveInput = value;
+            }
+        }
+
         public bool IsSprinting { get; set; }
         public Vector2 lookInput { get; set; }
         public bool IsNPC { get; set; } = true;
@@ -45,7 +66,8 @@ namespace Server.Character
             isForceMoving = true;
             forceMoveSpeed = speed;
             forceMoveTargetPosition = transform.position + targetDirection;
-            forceMoveTargetPosition.y = transform.position.y; //TODO change when force movement allows for vertical pushes
+            forceMoveTargetPosition.y =
+                transform.position.y; //TODO change when force movement allows for vertical pushes
         }
 
         public void ForceMovement(Vector3 direction, float speed, float time)
@@ -70,6 +92,7 @@ namespace Server.Character
             {
                 isForceMoving = false;
             }
+
             GroundCheck();
             characterController.stepOffset = isGrounded ? 0.3f : 0f;
             ApplyMovement();
@@ -125,8 +148,8 @@ namespace Server.Character
             }
             else
             {
-                finalMove = moveInput.x * transform.right;
-                finalMove += moveInput.y * transform.forward;
+                finalMove = MoveInput.x * transform.right;
+                finalMove += MoveInput.y * transform.forward;
                 finalMove.Normalize();
                 finalMove *= IsSprinting ? moveSpeed * sprintSpeedMultiplier : moveSpeed;
                 finalMove *= Time.deltaTime;

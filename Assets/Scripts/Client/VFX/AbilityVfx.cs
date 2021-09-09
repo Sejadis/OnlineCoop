@@ -64,7 +64,7 @@ namespace Client.VFX
         {
             return description.effect switch
             {
-                // AbilityEffectType.Projectile => new ProjectileAbility(ref runtimeParams),
+                AbilityEffectType.Projectile => null,
                 // AbilityEffectType.Craft => new CraftItemAbility(ref runtimeParams),
                 AbilityEffectType.AoeZone => new AoeZoneVfx(ref runtimeParams),
                 // AbilityEffectType.AoeOneShot => new AoeAbility(ref runtimeParams),

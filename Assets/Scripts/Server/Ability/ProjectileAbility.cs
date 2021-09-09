@@ -1,5 +1,7 @@
 using System.Diagnostics;
 using MLAPI;
+using MLAPI.Spawning;
+using Shared;
 using Shared.Abilities;
 using UnityEngine;
 
@@ -10,10 +12,15 @@ namespace Server.Ability
         private NetworkObject projectileNetObject;
         private bool didStart;
         private Stopwatch watch = new Stopwatch();
+        private NetworkCharacterState actor;
 
         public override bool Start()
         {
             CanStartCooldown = false;
+            actor = NetworkSpawnManager.SpawnedObjects[AbilityRuntimeParams.Actor]
+                .GetComponent<NetworkCharacterState>(); //TODO refactor into base?
+            //TODO needs to happen outside of abilities, (maybe ability handler?)
+            actor.CastAbilityClientRpc(AbilityRuntimeParams);
             if (DidCastTimePass)
             {
                 FireProjectile();
@@ -31,9 +38,9 @@ namespace Server.Ability
             }
 
             return !didStart
-                    || projectileNetObject.IsSpawned
-                    && Vector3.Distance(AbilityRuntimeParams.StartPosition, projectileNetObject.transform.position) <
-                    Description.range;
+                   || projectileNetObject.IsSpawned
+                   && Vector3.Distance(AbilityRuntimeParams.StartPosition, projectileNetObject.transform.position) <
+                   Description.range;
         }
 
         public override void End()
@@ -45,8 +52,19 @@ namespace Server.Ability
             }
         }
 
+        public override void Cancel()
+        {
+            base.Cancel();
+            if (projectileNetObject != null && projectileNetObject.IsSpawned)
+            {
+                projectileNetObject.Despawn(true);
+            }
+        }
+
         public override bool Reactivate()
         {
+            if (!DidCastTimePass) return true; //reactivating while still casting shouldn't do anything
+
             CanStartCooldown = true;
             return false;
         }
