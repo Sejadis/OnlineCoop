@@ -46,9 +46,16 @@ namespace Server.Character
             }
 
             serverCharacterMovement = GetComponent<ServerCharacterMovement>();
-            serverCharacterMovement.OnMovementStarted += OnMovementStarted;
+            if (serverCharacterMovement != null)
+            {
+                serverCharacterMovement.OnMovementStarted += OnMovementStarted;
+            }
+
             networkCharacterState = GetComponent<NetworkCharacterState>();
-            networkCharacterState.OnServerAbilityCast += OnAbilityCast;
+            if (networkCharacterState != null)
+            {
+                networkCharacterState.OnServerAbilityCast += OnAbilityCast;
+            }
         }
 
         private void OnMovementStarted()
