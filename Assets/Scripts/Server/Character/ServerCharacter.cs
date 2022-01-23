@@ -45,14 +45,11 @@ namespace Server.Character
                 return;
             }
 
-            serverCharacterMovement = GetComponent<ServerCharacterMovement>();
-            if (serverCharacterMovement != null)
+            if (TryGetComponent(out serverCharacterMovement))
             {
                 serverCharacterMovement.OnMovementStarted += OnMovementStarted;
             }
-
-            networkCharacterState = GetComponent<NetworkCharacterState>();
-            if (networkCharacterState != null)
+            if (TryGetComponent(out networkCharacterState))
             {
                 networkCharacterState.OnServerAbilityCast += OnAbilityCast;
             }
