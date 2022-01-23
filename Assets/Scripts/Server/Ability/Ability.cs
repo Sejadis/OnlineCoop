@@ -100,7 +100,8 @@ namespace Server.Ability
                 //all conditions met, increase count
                 hitEffectTriggerCount[hitEffect] += 1;
 
-                //we do not want to override the provided targets, just change them for the current effect so we make a copy
+                //we do not want to override the provided targets, just change them for the current effect
+                //so we make a copy
                 var effectTargets = new ulong[targets.Length];
                 targets.CopyTo(effectTargets, 0);
 
@@ -185,15 +186,13 @@ namespace Server.Ability
 
         public bool TryInterrupt(InterruptType interruptType)
         {
-            switch (interruptType)
+            return interruptType switch
             {
-                case InterruptType.Movement:
-                    return Description.isInterruptible && !DidCastTimePass; //interrupt if this ability is interruptible and while we are casting
-                    break;
-                default:
-                    throw new ArgumentOutOfRangeException(nameof(interruptType), interruptType, null);
-            }
-            return false;
+                InterruptType.Movement =>
+                    Description.isInterruptible &&
+                    !DidCastTimePass, //interrupt if this ability is interruptible and while we are casting
+                _ => throw new ArgumentOutOfRangeException(nameof(interruptType), interruptType, null)
+            };
         }
     }
 }

@@ -21,10 +21,10 @@ namespace Client.Character
         {
             vfxRunner.Update();
         }
-        
-        private void OnClientAbilityCast(AbilityRuntimeParams runtimeParams)
+
+        private void OnClientAbilityCast(AbilityRuntimeParams runtimeParams, bool asReactivation)
         {
-            vfxRunner.AddRunnable(ref runtimeParams);
+            vfxRunner.AddRunnable(ref runtimeParams, asReactivation);
         }
     }
 }

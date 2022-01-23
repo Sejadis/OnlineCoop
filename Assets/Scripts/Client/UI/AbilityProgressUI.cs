@@ -22,14 +22,16 @@ namespace Client.UI
 
         private void OnAbilityCastCanceled()
         {
-            isCasting = false;
-            container.SetActive(false);
-            //TODO some visual indication for cancel
+            CancelCast();
         }
 
-        private void OnClientAbilityCast(AbilityRuntimeParams runtimeParams)
+        private void OnClientAbilityCast(AbilityRuntimeParams runtimeParams, bool asReactivation)
         {
-            if (GameDataManager.TryGetAbilityDescriptionByType(runtimeParams.AbilityType, out var description))
+            if (asReactivation)
+            {
+                FinishCast();
+            }
+            else if (GameDataManager.TryGetAbilityDescriptionByType(runtimeParams.AbilityType, out var description))
             {
                 duration = description.castTime;
                 elapsedTime = 0;
@@ -37,6 +39,20 @@ namespace Client.UI
                 progressImage.fillAmount = 0f;
                 container.SetActive(true);
             }
+        }
+
+        private void FinishCast()
+        {
+            isCasting = false;
+            container.SetActive(false);
+            //TODO some visual indication for finish
+        }
+
+        private void CancelCast()
+        {
+            isCasting = false;
+            container.SetActive(false);
+            //TODO some visual indication for cancel
         }
 
         private void Update()
@@ -47,8 +63,7 @@ namespace Client.UI
             progressImage.fillAmount = progress;
             if (progress > 1)
             {
-                isCasting = false;
-                container.SetActive(false);
+                FinishCast();
             }
         }
     }

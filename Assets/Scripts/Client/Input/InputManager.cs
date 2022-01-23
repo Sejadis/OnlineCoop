@@ -52,7 +52,6 @@ namespace Client.Input
             PlayerInput.Controls.Movement.started += ctx => OnMovement?.Invoke(ctx);
             PlayerInput.Controls.Movement.performed += ctx => OnMovement?.Invoke(ctx);
             PlayerInput.Controls.Movement.canceled += ctx => OnMovement?.Invoke(ctx);
-
             // PlayerInput.Controls.Interaction.performed += ctx => OnInteraction?.Invoke(ctx);
 
 

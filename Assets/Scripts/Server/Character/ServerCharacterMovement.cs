@@ -102,7 +102,7 @@ namespace Server.Character
                 yRotation %= 360; //keep the number small
 
                 transform.rotation =
-                    Quaternion.Euler(transform.rotation.eulerAngles.x, yRotation, transform.rotation.eulerAngles.z);
+                    Quaternion.Euler(transform.rotation.eulerAngles.x, yRotation, transform.rotation.eulerAngles.z); 
 
                 xRotation += lookInput.y * sensitivity.Value;
                 xRotation = Mathf.Clamp(xRotation, -90f, 70f);
@@ -140,7 +140,7 @@ namespace Server.Character
 
         protected virtual void ApplyMovement()
         {
-            Vector3 finalMove = Vector3.zero;
+            Vector3 finalMove;
             if (isForceMoving)
             {
                 var targetDirection = (forceMoveTargetPosition - transform.position).normalized;

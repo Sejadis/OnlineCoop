@@ -42,7 +42,7 @@ namespace Server.Ability
             var size = chargeProgress * Description.size;
             Debug.DrawRay(AbilityRuntimeParams.TargetPosition, Vector3.up * size, Color.red, 10f);
             RunHitCheck(size);
-            actor.CastAbilityClientRpc(AbilityRuntimeParams);
+            // actor.CastAbilityClientRpc(AbilityRuntimeParams, true);
             didActivate = true;
             CanStartCooldown = true;
             return false;

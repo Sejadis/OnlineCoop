@@ -5,14 +5,12 @@ namespace Shared.Abilities
 {
     public abstract class AbilityBase : Runnable.Runnable
     {
-        private readonly AbilityRuntimeParams abilityRuntimeParams;
-
         protected AbilityBase(ref AbilityRuntimeParams abilityRuntimeParams)
         {
-            this.abilityRuntimeParams = abilityRuntimeParams;
+            AbilityRuntimeParams = abilityRuntimeParams;
         }
 
-        protected AbilityRuntimeParams AbilityRuntimeParams => abilityRuntimeParams;
+        public AbilityRuntimeParams AbilityRuntimeParams { get; }
 
         public AbilityDescription Description
         {

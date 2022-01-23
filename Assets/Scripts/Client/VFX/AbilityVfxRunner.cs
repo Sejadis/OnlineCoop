@@ -13,10 +13,10 @@ namespace Client.VFX
             return AbilityVfx.CreateVfx(ref runtimeParams);
         }
 
-        public override void AddRunnable(ref AbilityRuntimeParams runtimeParameter)
+        public override void AddRunnable(ref AbilityRuntimeParams runtimeParameter, bool asReactivation)
         {
             GameDataManager.TryGetAbilityDescriptionByType(runtimeParameter.AbilityType, out var description);
-            if (description.isUnique &&
+            if (asReactivation && description.isUnique &&
                 CurrentRunnables.FirstOrDefault(r =>
                     r.Description.abilityType == description.abilityType) is var match && match != null)
             {
@@ -25,7 +25,7 @@ namespace Client.VFX
                     EndRunnable(match);
                 }
             }
-            else
+            else if (!asReactivation)
             {
                 base.AddRunnable(ref runtimeParameter);
             }

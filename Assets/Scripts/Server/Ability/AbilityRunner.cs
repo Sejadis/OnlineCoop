@@ -19,9 +19,7 @@ namespace Server.Ability
         {
             this.serverCharacter = serverCharacter;
         }
-        // Start is called before the first frame update
 
-        // Update is called once per frame
         public override void Update()
         {
             if (blockingAbilities.Count > 0)
@@ -74,11 +72,10 @@ namespace Server.Ability
             RunAbility();
         }
 
-        public override void AddRunnable(ref AbilityRuntimeParams runtimeParams)
+        public override void AddRunnable(ref AbilityRuntimeParams runtimeParams, bool asReactivation = false)
         {
             if (GameDataManager.TryGetAbilityDescriptionByType(runtimeParams.AbilityType, out var description))
             {
-                //dont go for reactivation if we are currently in a hitEffect instead of normal ability
                 if (description.isUnique)
                 {
                     //try to find this ability in queue
@@ -117,6 +114,11 @@ namespace Server.Ability
                                 //TODO shouldn't need to remove from both, call it only on correct queue 
                                 CurrentRunnables.Remove(match);
                                 blockingAbilities.Remove(match);
+                            }
+                            else
+                            {
+                                serverCharacter.NetworkCharacterState.CastAbilityClientRpc(
+                                    matchedAbility.AbilityRuntimeParams, true);
                             }
                         }
                         else
@@ -172,6 +174,7 @@ namespace Server.Ability
                     var shouldEnd = !ability.Start();
                     if (ability.Description.cooldown > 0)
                     {
+                        //TODO possibly dont set cooldown when ability cancels out of start
                         TryStartCooldown(ability);
                     }
 
@@ -200,7 +203,7 @@ namespace Server.Ability
             if (!ability.ShouldStartCooldown()) return false; //cooldown not started
 
             abilityCooldowns[ability.Description.abilityType] =
-                Time.time; //TODO possibly dont set cooldown when ability cancels out of start
+                Time.time; 
             if (serverCharacter is ServerPlayerCharacter playerCharacter)
             {
                 playerCharacter.NetworkCharacterState.StartCooldownClientRpc(ability.Description.abilityType,
@@ -212,15 +215,12 @@ namespace Server.Ability
 
         public void Interrupt(InterruptType interruptType)
         {
-            if (blockingAbilities.Count > 0 && blockingAbilities[0].TryInterrupt(interruptType))
-            {
-                blockingAbilities[0].Cancel();
-                if (serverCharacter is ServerPlayerCharacter playerCharacter)
-                {
-                    playerCharacter.NetworkCharacterState.CancelAbilityCastClientRpc();
-                }
-                AdvanceAbilityQueue();
-            }
+            if (blockingAbilities.Count <= 0 || !blockingAbilities[0].TryInterrupt(interruptType)) return;
+            blockingAbilities[0].Cancel();
+
+            serverCharacter.NetworkCharacterState.CancelAbilityCastClientRpc();
+
+            AdvanceAbilityQueue();
         }
     }
 }

@@ -28,7 +28,7 @@ namespace Shared
         public event Action<AbilityType, float> OnStartCooldown;
         public event Action OnClientAbiltyCastCanceled;
         public event Action<AbilityRuntimeParams> OnServerAbilityCast;
-        public event Action<AbilityRuntimeParams> OnClientAbilityCast;
+        public event Action<AbilityRuntimeParams, bool> OnClientAbilityCast;
         public event Action<StatusEffectRuntimeParams> OnClientStatusEffectAdded;
 
         [ServerRpc(RequireOwnership = false)]
@@ -38,9 +38,9 @@ namespace Shared
         }
 
         [ClientRpc]
-        public void CastAbilityClientRpc(AbilityRuntimeParams runtimeParams)
+        public void CastAbilityClientRpc(AbilityRuntimeParams runtimeParams, bool asReactivation = false)
         {
-            OnClientAbilityCast?.Invoke(runtimeParams);
+            OnClientAbilityCast?.Invoke(runtimeParams, asReactivation);
         }
 
         public NetworkHealthState NetHealthState { get; private set; }

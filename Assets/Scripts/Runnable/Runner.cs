@@ -8,7 +8,7 @@ namespace Runnable
         private readonly List<T> currentRunnables = new List<T>();
         protected List<T> CurrentRunnables => currentRunnables;
 
-        public virtual void AddRunnable(ref TY runtimeParameter)
+        public virtual void AddRunnable(ref TY runtimeParameter, bool asReactivation = false)
         {
             var runnable = GetRunnable(ref runtimeParameter);
             if (runnable == null) return;
